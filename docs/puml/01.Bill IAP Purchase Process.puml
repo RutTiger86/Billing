@@ -1,0 +1,47 @@
+@startuml Bill IAP Purchase Process
+
+title Bill IAP Purchase Process
+
+participant "Payment Market(IOS, Google)" as payment
+participant "Client(App)" as client
+participant "Game Server" as game
+participant "Billing Server" as bill
+
+activate client
+client -> game : Purchase Request
+activate game
+game -> bill : Transaction Request
+activate bill 
+bill -> bill : Create Transaction
+bill --> game : Transaction ID Response
+deactivate bill
+game --> client : Transaction ID Response
+deactivate game
+
+client -> payment : Purchase Request
+activate payment
+payment -> client : Purchase Response 
+deactivate payment
+
+client -> game : Validation Request 
+activate game
+game -> bill : Validation Request 
+activate bill 
+bill -> bill : Validation 
+bill -> payment : Receipt Info Request
+activate payment 
+payment --> bill : Receipt Info Response
+deactivate payment
+bill -> bill : Validation Receipt
+bill --> game : Validation Response & Give Product Request 
+deactivate bill
+game -> game : Give Product
+game -> bill : Give Product Response
+activate bill 
+bill -> bill : Transaction End
+deactivate bill
+game --> client : Purchase Response
+deactivate game
+deactivate client
+@enduml
+

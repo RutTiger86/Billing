@@ -1,0 +1,28 @@
+@startuml Bill App Purchase Process Point
+
+title Bill App Point Purchase Process
+
+participant "Client(App)" as client
+participant "Game Server" as game
+participant "Billing Server" as bill
+
+activate client
+client -> game : Point Purchase Request
+activate game
+game -> bill : Point Purchase Request
+activate bill 
+bill -> bill : Transaction Create
+bill -> bill : Point Purchase Validation 
+bill -> bill : Point Spend
+bill -> bill : Point Spend Validation 
+bill -> game : Give Product Request
+deactivate bill
+game -> game : Give Product
+game -> bill : Give Product Response
+activate bill
+bill -> bill : Transaction End
+deactivate bill
+game --> client : Give Product Response
+deactivate client
+@enduml
+

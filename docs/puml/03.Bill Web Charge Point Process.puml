@@ -1,0 +1,36 @@
+@startuml Bill Web PG Charge Point Process
+
+title Bill Web PG Charge Point Process
+
+participant "Payment Market(PG)" as payment
+participant "Client(Web)" as client
+participant "Game Server" as game
+participant "Billing Server" as bill
+
+activate client
+client -> bill : Transaction Request
+activate bill 
+bill -> bill : Transaction Create 
+bill --> client : Transaction ID Response
+deactivate bill
+
+client -> payment : PG Purchase
+activate payment
+payment -> client : PG Purchase Response 
+deactivate payment
+
+client -> bill : Charge Point Request 
+activate bill
+bill -> bill : Validation
+bill -> payment : Receipt Info Request 
+activate payment 
+payment --> bill : Receipt Info Response 
+deactivate payment
+bill -> bill : Validation Receipt
+bill -> bill : Charge Point
+bill --> client : Charge Point Response 
+bill -> bill : Transaction End
+deactivate client
+deactivate bill
+@enduml
+

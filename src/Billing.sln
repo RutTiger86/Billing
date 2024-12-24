@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billing.Core", "Billing.Core\Billing.Core.csproj", "{5AC243A0-E37B-4EEE-BF96-A279F6620761}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billing.Api", "Billing.Api\Billing.Api.csproj", "{0B85EE81-9749-41AD-9B31-F01421487EDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billing.Service", "Billing.Service\Billing.Service.csproj", "{896C194E-8349-42C1-99D1-4711DAECA53C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5AC243A0-E37B-4EEE-BF96-A279F6620761}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AC243A0-E37B-4EEE-BF96-A279F6620761}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AC243A0-E37B-4EEE-BF96-A279F6620761}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AC243A0-E37B-4EEE-BF96-A279F6620761}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B85EE81-9749-41AD-9B31-F01421487EDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B85EE81-9749-41AD-9B31-F01421487EDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B85EE81-9749-41AD-9B31-F01421487EDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B85EE81-9749-41AD-9B31-F01421487EDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{896C194E-8349-42C1-99D1-4711DAECA53C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{896C194E-8349-42C1-99D1-4711DAECA53C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{896C194E-8349-42C1-99D1-4711DAECA53C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{896C194E-8349-42C1-99D1-4711DAECA53C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
