@@ -14,7 +14,7 @@ Transaction 은 자동증가값의 _Bigint_ 로 관리되며 필요시 *GUID*를
 명확한 관계를 표현하고자 상위 Type은 _TransactionType_ 하위 Type은 _TransactionSubType_ 으로 지정합니다.
 
 1. TranscationType
-   - WEB : Web 결재
+   - WEB_PG : Web 결재
    - IAP_Google : Google IAP
    - IAP_IOS : iOS IAP
    - POINT : 내부 포인트(내부 캐시) 관련
