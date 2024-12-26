@@ -10,16 +10,15 @@ namespace Billing.Core.Interfaces
 {
     public interface IDataService
     {
-        public long InsertBillTx(BillTx BillTx);
-        public bool UpdateBillTxState(long BillTxId, BillTxStatus status);
-        public bool UpdateBillTxState(long BillTxId, BillTxStatus status, bool IsComplete);
-        public bool UpdateBillTxState(long BillTxId, bool IsDeleted);
-        public bool DeleteBillTxDetail(long BillTxId);
+        public long InsertBillTx(BillTx billTx);
+        public bool UpdateBillTxState(long billTxId, BillTxStatus status);
+        public bool UpdateBillTxState(long billTxId, BillTxStatus status, bool isComplete);
+        public bool UpdateBillTxState(long billTxId, bool isDeleted);
         public bool InsertBillTxDetails(BillDetail billDetail);
-        public bool UpdateBillTxDetailsDetail(long BillDetailId);
-        public BillTx GetBillTx(long BillTxId);
-        public BillDetail GetBillDetails(long BillTxId);
-        public BillDetail GetBillDetail(long BillDetailId);
+        public bool UpdateBillTxDetailsDetail(long billDetailId);
+        public BillTx GetBillTx(long billTxId);
+        public BillDetail GetBillDetails(long billTxId);
+        public BillDetail GetBillDetail(long billDetailId);
 
     }
 }

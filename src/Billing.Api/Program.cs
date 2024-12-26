@@ -1,4 +1,8 @@
 
+using Billing.Api.Extensions;
+using Billing.Core.Interfaces;
+using Billing.Core.Services;
+
 namespace Billing.Api
 {
     public class Program
@@ -7,12 +11,9 @@ namespace Billing.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            builder.Logging.AddLog4Net();
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            ConfigureServices(builder.Services);
 
             var app = builder.Build();
 
@@ -27,10 +28,23 @@ namespace Billing.Api
 
             app.UseAuthorization();
 
-
             app.MapControllers();
 
+            app.UseLoggingMiddleware();
+
             app.Run();
+        }
+
+        public static void ConfigureServices(IServiceCollection services)
+        {
+            services.AddControllers();
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
+
+            services.AddSingleton<IDataService, MemoryDataService>();
+
+            services.AddScoped<IBillTxService, BillTxService>();            
         }
     }
 }

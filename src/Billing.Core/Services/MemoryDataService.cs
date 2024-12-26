@@ -1,13 +1,9 @@
 ﻿using Billing.Core.Enums;
+using Billing.Core.Extensions;
 using Billing.Core.Interfaces;
 using Billing.Core.Models;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Billing.Core.Services
 {
@@ -17,6 +13,7 @@ namespace Billing.Core.Services
 
         private readonly DataSet memoryDataSet;
 
+        private readonly object lockObj = new();
         public MemoryDataService(ILogger<MemoryDataService> logger)
         {
             this.logger = logger;
@@ -27,52 +24,73 @@ namespace Billing.Core.Services
         private void InitMemoryDataSet()
         {
             AddTable<BillTx>("Id");
+            AddTable<BillDetail>("Id");
+            AddTable<Product>("Id");
+            AddTable<ProductDetail>("Id");
+            AddTable<Item>("Id");
         }
 
-        public void AddTable<T>(string IdName) where T : class
+        private void AddTable<T>(string idName) where T : class
         {
             var tableName = typeof(T).Name;
-            if (memoryDataSet.Tables.Contains(tableName)) throw new Exception($"Table {tableName} already exists.");
 
-            DataTable table = new DataTable(tableName);
+            DataTable table = new (tableName);
 
             foreach (var prop in typeof(T).GetProperties())
             {
                 table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
             }
 
-            if (table.Columns.Contains(IdName))
+            if (table.Columns.Contains(idName))
             {
-                table.PrimaryKey = new[] { table.Columns[IdName] };
+                table.PrimaryKey = new[] { table.Columns[idName] };
             }
 
             memoryDataSet.Tables.Add(table);
         }
 
+        private BillTx SelectBillTx(long billTxId)
+        {
+            DataTable billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
+            return billTxTable.AsEnumerable().FirstOrDefault(p => p.Field<long>("Id") == billTxId)?.ToClass<BillTx>();
+        }
 
-        public bool DeleteBillTxDetail(long BillTxId)
+
+        public BillDetail GetBillDetail(long billDetailId)
         {
             throw new NotImplementedException();
         }
 
-        public BillDetail GetBillDetail(long BillDetailId)
+        public BillDetail GetBillDetails(long billTxId)
         {
             throw new NotImplementedException();
         }
 
-        public BillDetail GetBillDetails(long BillTxId)
-        {
-            throw new NotImplementedException();
-        }
 
-        public BillTx GetBillTx(long BillTxId)
+        public BillTx GetBillTx(long billTxId)
         {
-            throw new NotImplementedException();
+            var billTx = SelectBillTx(billTxId);
+            return billTx.DeepCopy<BillTx>();
         }
+        
 
-        public long InsertBillTx(BillTx BillTx)
+        public long InsertBillTx(BillTx billTx)
         {
-            throw new NotImplementedException();
+            lock (lockObj)
+            {
+                DateTime now = DateTime.UtcNow;
+                DataTable billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
+                // 행이 없는 경우 ID를 1로 설정
+                long maxId = billTxTable.Rows.Count > 0
+                    ? billTxTable.AsEnumerable().Max(row => row.Field<long>("Id"))
+                    : 0;
+
+                billTx.Id = maxId + 1;
+                billTx.CreateDate = now;
+                billTx.UpdateDate = now;
+                billTxTable.AddRow<BillTx>(billTx);
+                return billTx.Id;
+            }
         }
 
         public bool InsertBillTxDetails(BillDetail billDetail)
@@ -80,24 +98,68 @@ namespace Billing.Core.Services
             throw new NotImplementedException();
         }
 
-        public bool UpdateBillTxDetailsDetail(long BillDetailId)
+        public bool UpdateBillTxDetailsDetail(long billDetailId)
         {
             throw new NotImplementedException();
         }
 
-        public bool UpdateBillTxState(long BillTxId, BillTxStatus status)
+        public bool UpdateBillTxState(long billTxId, BillTxStatus status)
         {
-            throw new NotImplementedException();
+            lock (lockObj)
+            {
+
+                var billTx = SelectBillTx(billTxId);
+
+                if (billTx != null)
+                {
+                    billTx.UpdateDate = DateTime.Now;
+                    billTx.Status = status;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
-        public bool UpdateBillTxState(long BillTxId, BillTxStatus status, bool IsComplete)
+        public bool UpdateBillTxState(long billTxId, BillTxStatus status, bool isComplete)
         {
-            throw new NotImplementedException();
+            lock (lockObj)
+            {
+                var billTx = SelectBillTx(billTxId);
+
+                if (billTx != null)
+                {
+                    billTx.UpdateDate = DateTime.Now;
+                    billTx.Status = status;
+                    billTx.IsCompleted = isComplete;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
-        public bool UpdateBillTxState(long BillTxId, bool IsDeleted)
+        public bool UpdateBillTxState(long billTxId, bool isDeleted)
         {
-            throw new NotImplementedException();
+            lock (lockObj)
+            {
+                var billTx = SelectBillTx(billTxId);
+
+                if (billTx != null)
+                {
+                    billTx.UpdateDate = DateTime.Now;
+                    billTx.IsDeleted = isDeleted;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
     }
 }

@@ -30,14 +30,14 @@ namespace Billing.Core.Services
             return transactionID;
         }
 
-        public bool UpdateBillTxState(long BillTxId, BillTxStatus status)
+        public bool UpdateBillTxState(long billTxId, BillTxStatus status)
         {
-            return dataService.UpdateBillTxState(BillTxId, status);
+            return dataService.UpdateBillTxState(billTxId, status);
         }
 
-        public (bool, ValidateError) ValidateBillTx(long BillTxId)
+        public (bool, ValidateError) ValidateBillTx(long billTxId)
         {
-            BillTx billTx =  dataService.GetBillTx(BillTxId);
+            BillTx billTx =  dataService.GetBillTx(billTxId);
 
             if (billTx == null)
             {
@@ -58,14 +58,14 @@ namespace Billing.Core.Services
             return (true, ValidateError.None);
         }
 
-        public bool CancleBillTx(long BillTxId)
+        public bool CancleBillTx(long billTxId)
         {
-            return dataService.UpdateBillTxState(BillTxId, true);
+            return dataService.UpdateBillTxState(billTxId, true);
         }
 
-        public bool EndBillTx(long BillTxId)
+        public bool EndBillTx(long billTxId)
         {
-            return dataService.UpdateBillTxState(BillTxId, BillTxStatus.COMPLETED, true);
+            return dataService.UpdateBillTxState(billTxId, BillTxStatus.COMPLETED, true);
         }
     }
 }

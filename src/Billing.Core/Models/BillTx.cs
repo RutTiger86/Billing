@@ -2,7 +2,7 @@
 
 namespace Billing.Core.Models
 {
-    public class BillTx
+    public class BillTx : BaseModel
     {
         public long Id { get; set; }
         public BillTxTypes Type { get; set; }
@@ -11,6 +11,5 @@ namespace Billing.Core.Models
         public bool IsDeleted { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime UpdateDate { get; set; }
-
     }
 }
