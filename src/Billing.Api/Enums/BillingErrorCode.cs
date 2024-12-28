@@ -2,7 +2,8 @@
 {
     public enum BillingErrorCode
     {
-        NONE = 0,
+        Success = 0,
         SYSTEM_EXCEPTION, // 익셉션 에러
+        TX_VALIDATION_FAILED, // TX 검증 실패 
     }
 }
