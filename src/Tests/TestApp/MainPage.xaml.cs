@@ -1,32 +1,68 @@
 ﻿using Plugin.InAppBilling;
 using System.Collections.ObjectModel;
+using Microsoft.Maui.ApplicationModel;
 
 namespace TestApp
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
         public ObservableCollection<InAppBillingProduct> Items { get; } = new();
         public MainPage()
         {
             InitializeComponent();
-        }
-
-        private void OnCounterClicked(object sender, EventArgs e)
-        {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            lbl_VersionInfo.Text = AppInfo.VersionString;
         }
 
         private async void ButtonConsumable_Clicked(object sender, EventArgs e)
         {
-            var productId = "ruttiger.billing.item1";
+            var productId = ent_ProductId.Text;
+            var billing = CrossInAppBilling.Current;
+            try
+            {
+                var connected = await billing.ConnectAsync();
+                if (!connected)
+                {
+                    lbl_Result.Text = $"CrossInAppBilling.Current Connected Fail";
+                    return;
+                }
+
+                //check purchases
+                var purchase = await billing.PurchaseAsync(productId, ItemType.InAppPurchaseConsumable);
+
+                if (purchase == null)
+                {
+                    lbl_Result.Text = "Purchase Fail (Is Null)";
+                }
+                else if (purchase.State == PurchaseState.Purchased)
+                {
+                    ent_TrasactionID.Text = purchase.TransactionIdentifier;
+                    lbl_Result.Text = "Purchase Success";
+                }
+                else
+                {
+                    ent_TrasactionID.Text = purchase.TransactionIdentifier;
+                    lbl_Result.Text = $"Purchase Issue!!  pid : {purchase.ProductId} , State : {purchase.State}, TxId : {purchase.TransactionIdentifier}  ";
+
+                }
+            }
+            catch (InAppBillingPurchaseException purchaseEx)
+            {
+                lbl_Result.Text = $"Error : {purchaseEx}";
+            }
+            catch (Exception ex)
+            {
+                lbl_Result.Text = $"Issue Connecting : {ex} ";
+            }
+            finally
+            {
+                await billing.DisconnectAsync();
+            }
+        }
+
+        private async void ButtonConsumed_Clicked(object sender, EventArgs e)
+        {
+            var productId = ent_ProductId.Text;
+            var transactionID = ent_TrasactionID.Text;
             var billing = CrossInAppBilling.Current;
             try
             {
@@ -34,46 +70,30 @@ namespace TestApp
                 if (!connected)
                 {
                     //we are offline or can't connect, don't try to purchase
-                    return ;
+                    return;
                 }
 
-                //check purchases
-                var purchase = await billing.PurchaseAsync(productId, ItemType.InAppPurchaseConsumable);
+                //only required on Android & Windows    
+                var wasConsumed = await billing.ConsumePurchaseAsync(productId, transactionID);
 
-                //possibility that a null came through.
-                if (purchase == null)
+                if (wasConsumed)
                 {
-                    await DisplayAlert(string.Empty, "purchase fail", "OK");
-                    //did not purchase
+
+                    lbl_Result.Text = "WasConsumed Success";
                 }
-                else if (purchase.State == PurchaseState.Purchased)
+                else
                 {
-                    // purchased, we can now consume the item or do it later
-                    // here you may want to call your backend or process something in your app.
-
-                    lbl_TrasactionID.Text = purchase.TransactionIdentifier;
-                    //only required on Android & Windows    
-                    var wasConsumed = await CrossInAppBilling.Current.ConsumePurchaseAsync(purchase.ProductId, purchase.TransactionIdentifier);
-
-                    if (wasConsumed)
-                    {
-                        await DisplayAlert(string.Empty, "wasConsumed Success", "OK");
-                    }
-                    else
-                    {
-                        await DisplayAlert(string.Empty, "wasConsumed fail", "OK");
-                    }
+                    lbl_Result.Text = "WasConsumed Fail";
                 }
+
             }
             catch (InAppBillingPurchaseException purchaseEx)
             {
-                //Billing Exception handle this based on the type
-                Console.WriteLine("Error: " + purchaseEx);
+                lbl_Result.Text = $"Error : {purchaseEx}";
             }
             catch (Exception ex)
             {
-                //Something else has gone wrong, log it
-                Console.WriteLine("Issue connecting: " + ex);
+                lbl_Result.Text = $"Issue connecting : {ex}";
             }
             finally
             {
@@ -85,21 +105,34 @@ namespace TestApp
         {
             try
             {
-                var id = "ruttiger.billing.item1";
+                var id = ent_ProductId.Text;
                 await CrossInAppBilling.Current.ConnectAsync();
-                var items = await CrossInAppBilling.Current.GetProductInfoAsync(ItemType.InAppPurchase, [id]);
+                Items.Clear();
+                var items = await CrossInAppBilling.Current.GetProductInfoAsync(ItemType.InAppPurchaseConsumable, [id]);
                 foreach (var item in items)
                     await DisplayAlert(string.Empty, "item :  " + item.ProductId + ", Name : " + item.Name, "OK");
             }
             catch (Exception ex)
             {
-                await DisplayAlert(string.Empty, "Did not purchase: " + ex.Message, "OK");
-                Console.WriteLine(ex);
+                lbl_Result.Text = $"ProductInfo Exception : {ex.Message}";
             }
             finally
             {
 
                 await CrossInAppBilling.Current.DisconnectAsync();
+            }
+        }
+
+        private async void ButtonCopyTxID_Clicked(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(ent_TrasactionID.Text))
+            {
+                await Clipboard.SetTextAsync(ent_TrasactionID.Text);
+                await DisplayAlert("Copied", "Transaction ID copied to clipboard.", "OK");
+            }
+            else
+            {
+                await DisplayAlert("Error", "Transaction ID is empty.", "OK");
             }
         }
 
