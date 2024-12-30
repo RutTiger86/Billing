@@ -16,7 +16,16 @@ namespace Billing.Core.Extensions
             {
                 if (row.Table.Columns.Contains(prop.Name) && row[prop.Name] != DBNull.Value)
                 {
-                    prop.SetValue(obj, Convert.ChangeType(row[prop.Name], prop.PropertyType));
+                    var propertyType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+
+                    if (propertyType.IsEnum)
+                    {
+                        prop.SetValue(obj, Enum.ToObject(propertyType, row[prop.Name]));
+                    }
+                    else
+                    {
+                        prop.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyType));
+                    }
                 }
             }
             return obj;

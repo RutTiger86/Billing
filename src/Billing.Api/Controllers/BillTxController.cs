@@ -27,34 +27,13 @@ namespace Billing.Api.Controllers
             BaseResponse<long> response = new BaseResponse<long>
             {
                 Result = true,
-                ErrorCode = (int)BillingErrorCode.Success,
+                ErrorCode = (int)BillingErrorCode.SUCESS,
                 Data = billTxService.IssueBillTx(txTypes)
 
             };
             return response;
         }
 
-        [HttpPost]
-        public BaseResponse<bool> ValidateBillTx([FromBody] long billTxId)
-        {
-
-            BaseResponse<bool> response = new BaseResponse<bool>()
-            {
-                Result = true,
-                ErrorCode= (int)BillingErrorCode.Success,
-            };
-
-            (bool result , ValidateError error ) = billTxService.ValidateBillTx(billTxId);
-
-            if (!result)
-            {
-
-                logger.LogWarning($"[ValidataionFaild] BillTxId : {billTxId}, Result : {result}, ValidateError : {error}")
-                response.Result = result;
-                response.ErrorCode = (int)BillingErrorCode.TX_VALIDATION_FAILED;
-            }
-
-            return response;
-        }
+        
     }
 }

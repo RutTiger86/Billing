@@ -44,6 +44,7 @@ namespace Billing.Api
 
             services.AddSingleton<IDataService, MemoryDataService>();
 
+            services.AddScoped<GoogleBillingService>();
             services.AddScoped<IBillTxService, BillTxService>();            
         }
     }

@@ -8,6 +8,6 @@ namespace Billing.Core.Interfaces
 {
     public interface IBillingService
     {
-        public bool ValidateReceipt();
+        public Task<bool> ValidatePurchaseAsync(string productId, string purchaseToken);
     }
 }

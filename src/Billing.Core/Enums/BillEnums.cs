@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Billing.Core.Enums
 {
-    public enum ValidateError
+    public enum BillingError
     {
-        None = 0,           // 에러 없음 
-        NotFound,           // 존재하지 않는 Tx
-        AlreadyCompleted,   // 이미 완료된 Tx
-        Canceled,           // 취소된 Tx
-        Unknown             // 알려지지 않은 상태
+        NONE = 0,           // 에러 없음 
+        TX_NOTFFOUND,           // 존재하지 않는 Tx
+        TX_ALREADY_COMPLETED,   // 이미 완료된 Tx
+        TX_CANCLED,           // 취소된 Tx
+        UNKNOWN             // 알려지지 않은 상태
     }
 }

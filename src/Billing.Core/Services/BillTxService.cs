@@ -1,4 +1,5 @@
 ﻿using Billing.Core.Enums;
+using Billing.Core.Exceptions;
 using Billing.Core.Interfaces;
 using Billing.Core.Models;
 using Microsoft.Extensions.Logging;
@@ -35,27 +36,28 @@ namespace Billing.Core.Services
             return dataService.UpdateBillTxState(billTxId, status);
         }
 
-        public (bool, ValidateError) ValidateBillTx(long billTxId)
+        public (bool IsValide, BillingError Error) ValidateBillTx(long billTxId)
         {
             BillTx billTx =  dataService.GetBillTx(billTxId);
 
             if (billTx == null)
             {
-                return (false, ValidateError.NotFound);
-            }
-
-            if(billTx.IsDeleted)
-            {
-                return (false, ValidateError.NotFound);
+                return (false, BillingError.TX_NOTFFOUND);
             }
 
             if (billTx.IsCompleted)
             {
-                return (false, ValidateError.NotFound);
+                return (false, BillingError.TX_ALREADY_COMPLETED);
 
             }
 
-            return (true, ValidateError.None);
+            return ( true, BillingError.NONE);
+        }
+
+        public BillTxTypes GetBillTxType(long billTxId)
+        {
+            BillTx billTx = dataService.GetBillTx(billTxId);
+            return billTx == null ? throw new BillingException( BillingError.TX_NOTFFOUND, "Transaction does not exist") : billTx.Type;
         }
 
         public bool CancleBillTx(long billTxId)

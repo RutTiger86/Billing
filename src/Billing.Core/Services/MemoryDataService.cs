@@ -49,10 +49,11 @@ namespace Billing.Core.Services
             memoryDataSet.Tables.Add(table);
         }
 
-        private BillTx SelectBillTx(long billTxId)
+        private BillTx SelectBillTx(long billTxId, bool isDeleted  = false)
         {
             DataTable billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
-            return billTxTable.AsEnumerable().FirstOrDefault(p => p.Field<long>("Id") == billTxId)?.ToClass<BillTx>();
+            return billTxTable.AsEnumerable().Where(p=> p.Field<bool>("IsDeleted") == isDeleted)
+                .FirstOrDefault(p => p.Field<long>("Id") == billTxId)?.ToClass<BillTx>();
         }
 
 
@@ -67,9 +68,9 @@ namespace Billing.Core.Services
         }
 
 
-        public BillTx GetBillTx(long billTxId)
+        public BillTx GetBillTx(long billTxId, bool isDeleted = false)
         {
-            var billTx = SelectBillTx(billTxId);
+            var billTx = SelectBillTx(billTxId, isDeleted);
             return billTx.DeepCopy<BillTx>();
         }
         

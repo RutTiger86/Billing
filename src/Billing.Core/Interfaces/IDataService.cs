@@ -16,7 +16,7 @@ namespace Billing.Core.Interfaces
         public bool UpdateBillTxState(long billTxId, bool isDeleted);
         public bool InsertBillTxDetails(BillDetail billDetail);
         public bool UpdateBillTxDetailsDetail(long billDetailId);
-        public BillTx GetBillTx(long billTxId);
+        public BillTx GetBillTx(long billTxId, bool isDeleted = false);
         public BillDetail GetBillDetails(long billTxId);
         public BillDetail GetBillDetail(long billDetailId);
 
