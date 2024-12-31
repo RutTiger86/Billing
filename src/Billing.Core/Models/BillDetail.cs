@@ -7,6 +7,9 @@ namespace Billing.Core.Models
         public long Id { get; set; }
         public long BillTxId { get; set; }        
         public long ProductId { get; set; }
+        public long AccountId { get; set; }
+        public long? CharId {get; set; }
+        public string? CharName { get; set; }
         public BillTxSubTypes SubType { get; set; }
         public BillTxStatus Status { get; set; }
         public bool IsCompleted { get; set; }

@@ -1,6 +1,4 @@
-﻿using Billing.Core.Enums;
-
-namespace Billing.Core.Models
+﻿namespace Billing.Core.Models
 {
     public class Product
     {

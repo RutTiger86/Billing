@@ -1,39 +1,42 @@
-﻿using Billing.Api.Enums;
-using Billing.Api.Middlewares;
-using Billing.Api.Models.Respons;
+﻿using Billing.Api.Models.Respons;
 using Billing.Core.Enums;
 using Billing.Core.Interfaces;
-using Billing.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Billing.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BillTxController : ControllerBase
+    public class BillTxController(IBillTxService billTxService, ILogger<BillTxController> logger) : ControllerBase
     {
-        private ILogger<BillTxController> logger;
-        private IBillTxService billTxService;
+        private readonly ILogger<BillTxController> logger = logger;
+        private readonly IBillTxService billTxService = billTxService;
 
-        public BillTxController(IBillTxService billTxService, ILogger<BillTxController> logger) 
+        [HttpGet("issuetx")]
+        public BaseResponse<long> IssueBillTx([FromQuery] BillTxTypes txTypes)
         {
-            this.billTxService = billTxService;
-            this.logger = logger;
-        }
-
-        [HttpGet]
-        public BaseResponse<long> IssueBillTx([FromQuery]BillTxTypes txTypes)
-        {
-            BaseResponse<long> response = new BaseResponse<long>
+            try
             {
-                Result = true,
-                ErrorCode = (int)BillingErrorCode.SUCESS,
-                Data = billTxService.IssueBillTx(txTypes)
-
-            };
-            return response;
+                return new BaseResponse<long>
+                {
+                    Result = true,
+                    ErrorCode = (int)BillingError.NONE,
+                    Data = billTxService.IssueBillTx(txTypes)
+                };
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"IssuBillTx Error : {ex.Message}");
+                return new BaseResponse<long>
+                {
+                    Result = false,
+                    ErrorCode = (int)BillingError.SYSTEM_ERROR,
+                    ErrorMessage = BillingError.SYSTEM_ERROR.ToString(),
+                    Data = -1
+                };
+            }
         }
 
-        
+
     }
 }

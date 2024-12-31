@@ -1,9 +1,4 @@
 ﻿using Billing.Core.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Billing.Core.Interfaces
 {
@@ -15,10 +10,11 @@ namespace Billing.Core.Interfaces
 
         public bool UpdateBillTxState(long billTxId, BillTxStatus status);
 
+        public bool RegistPurchaseToken(long billTxId, string purchaseToken);
+
         public bool EndBillTx(long billTxId);
 
         public bool CancleBillTx(long billTxId);
 
-        public BillTxTypes GetBillTxType(long billTxId);
     }
 }

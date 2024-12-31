@@ -104,7 +104,7 @@ namespace Billing.Core.Services
             throw new NotImplementedException();
         }
 
-        public bool UpdateBillTxState(long billTxId, BillTxStatus status)
+        public bool UpdateBillTx(long billTxId, BillTxStatus status)
         {
             lock (lockObj)
             {
@@ -124,7 +124,7 @@ namespace Billing.Core.Services
             }
         }
 
-        public bool UpdateBillTxState(long billTxId, BillTxStatus status, bool isComplete)
+        public bool UpdateBillTx(long billTxId, BillTxStatus status, bool isComplete)
         {
             lock (lockObj)
             {
@@ -144,7 +144,7 @@ namespace Billing.Core.Services
             }
         }
 
-        public bool UpdateBillTxState(long billTxId, bool isDeleted)
+        public bool UpdateBillTx(long billTxId, bool isDeleted)
         {
             lock (lockObj)
             {
@@ -154,6 +154,24 @@ namespace Billing.Core.Services
                 {
                     billTx.UpdateDate = DateTime.Now;
                     billTx.IsDeleted = isDeleted;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public bool UpdateBillTx(long billTxId, string PurchaseToken)
+        {
+            lock (lockObj)
+            {
+                var billTx = SelectBillTx(billTxId);
+
+                if (billTx != null)
+                {
+                    billTx.UpdateDate = DateTime.Now;
+                    billTx.PurchaseToken = PurchaseToken;
                     return true;
                 }
                 else

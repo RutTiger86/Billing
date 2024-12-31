@@ -1,98 +1,81 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Billing.Api.Models.Requests;
+using Billing.Api.Models.Respons;
 using Billing.Core.Enums;
 using Billing.Core.Interfaces;
-using Billing.Core.Services;
-using Billing.Api.Models.Respons;
-using Billing.Api.Enums;
-using Billing.Core.Exceptions;
-using Billing.Api.Models.Requests;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Billing.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BillController : ControllerBase
+    public class BillController(IBillTxService billTxService, IBillService billService, ILogger<BillController> logger) : ControllerBase
     {
-        private ILogger<BillController> logger;
-        private IBillTxService billTxService;
-        private GoogleBillingService googlBillServices;
+        private readonly ILogger<BillController> logger = logger;
+        private readonly IBillTxService billTxService = billTxService;
+        private readonly IBillService billService = billService;
 
-        public BillController(IBillTxService billTxService, ILogger<BillController> logger, GoogleBillingService googlBillServices)
-        {
-            this.billTxService = billTxService;
-            this.logger = logger;
-            this.googlBillServices = googlBillServices;
-        }
-
-        [HttpPost]
+        [HttpPost("validate")]
         public async Task<BaseResponse<bool>> ValidateBillTx([FromBody] ValidateBillTxRequest validateRequest)
         {
-
-            BaseResponse<bool> response = new()
+            var response = new BaseResponse<bool>
             {
                 Result = true,
-                ErrorCode = (int)BillingErrorCode.SUCESS,
+                ErrorCode = (int)BillingError.NONE,
             };
 
             try
             {
-                (bool result, BillingError error) = billTxService.ValidateBillTx(validateRequest.BillTxId);
-
-                if (result)
+                // 1. 초기 거래 검증
+                var (isValid, validationError) = billTxService.ValidateBillTx(validateRequest.BillTxId);
+                if (!isValid)
                 {
-                    var billType =  billTxService.GetBillTxType(validateRequest.BillTxId);
-                    IBillingService billingService = null;
-
-                    switch (billType)
-                    {
-                        case BillTxTypes.IAP_Google:
-                            billingService = googlBillServices;
-                            break;
-                        case BillTxTypes.WEB_PG:
-                            break;
-                        case BillTxTypes.IAP_IOS:
-                            break;
-                        case BillTxTypes.POINT:
-                            break;
-                        default:
-                            billingService = null;
-                            break;
-                    }
-
-                    if (billingService != null)
-                    {
-                        bool purcaseResult = await billingService.ValidatePurchaseAsync(validateRequest.ProductId, validateRequest.PurchaseToken);
-
-                        if(!purcaseResult)
-                        {
-                            response.Result = false;
-                            response.ErrorCode = (int)BillingErrorCode.PURCHASE_VALIDATION_FAILED;
-                        }
-                    }
-                    else
-                    {
-                        response.Result = false;
-                        response.ErrorCode = (int)BillingErrorCode.TX_UNVERIFIABLE_TYPE;
-                    }
-
+                    return HandleValidationFailure(response, validationError, validateRequest.BillTxId);
                 }
-                else
+
+                // 2. 구매 토큰 등록
+                if (!billTxService.RegistPurchaseToken(validateRequest.BillTxId, validateRequest.PurchaseToken))
                 {
-                    logger.LogWarning($"[ValidataionFaild] BillTxId : {validateRequest.BillTxId}, Result : {result}, ValidateError : {error}");
-                    response.Result = result;
-                    response.ErrorCode = (int)BillingErrorCode.TX_VALIDATION_FAILED;
+                    logger.LogWarning($"[RegistPurchaseToken False] BillTxId: {validateRequest.BillTxId}");
+                    return HandleSystemError(response, BillingError.SYSTEM_ERROR, "Failed to register purchase token.");
                 }
-            }
-            catch (BillingException ex)
-            {
 
-            }
-            catch (Exception)
-            {
+                // 3. 구매 검증
+                var (validationResult, validationServiceError) = await billService.Validation(
+                    validateRequest.BillTxId,
+                    validateRequest.ProductId,
+                    validateRequest.PurchaseToken
+                );
 
+                response.Result = validationResult;
+                response.ErrorCode = (int)validationServiceError;
+                response.ErrorMessage = validationServiceError.ToString();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"ValidateBillTx Error: {ex.Message}");
+                return HandleSystemError(response, BillingError.SYSTEM_ERROR, "Unexpected exception during validation.");
             }
 
             return response;
         }
+
+        private BaseResponse<bool> HandleValidationFailure(BaseResponse<bool> response, BillingError error, long billTxId)
+        {
+            logger.LogWarning($"[ValidationFailed] BillTxId: {billTxId}, ValidateError: {error}");
+            response.Result = false;
+            response.ErrorCode = (int)error;
+            response.ErrorMessage = error.ToString();
+            return response;
+        }
+
+        private BaseResponse<bool> HandleSystemError(BaseResponse<bool> response, BillingError error, string errorMessage)
+        {
+            logger.LogWarning(errorMessage);
+            response.Result = false;
+            response.ErrorCode = (int)error;
+            response.ErrorMessage = error.ToString();
+            return response;
+        }
+
     }
 }

@@ -1,28 +1,19 @@
-﻿using Billing.Api.Enums;
-using Billing.Api.Extensions;
+﻿using Billing.Api.Extensions;
 using Billing.Api.Models.Respons;
-using log4net.Core;
+using Billing.Core.Enums;
 using System.Diagnostics;
 using System.Text.Json;
 
 namespace Billing.Api.Middlewares
 {
 
-    public class LoggingMiddleware
+    public class LoggingMiddleware(ILogger<LoggingMiddleware> logger, RequestDelegate next, IConfiguration configuration)
     {
-        private readonly ILogger<LoggingMiddleware> logger;
-        private readonly RequestDelegate next;
+        private readonly ILogger<LoggingMiddleware> logger = logger;
+        private readonly RequestDelegate next = next;
 
-        private IConfiguration configuration;
-        private readonly HashSet<string> notloggingProperties;
-
-        public LoggingMiddleware(ILogger<LoggingMiddleware> logger, RequestDelegate next, IConfiguration configuration)
-        {
-            this.logger = logger;
-            this.next = next;
-            this.configuration = configuration;
-            notloggingProperties = ["notLoggingData", "secretData"];
-        }
+        private IConfiguration configuration = configuration;
+        private readonly HashSet<string> notloggingProperties = ["notLoggingData", "secretData"];
 
         public async Task InvokeAsync(HttpContext context)
         {
@@ -80,8 +71,8 @@ namespace Billing.Api.Middlewares
 
                 BaseResponse<string> res = new()
                 {
-                    ErrorCode = (int)BillingErrorCode.SYSTEM_EXCEPTION,
-                    ErrorMessage = $"{BillingErrorCode.SYSTEM_EXCEPTION}",
+                    ErrorCode = (int)BillingError.SYSTEM_ERROR,
+                    ErrorMessage = $"{BillingError.SYSTEM_ERROR}",
                     Data = ex.ToString(),
                     Result = false
                 };
