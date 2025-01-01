@@ -12,13 +12,15 @@ namespace Billing.Core.Services
     {
         private readonly ILogger<GoogleValidationService> logger;
         private readonly AndroidPublisherService service;
+        private readonly IDataService dataService;
 
         private const string packageName = "com.ruttiger.testapp";
         private const string AppName = "BillTestApp";
 
-        public GoogleValidationService(ILogger<GoogleValidationService> logger)
+        public GoogleValidationService(IDataService dataService, ILogger<GoogleValidationService> logger)
         {
             this.logger = logger;
+            this.dataService = dataService;
 
             string serviceAccountJsonPath = Path.Combine(AppContext.BaseDirectory, "account", "billServiceAccount.json");
 
@@ -32,12 +34,17 @@ namespace Billing.Core.Services
             });
         }
 
-        public  async Task<bool> ValidatePurchaseAsync(string productId, string purchaseToken)
+        public async Task<bool> ValidatePurchase(long billDetailId, string productId, string purchaseToken)
         {
             try
             {
                 var request = service.Purchases.Products.Get(packageName, productId, purchaseToken);
-                var response = await request.ExecuteAsync();
+
+                var responseTask = request.ExecuteAsync();
+
+                dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_PENDING);
+
+                var response = await responseTask;
 
                 if (response != null)
                 {
@@ -47,17 +54,20 @@ namespace Billing.Core.Services
                     // 2 : 구매 보류 
                     if (response.PurchaseState == 0)
                     {
+                        dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_VALID);
                         logger.LogInformation($"Purchase verified: {response.OrderId}");
                         return true;
                     }
                     else
                     {
+                        dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_INVALID);
                         logger.LogWarning($"Purchase is not valid: {response.OrderId}");
                         return false;
                     }
                 }
                 else
                 {
+                    dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_INVALID);
                     logger.LogError($"Purchase valid response is Null  ProductId: {productId}");
                     return false;
                 }

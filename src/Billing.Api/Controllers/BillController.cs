@@ -1,4 +1,5 @@
-﻿using Billing.Api.Models.Requests;
+﻿using Billing.Api.Extensions;
+using Billing.Api.Models.Requests;
 using Billing.Api.Models.Respons;
 using Billing.Core.Enums;
 using Billing.Core.Interfaces;
@@ -25,6 +26,7 @@ namespace Billing.Api.Controllers
 
             try
             {
+
                 // 1. 초기 거래 검증
                 var (isValid, validationError) = billTxService.ValidateBillTx(validateRequest.BillTxId);
                 if (!isValid)
@@ -40,11 +42,7 @@ namespace Billing.Api.Controllers
                 }
 
                 // 3. 구매 검증
-                var (validationResult, validationServiceError) = await billService.Validation(
-                    validateRequest.BillTxId,
-                    validateRequest.ProductId,
-                    validateRequest.PurchaseToken
-                );
+                var (validationResult, validationServiceError) = await billService.Validation(validateRequest.toPurchaseInfo());
 
                 response.Result = validationResult;
                 response.ErrorCode = (int)validationServiceError;

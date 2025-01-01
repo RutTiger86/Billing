@@ -17,6 +17,7 @@ namespace Billing.Core.Enums
         TX_UNVERIFIABLE_TYPE,           // 검증 불가 타입 
         PURCHASE_VALIDATION_FAILED,     // 구매 검증 실패 
         PURCHASE_GOOGLE_VALIDATE_ERROR, // 구글 검증 에러 
+        BILL_CREATE_DETAIL_FAILED,         // 구글 검증 에러 
         UNKNOWN                         // 알려지지 않은 상태
     }
 }

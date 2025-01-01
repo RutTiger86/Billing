@@ -1,6 +1,6 @@
 ﻿using Billing.Core.Enums;
 using Billing.Core.Interfaces;
-using Billing.Core.Models;
+using Billing.Core.Models.DataBase;
 using Microsoft.Extensions.Logging;
 
 namespace Billing.Core.Services
@@ -14,9 +14,8 @@ namespace Billing.Core.Services
         {
             try
             {
-                BillTx transaction = new BillTx()
+                BillTx transaction = new ()
                 {
-                    Status = BillTxStatus.INITIATED,
                     Type = transactionType,
                     IsDeleted = false,
                     IsCompleted = false,
@@ -29,19 +28,6 @@ namespace Billing.Core.Services
             {
                 logger.LogError($"IssueBill Error: {ex.ToString()}");
                 return -1;
-            }
-        }
-
-        public bool UpdateBillTxState(long billTxId, BillTxStatus status)
-        {
-            try
-            {
-                return dataService.UpdateBillTx(billTxId, status);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError($"UpdateBillTxState Error: {ex.ToString()}");
-                return false;
             }
         }
 
@@ -59,11 +45,6 @@ namespace Billing.Core.Services
                 if (billTx.IsCompleted)
                 {
                     return (false, BillingError.TX_ALREADY_COMPLETED);
-                }
-
-                if (billTx.Status != BillTxStatus.INITIATED)
-                {
-                    return (false, BillingError.TX_ALREADY_INPROGRESS);
                 }
 
                 return (true, BillingError.NONE);
@@ -92,7 +73,7 @@ namespace Billing.Core.Services
         {
             try
             {
-                return dataService.UpdateBillTx(billTxId, true);
+                return dataService.DeleteBillTx(billTxId, true);
             }
             catch (Exception ex)
             {
@@ -105,7 +86,7 @@ namespace Billing.Core.Services
         {
             try
             {
-                return dataService.UpdateBillTx(billTxId, BillTxStatus.COMPLETED, true);
+                return dataService.UpdateBillTx(billTxId, true);
             }
             catch (Exception ex)
             {

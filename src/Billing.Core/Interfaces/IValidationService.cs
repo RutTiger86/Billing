@@ -2,6 +2,6 @@
 {
     public interface IValidationService
     {
-        public Task<bool> ValidatePurchaseAsync(string productId, string purchaseToken);
+        public Task<bool> ValidatePurchase(long billDetailId, string productId, string purchaseToken);
     }
 }

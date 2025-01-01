@@ -8,8 +8,6 @@ namespace Billing.Core.Interfaces
 
         public (bool IsValide, BillingError Error) ValidateBillTx(long billTxId);
 
-        public bool UpdateBillTxState(long billTxId, BillTxStatus status);
-
         public bool RegistPurchaseToken(long billTxId, string purchaseToken);
 
         public bool EndBillTx(long billTxId);
