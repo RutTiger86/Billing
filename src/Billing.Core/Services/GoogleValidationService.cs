@@ -9,6 +9,7 @@ using Google.Apis.Requests;
 using Google.Apis.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualBasic;
+using static Google.Apis.Requests.BatchRequest;
 
 namespace Billing.Core.Services
 {
@@ -58,6 +59,16 @@ namespace Billing.Core.Services
                     // 2 : 구매 보류 
                     if (response.PurchaseState == 0)
                     {
+                        //if (response.AcknowledgementState == 0)
+                        //{
+                        //    logger.LogInformation("Acknowledgement required. Processing...");
+                        //    await ProductAcknowledge(purchaseInfo);
+                        //}
+                        //else
+                        //{
+                        //    logger.LogInformation("Purchase already acknowledged.");
+                        //}
+
                         dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_VALID);
                         logger.LogInformation($"Purchase verified: {response.OrderId}");
                         return true;
@@ -82,7 +93,7 @@ namespace Billing.Core.Services
             }
         }
 
-        public async Task<bool> SubscriptionsValidate( long billDetailId, PurchaseInfo purchaseInfo)
+        public async Task<bool> SubscriptionsValidate(long billDetailId, PurchaseInfo purchaseInfo)
         {
             try
             {
@@ -104,21 +115,15 @@ namespace Billing.Core.Services
                         return false;
                     }
 
-                    if (response.AcknowledgementState == 0)
-                    {
-                        logger.LogInformation("Acknowledgement required. Processing...");
-                        var acknowledgeRequest = new SubscriptionPurchasesAcknowledgeRequest
-                        {
-                            DeveloperPayload = purchaseInfo.BillTxId.ToString(),
-                        };
-
-                        var acknowledge = service.Purchases.Subscriptions.Acknowledge(acknowledgeRequest, packageName, purchaseInfo.ProductKey, purchaseInfo.PurchaseToken);
-                        await acknowledge.ExecuteAsync();
-                    }
-                    else
-                    {
-                        logger.LogInformation("Subscription already acknowledged.");
-                    }
+                    //if (response.AcknowledgementState == 0)
+                    //{
+                    //    logger.LogInformation("Acknowledgement required. Processing...");
+                    //    await SubscriptionsAcknowledge(purchaseInfo);
+                    //}
+                    //else
+                    //{
+                    //    logger.LogInformation("Subscription already acknowledged.");
+                    //}
 
                     dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_VALID);
                     logger.LogInformation($"Purchase verified: {response.OrderId}");
@@ -135,6 +140,31 @@ namespace Billing.Core.Services
             {
                 throw new BillingException(BillingError.PURCHASE_GOOGLE_VALIDATE_ERROR, $"Error verifying purchase: {ex.Message}");
             }
+        }
+
+        private async Task ProductAcknowledge(PurchaseInfo purchaseInfo)
+        {
+            logger.LogInformation("Acknowledgement required. Processing...");
+            var acknowledgeRequest = new ProductPurchasesAcknowledgeRequest
+            {
+                DeveloperPayload = purchaseInfo.BillTxId.ToString(),
+            };
+
+            var acknowledge = service.Purchases.Products.Acknowledge(acknowledgeRequest, packageName, purchaseInfo.ProductKey, purchaseInfo.PurchaseToken);
+            await acknowledge.ExecuteAsync();
+        }
+
+
+        private async Task SubscriptionsAcknowledge(PurchaseInfo purchaseInfo)
+        {
+            logger.LogInformation("Acknowledgement required. Processing...");
+            var acknowledgeRequest = new SubscriptionPurchasesAcknowledgeRequest
+            {
+                DeveloperPayload = purchaseInfo.BillTxId.ToString(),
+            };
+
+            var acknowledge = service.Purchases.Subscriptions.Acknowledge(acknowledgeRequest, packageName, purchaseInfo.ProductKey, purchaseInfo.PurchaseToken);
+            await acknowledge.ExecuteAsync();
         }
     }
 }
