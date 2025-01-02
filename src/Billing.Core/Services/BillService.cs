@@ -13,7 +13,7 @@ namespace Billing.Core.Services
         private readonly ILogger<BillService> logger = logger;
         private readonly GoogleValidationService googlValidationServices = googlValidationServices;
 
-        public async Task<(bool Result, BillingError error)> Validation(PurchaseInfo purchaseInfo)
+        public async Task<(bool Result, BillingError error)> PurchaseValidation(PurchaseInfo purchaseInfo)
         {
             try
             {
@@ -32,7 +32,12 @@ namespace Billing.Core.Services
                     return (false, BillingError.TX_UNVERIFIABLE_TYPE);                    
                 }
 
-                bool purcaseResult = await validationService.ValidatePurchase(billDetailId, purchaseInfo.ProductKey, purchaseInfo.PurchaseToken);
+                bool purcaseResult = purchaseInfo.ProductType switch
+                { 
+                    BillProductType.CONSUMABLE or BillProductType.NON_CONSUMABLE => await validationService.Validate(billDetailId, purchaseInfo),                
+                    BillProductType.SUBSCRIPTION => await validationService.SubscriptionsValidate(billDetailId, purchaseInfo),
+                    _ => false
+                };
 
                 if (!purcaseResult)
                 {
@@ -89,11 +94,15 @@ namespace Billing.Core.Services
                 CharName = purchaseInfo.CharName,
                 SubType = purchaseInfo.SubType,          
                 BillTxId = purchaseInfo.BillTxId,
-                IsCompleted = false,
                 IsDeleted = false,
             };
 
             return dataService.InsertBillDetail(billDetail);
+        }
+
+        public bool CompleteBillDetail(long billTxId)
+        {
+            return dataService.CompleteBillDetail(billTxId);
         }
     }
 }

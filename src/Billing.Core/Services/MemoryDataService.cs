@@ -80,7 +80,7 @@ namespace Billing.Core.Services
             newRow = productItemTable.NewRow();
             newRow["Id"] = 1;
             newRow["ProductId"] = 1;
-            newRow["Types"] = ProductTypes.CharacterItem;
+            newRow["Types"] = ProductTypes.CHARACTER_ITEM;
             newRow["ItemId"] = 1;
             newRow["ItemVolume"] = 1;
             newRow["IsUse"] = true;
@@ -92,7 +92,7 @@ namespace Billing.Core.Services
             newRow = productItemTable.NewRow();
             newRow["Id"] = 2;
             newRow["ProductId"] = 2;
-            newRow["Types"] = ProductTypes.CharacterItem;
+            newRow["Types"] = ProductTypes.CHARACTER_ITEM;
             newRow["ItemId"] = 1;
             newRow["ItemVolume"] = 1;
             newRow["IsUse"] = true;
@@ -104,7 +104,7 @@ namespace Billing.Core.Services
             newRow = productItemTable.NewRow();
             newRow["Id"] = 3;
             newRow["ProductId"] = 2;
-            newRow["Types"] = ProductTypes.CharacterItem;
+            newRow["Types"] = ProductTypes.CHARACTER_ITEM;
             newRow["ItemId"] = 2;
             newRow["ItemVolume"] = 10;
             newRow["IsUse"] = true;
@@ -218,6 +218,31 @@ namespace Billing.Core.Services
             }
         }
 
+        public bool CompleteBillDetail(long billTxId)
+        {
+            lock (lockObj)
+            {
+                DataTable billDetailTable = memoryDataSet.Tables[typeof(BillDetail).Name];
+                if (billDetailTable == null)
+                {
+                    return false;
+                }
+
+                var billDetailRow = billDetailTable.AsEnumerable()
+                    .FirstOrDefault(p => p.Field<long>("BillTxId") == billTxId);
+
+                if (billDetailRow == null)
+                {
+                    return false;
+                }
+
+                billDetailRow["Status"] = BillTxStatus.COMPLETED;
+                billDetailRow["UpdateDate"] = DateTime.Now;
+
+                return true;
+            }
+        }
+
 
         public bool UpdateBillTx(long billTxId, bool isComplete)
         {
@@ -244,6 +269,7 @@ namespace Billing.Core.Services
                 }
             }
         }
+
 
         public bool DeleteBillTx(long billTxId, bool isDeleted)
         {

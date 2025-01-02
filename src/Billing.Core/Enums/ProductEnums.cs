@@ -2,8 +2,8 @@
 {
     public enum ProductTypes
     {
-        Point = 0,
-        AccountItem,
-        CharacterItem
+        POINT = 0,
+        ACCOUNT_ITEM,
+        CHARACTER_ITEM
     }
 }

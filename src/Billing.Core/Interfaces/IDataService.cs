@@ -11,6 +11,7 @@ namespace Billing.Core.Interfaces
         public bool UpdateBillTx(long billTxId, string purchaseToken);
         public long InsertBillDetail(BillDetail billDetail);
         public bool UpdateBillDetail(long billDetailId, BillTxStatus Status);
+        public bool CompleteBillDetail(long billlTxId);
         public BillTx GetBillTx(long billTxId, bool isDeleted = false);
         public List<BillDetail> GetBillDetails(long billTxId);
         public BillDetail GetBillDetail(long billDetailId);

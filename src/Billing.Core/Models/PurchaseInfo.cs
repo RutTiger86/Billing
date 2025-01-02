@@ -10,6 +10,7 @@ namespace Billing.Core.Models
     public class PurchaseInfo:BaseModel
     {
         public long BillTxId { get; set; }
+        public BillProductType ProductType { get; set; }
         public required string ProductKey { get; set; }
         public required string PurchaseToken { get; set; }
         public long AccountId { get; set; }

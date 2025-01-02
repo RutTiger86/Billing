@@ -5,6 +5,8 @@ namespace Billing.Core.Interfaces
 {
     public interface IBillService
     {
-        Task<(bool Result, BillingError error)> Validation(PurchaseInfo purchaseInfo);
+        Task<(bool Result, BillingError error)> PurchaseValidation(PurchaseInfo purchaseInfo);
+
+        bool CompleteBillDetail(long billTxId);
     }
 }

@@ -26,23 +26,19 @@ namespace Billing.Api.Controllers
 
             try
             {
-
-                // 1. 초기 거래 검증
                 var (isValid, validationError) = billTxService.ValidateBillTx(validateRequest.BillTxId);
                 if (!isValid)
                 {
                     return HandleValidationFailure(response, validationError, validateRequest.BillTxId);
                 }
 
-                // 2. 구매 토큰 등록
                 if (!billTxService.RegistPurchaseToken(validateRequest.BillTxId, validateRequest.PurchaseToken))
                 {
                     logger.LogWarning($"[RegistPurchaseToken False] BillTxId: {validateRequest.BillTxId}");
                     return HandleSystemError(response, BillingError.SYSTEM_ERROR, "Failed to register purchase token.");
                 }
 
-                // 3. 구매 검증
-                var (validationResult, validationServiceError) = await billService.Validation(validateRequest.toPurchaseInfo());
+                var (validationResult, validationServiceError) = await billService.PurchaseValidation(validateRequest.toPurchaseInfo());
 
                 response.Result = validationResult;
                 response.ErrorCode = (int)validationServiceError;

@@ -12,7 +12,6 @@ namespace Billing.Core.Models.DataBase
         public string? CharName { get; set; }
         public BillTxSubTypes SubType { get; set; }
         public BillTxStatus Status { get; set; }
-        public bool IsCompleted { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime UpdateDate { get; set; }

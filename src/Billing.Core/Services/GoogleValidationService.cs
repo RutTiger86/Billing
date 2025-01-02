@@ -1,10 +1,14 @@
 ﻿using Billing.Core.Enums;
 using Billing.Core.Exceptions;
 using Billing.Core.Interfaces;
+using Billing.Core.Models;
 using Google.Apis.AndroidPublisher.v3;
+using Google.Apis.AndroidPublisher.v3.Data;
 using Google.Apis.Auth.OAuth2;
+using Google.Apis.Requests;
 using Google.Apis.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
 
 namespace Billing.Core.Services
 {
@@ -34,11 +38,11 @@ namespace Billing.Core.Services
             });
         }
 
-        public async Task<bool> ValidatePurchase(long billDetailId, string productId, string purchaseToken)
+        public async Task<bool> Validate(long billDetailId, PurchaseInfo purchaseInfo)
         {
             try
             {
-                var request = service.Purchases.Products.Get(packageName, productId, purchaseToken);
+                var request = service.Purchases.Products.Get(packageName, purchaseInfo.ProductKey, purchaseInfo.PurchaseToken);
 
                 var responseTask = request.ExecuteAsync();
 
@@ -68,7 +72,62 @@ namespace Billing.Core.Services
                 else
                 {
                     dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_INVALID);
-                    logger.LogError($"Purchase valid response is Null  ProductId: {productId}");
+                    logger.LogError($"Purchase valid response is Null  ProductId: {purchaseInfo.ProductKey}");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new BillingException(BillingError.PURCHASE_GOOGLE_VALIDATE_ERROR, $"Error verifying purchase: {ex.Message}");
+            }
+        }
+
+        public async Task<bool> SubscriptionsValidate( long billDetailId, PurchaseInfo purchaseInfo)
+        {
+            try
+            {
+                var request = service.Purchases.Subscriptions.Get(packageName, purchaseInfo.ProductKey, purchaseInfo.PurchaseToken);
+
+                var responseTask = request.ExecuteAsync();
+
+                dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_PENDING);
+
+                var response = await responseTask;
+
+                if (response != null)
+                {
+                    long currentTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                    if (response.ExpiryTimeMillis < currentTime)
+                    {
+                        dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_VALID);
+                        logger.LogInformation("Subscription has expired.");
+                        return false;
+                    }
+
+                    if (response.AcknowledgementState == 0)
+                    {
+                        logger.LogInformation("Acknowledgement required. Processing...");
+                        var acknowledgeRequest = new SubscriptionPurchasesAcknowledgeRequest
+                        {
+                            DeveloperPayload = purchaseInfo.BillTxId.ToString(),
+                        };
+
+                        var acknowledge = service.Purchases.Subscriptions.Acknowledge(acknowledgeRequest, packageName, purchaseInfo.ProductKey, purchaseInfo.PurchaseToken);
+                        await acknowledge.ExecuteAsync();
+                    }
+                    else
+                    {
+                        logger.LogInformation("Subscription already acknowledged.");
+                    }
+
+                    dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_VALID);
+                    logger.LogInformation($"Purchase verified: {response.OrderId}");
+                    return true;
+                }
+                else
+                {
+                    dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_INVALID);
+                    logger.LogError($"Purchase valid response is Null  ProductId: {purchaseInfo.ProductKey}");
                     return false;
                 }
             }
