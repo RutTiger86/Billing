@@ -2,7 +2,7 @@
 
 namespace Billing.Core.Extensions
 {
-    public static class DataRowExtensions
+    public static class DataRowExtension
     {
         public static T ToClass<T>(this DataRow row) where T : new()
         {

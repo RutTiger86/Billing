@@ -2,7 +2,7 @@
 
 namespace Billing.Core.Extensions
 {
-    public static class DataTableExtensions
+    public static class DataTableExtension
     {        
         public static void AddRow<T>(this DataTable table, T obj)
         {

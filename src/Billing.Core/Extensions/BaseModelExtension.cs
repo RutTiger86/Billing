@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Billing.Core.Extensions
 {
-    public static class BaseModelExtensions
+    public static class BaseModelExtension
     {
         public static T DeepCopy<T>(this BaseModel obj)
         {

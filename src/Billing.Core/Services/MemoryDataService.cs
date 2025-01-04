@@ -28,6 +28,7 @@ namespace Billing.Core.Services
             AddTable<Product>("Id");
             AddTable<ProductItem>("Id");
             AddTable<Item>("Id");
+            AddTable<SubscriptionInfo>("Id");
 
             ProductDataSet();
         }
@@ -152,7 +153,13 @@ namespace Billing.Core.Services
             return billTxTable.AsEnumerable().Where(p => p.Field<bool>("IsDeleted") == isDeleted)
                 .FirstOrDefault(p => p.Field<long>("Id") == billTxId)?.ToClass<BillTx>();
         }
-        
+
+        public SubscriptionInfo GetSubscriptionInfo(long billTxId)
+        {
+            DataTable subscriptionInfoTable = memoryDataSet.Tables[typeof(SubscriptionInfo).Name];
+            return subscriptionInfoTable.AsEnumerable().FirstOrDefault(p => p.Field<long>("Id") == billTxId)?.ToClass<SubscriptionInfo>();
+        }
+
 
         public long InsertBillTx(BillTx billTx)
         {
@@ -193,6 +200,26 @@ namespace Billing.Core.Services
             }
         }
 
+        public long InsertSubscriptionInfo(SubscriptionInfo subscriptionInfo)
+        {
+            lock (lockObj)
+            {
+                DateTime now = DateTime.UtcNow;
+                DataTable subscriptionInfoTable = memoryDataSet.Tables[typeof(SubscriptionInfo).Name];
+
+                long maxId = subscriptionInfoTable.Rows.Count > 0
+                    ? subscriptionInfoTable.AsEnumerable().Max(row => row.Field<long>("Id"))
+                    : 0;
+
+                subscriptionInfo.Id = maxId + 1;
+                subscriptionInfo.CreateDate = now;
+                subscriptionInfo.UpdateDate = now;
+                subscriptionInfoTable.AddRow<SubscriptionInfo>(subscriptionInfo);
+
+                return subscriptionInfo.Id;
+            }
+        }
+
         public bool UpdateBillDetail(long billDetailId, BillTxStatus status)
         {
             lock (lockObj)
@@ -228,19 +255,49 @@ namespace Billing.Core.Services
                     return false;
                 }
 
-                var billDetailRow = billDetailTable.AsEnumerable()
-                    .FirstOrDefault(p => p.Field<long>("BillTxId") == billTxId);
+                var billDetailRows = billDetailTable.AsEnumerable().Where(p=> p.Field<long>("BillTxId") == billTxId)
+                    .ToList();
+
+                if (billDetailRows == null || billDetailRows.Count == 0)
+                {
+                    return false;
+                }
+
+                foreach (var row in billDetailRows)
+                {
+                    row["Status"] = BillTxStatus.COMPLETED;
+                    row["UpdateDate"] = DateTime.Now;
+                }
+
+                return true;
+            }
+        }
+
+        public bool ExpireSubscription(long subscriptionId)
+        {
+            lock (lockObj)
+            {
+                DataTable subscriptionInfoTable = memoryDataSet.Tables[typeof(SubscriptionInfo).Name];
+                if (subscriptionInfoTable == null)
+                {
+                    return false;
+                }
+
+                var billDetailRow = subscriptionInfoTable.AsEnumerable()
+                    .FirstOrDefault(p => p.Field<long>("Id") == subscriptionId);
 
                 if (billDetailRow == null)
                 {
                     return false;
                 }
 
-                billDetailRow["Status"] = BillTxStatus.COMPLETED;
+                billDetailRow["State"] = SubScriptionState.SUBSCRIPTION_STATE_EXPIRED;
+                billDetailRow["IsExpired"] = true;
                 billDetailRow["UpdateDate"] = DateTime.Now;
 
                 return true;
             }
+
         }
 
 

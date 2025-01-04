@@ -4,6 +4,7 @@ using Billing.Core.Interfaces;
 using Billing.Core.Models;
 using Billing.Core.Models.DataBase;
 using Microsoft.Extensions.Logging;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Billing.Core.Services
 {
@@ -34,8 +35,8 @@ namespace Billing.Core.Services
 
                 bool purcaseResult = purchaseInfo.ProductType switch
                 { 
-                    BillProductType.CONSUMABLE or BillProductType.NON_CONSUMABLE => await validationService.Validate(billDetailId, purchaseInfo),                
-                    BillProductType.SUBSCRIPTION => await validationService.SubscriptionsValidate(billDetailId, purchaseInfo),
+                    BillProductType.CONSUMABLE or BillProductType.NON_CONSUMABLE => await validationService.PurchaseProductValidate(billDetailId, purchaseInfo),                
+                    BillProductType.SUBSCRIPTION => await validationService.PruchaseSubscriptionsValidate(billDetailId, purchaseInfo),
                     _ => false
                 };
 
@@ -48,13 +49,62 @@ namespace Billing.Core.Services
             }
             catch (BillingException ex)
             {
-                logger.LogError($"Bill Excepion Error : {ex.Message}");
+                logger.LogError($"Bill Exception Error : {ex.Message}");
                 return (false, BillingError.SYSTEM_ERROR);
             }
             catch (Exception ex)
             {
-                logger.LogError($"Bill Excepion Error : {ex.Message}");
+                logger.LogError($"Bill Exception Error : {ex.Message}");
                 return (false, BillingError.SYSTEM_ERROR);
+            }
+        }
+
+        public async Task<(SubScriptionState Statue, BillingError error)> SubScriptionStateValidation(long billTxID)
+        {
+            try
+            {
+                SubScriptionState statue = SubScriptionState.SUBSCRIPTION_STATE_UNSPECIFIED;
+                var billTx = dataService.GetBillTx(billTxID);
+
+                if (billTx == null)
+                {
+                    return (statue, BillingError.TX_NOTFFOUND);
+                }
+
+                var subscriptionInfo = dataService.GetSubscriptionInfo(billTxID);
+
+                if (subscriptionInfo == null)
+                {
+                    return (statue, BillingError.SUBSCRIPTION_NOTFFOUND);
+                }
+
+                IValidationService validationService = GetValidationService(billTxID);
+
+                if (validationService == null)
+                {
+                    return (statue, BillingError.TX_UNVERIFIABLE_TYPE);
+                }
+
+                statue = await  validationService.SubscriptionsValidate(billTx.PurchaseToken);
+
+                switch (statue)
+                {
+                    case SubScriptionState.SUBSCRIPTION_STATE_EXPIRED :
+                        dataService.ExpireSubscription(subscriptionInfo.Id);
+                            break;
+                };
+
+                return (statue, BillingError.NONE);
+            }
+            catch (BillingException ex)
+            {
+                logger.LogError($"Bill Exception Error : {ex.Message}");
+                return (SubScriptionState.SUBSCRIPTION_STATE_UNSPECIFIED, BillingError.SYSTEM_ERROR);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Bill Exception Error : {ex.Message}");
+                return (SubScriptionState.SUBSCRIPTION_STATE_UNSPECIFIED, BillingError.SYSTEM_ERROR);
 
             }
         }
@@ -104,5 +154,8 @@ namespace Billing.Core.Services
         {
             return dataService.CompleteBillDetail(billTxId);
         }
+                
+
+
     }
 }
