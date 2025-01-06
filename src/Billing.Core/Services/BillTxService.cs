@@ -17,6 +17,7 @@ namespace Billing.Core.Services
                 BillTx transaction = new ()
                 {
                     Type = transactionType,
+                    Status = BillTxStatus.INITIATED,
                     IsDeleted = false,
                     IsCompleted = false,
                 };
@@ -35,7 +36,7 @@ namespace Billing.Core.Services
         {
             try
             {
-                BillTx billTx = dataService.GetBillTx(billTxId);
+                BillTx billTx = dataService.SelectBillTx(billTxId);
 
                 if (billTx == null)
                 {
@@ -60,7 +61,7 @@ namespace Billing.Core.Services
         {
             try
             {
-                return dataService.UpdateBillTx(billTxId, purchaseToken);
+                return dataService.UpdateBillTxToken(billTxId, purchaseToken);
             }
             catch (Exception ex)
             {
@@ -86,7 +87,7 @@ namespace Billing.Core.Services
         {
             try
             {
-                return dataService.UpdateBillTx(billTxId, true);
+                return dataService.CompleteBillTx(billTxId);
             }
             catch (Exception ex)
             {

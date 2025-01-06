@@ -1,4 +1,5 @@
 ﻿using Billing.Core.Enums;
+using Billing.Core.Models;
 using Billing.Core.Models.DataBase;
 
 namespace Billing.Core.Interfaces
@@ -8,19 +9,22 @@ namespace Billing.Core.Interfaces
         public long InsertBillTx(BillTx billTx);
         public long InsertBillDetail(BillDetail billDetail);
         public long InsertSubscriptionInfo(SubscriptionInfo subscriptionInfo);
+        public long InsertLedger(Ledger ledger);
 
-        public bool UpdateBillTx(long billTxId, bool isComplete);
+        public bool CompleteBillTx(long billTxId);
         public bool DeleteBillTx(long billTxId, bool isDeleted);
-        public bool UpdateBillTx(long billTxId, string purchaseToken);
-        public bool UpdateBillDetail(long billDetailId, BillTxStatus status);
-        public bool CompleteBillDetail(long billlTxId);
+        public bool UpdateBillTxToken(long billTxId, string purchaseToken);
+        public bool UpdateBillTxStatus(long billTxId, BillTxStatus status);
         public bool ExpireSubscription(long subscriptionId);
 
-        public BillTx GetBillTx(long billTxId, bool isDeleted = false);
+        public bool ChargeLedger(long accountId, PointType pointType, long amount);
 
-        public List<BillDetail> GetBillDetails(long billTxId);
-        public BillDetail GetBillDetail(long billDetailId);
-        public Product GetProduct(string productKey, bool isUse = true);
-        public SubscriptionInfo GetSubscriptionInfo(long billTxId);
+        public BillTx SelectBillTx(long billTxId, bool isDeleted = false);
+        public List<Ledger> SelectLedger(long accountId);
+        public List<BillDetail> SelectBillDetails(long billTxId);
+        public BillDetail SelectBillDetail(long billDetailId);
+        public Product SelectProduct(string productKey, bool isUse = true);
+        public SubscriptionInfo SelectSubscriptionInfo(long billTxId);
+        public ProductInfo SelectProductInfoByProductKey(string productKey);
     }
 }

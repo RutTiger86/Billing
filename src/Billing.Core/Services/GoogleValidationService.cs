@@ -48,7 +48,7 @@ namespace Billing.Core.Services
 
                 var responseTask = request.ExecuteAsync();
 
-                dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_PENDING);
+                dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IAP_RECEIPT_PENDING);
 
                 var response = await responseTask;
 
@@ -71,20 +71,20 @@ namespace Billing.Core.Services
                         //    logger.LogInformation("Purchase already acknowledged.");
                         //}
 
-                        dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_VALID);
+                        dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IAP_RECEIPT_VALID);
                         logger.LogInformation($"Purchase verified: {response.OrderId}");
                         return true;
                     }
                     else
                     {
-                        dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_INVALID);
+                        dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IAP_RECEIPT_INVALID);
                         logger.LogWarning($"Purchase is not valid: {response.OrderId}");
                         return false;
                     }
                 }
                 else
                 {
-                    dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_INVALID);
+                    dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IAP_RECEIPT_INVALID);
                     logger.LogError($"Purchase valid response is Null  ProductId: {purchaseInfo.ProductKey}");
                     return false;
                 }
@@ -103,7 +103,7 @@ namespace Billing.Core.Services
 
                 var responseTask = request.ExecuteAsync();
 
-                dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_PENDING);
+                dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IAP_RECEIPT_PENDING);
 
                 var response = await responseTask;
 
@@ -112,7 +112,7 @@ namespace Billing.Core.Services
                     long currentTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                     if (response.ExpiryTimeMillis < currentTime)
                     {
-                        dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_VALID);
+                        dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IAP_RECEIPT_VALID);
                         logger.LogInformation("Subscription has expired.");
                         return false;
                     }
@@ -130,13 +130,13 @@ namespace Billing.Core.Services
 
                     CreateSubScription(billDetailId, purchaseInfo, (long)response.ExpiryTimeMillis);
 
-                    dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_VALID);
+                    dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IAP_RECEIPT_VALID);
                     logger.LogInformation($"Purchase verified: {response.OrderId}");
                     return true;
                 }
                 else
                 {
-                    dataService.UpdateBillDetail(billDetailId, BillTxStatus.IAP_RECEIPT_INVALID);
+                    dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IAP_RECEIPT_INVALID);
                     logger.LogError($"Purchase valid response is Null  ProductId: {purchaseInfo.ProductKey}");
                     return false;
                 }
@@ -149,7 +149,7 @@ namespace Billing.Core.Services
 
         private long CreateSubScription(long billDetailId, PurchaseInfo purchaseInfo, long expiryTimeMillis)
         {
-            var product = dataService.GetProduct(purchaseInfo.ProductKey);
+            var product = dataService.SelectProduct(purchaseInfo.ProductKey);
 
             if (product == null)
             {

@@ -16,6 +16,6 @@ namespace Billing.Core.Models
         public long AccountId { get; set; }
         public long? CharId { get; set; }
         public string? CharName { get; set; }
-        public BillTxSubTypes SubType { get; set; }
+        public BillDetailTypes SubType { get; set; }
     }
 }

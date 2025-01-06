@@ -8,16 +8,6 @@
         POINT
     }
 
-    public enum BillTxSubTypes
-    {
-        CONSUMABLE,
-        NON_CONSUMABLE,
-        SUBSCRIPTION_AUTO,
-        SOBSCRIPTION_NON_AUTO,
-        CHARGE,
-        REFUND
-    }
-
     public enum BillTxStatus
     {
         INITIATED,

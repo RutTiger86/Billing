@@ -26,23 +26,18 @@ namespace Billing.Core.Services
                     return (false, BillingError.BILL_CREATE_DETAIL_FAILED);
                 }
 
-                IValidationService validationService = GetValidationService(purchaseInfo.BillTxId);
+                bool validatedResult = await ValidationProcess(billDetailId, purchaseInfo);
 
-                if (validationService == null)
-                {
-                    return (false, BillingError.TX_UNVERIFIABLE_TYPE);                    
-                }
-
-                bool purcaseResult = purchaseInfo.ProductType switch
-                { 
-                    BillProductType.CONSUMABLE or BillProductType.NON_CONSUMABLE => await validationService.PurchaseProductValidate(billDetailId, purchaseInfo),                
-                    BillProductType.SUBSCRIPTION => await validationService.PruchaseSubscriptionsValidate(billDetailId, purchaseInfo),
-                    _ => false
-                };
-
-                if (!purcaseResult)
+                if (!validatedResult)
                 {
                     return (false, BillingError.PURCHASE_VALIDATION_FAILED);
+                }
+
+                var product = dataService.SelectProductInfoByProductKey(purchaseInfo.ProductKey);
+                var pointProduct = product.Items.Where(p => p.Types == ProductTypes.POINT).ToList();
+                if (pointProduct.Count>0)
+                {
+                    PointProcess(pointProduct,purchaseInfo);
                 }
 
                 return (true, BillingError.NONE);
@@ -64,14 +59,14 @@ namespace Billing.Core.Services
             try
             {
                 SubScriptionState statue = SubScriptionState.SUBSCRIPTION_STATE_UNSPECIFIED;
-                var billTx = dataService.GetBillTx(billTxID);
+                var billTx = dataService.SelectBillTx(billTxID);
 
                 if (billTx == null)
                 {
                     return (statue, BillingError.TX_NOTFFOUND);
                 }
 
-                var subscriptionInfo = dataService.GetSubscriptionInfo(billTxID);
+                var subscriptionInfo = dataService.SelectSubscriptionInfo(billTxID);
 
                 if (subscriptionInfo == null)
                 {
@@ -108,10 +103,35 @@ namespace Billing.Core.Services
 
             }
         }
+       
+        private async Task<bool> ValidationProcess(long billDetailId, PurchaseInfo purchaseInfo)
+        {
+            IValidationService validationService = GetValidationService(purchaseInfo.BillTxId);
+
+            if (validationService == null)
+            {
+                throw new BillingException(BillingError.TX_UNVERIFIABLE_TYPE, "Undefined Tx Type");
+            }
+
+            return purchaseInfo.ProductType switch
+            {
+                BillProductType.CONSUMABLE or BillProductType.NON_CONSUMABLE => await validationService.PurchaseProductValidate(billDetailId, purchaseInfo),
+                BillProductType.SUBSCRIPTION => await validationService.PruchaseSubscriptionsValidate(billDetailId, purchaseInfo),
+                _ => false
+            };
+        }
+       
+        private void PointProcess(List<ProductItemInfo> products, PurchaseInfo purchaseInfo)
+        {
+            foreach (ProductItemInfo productItem in products)
+            {
+                dataService.ChargeLedger(purchaseInfo.AccountId, productItem.PointType, productItem.ItemVolume);
+            }
+        }
 
         private BillTxTypes GetBillTxType(long billTxId)
         {
-            BillTx billTx = dataService.GetBillTx(billTxId);
+            BillTx billTx = dataService.SelectBillTx(billTxId);
             return billTx == null ? throw new BillingException(BillingError.TX_NOTFFOUND, "Transaction does not exist") : billTx.Type;
         }
 
@@ -128,7 +148,7 @@ namespace Billing.Core.Services
 
         private long CreateBillDetail(PurchaseInfo purchaseInfo)
         {
-            var product =  dataService.GetProduct(purchaseInfo.ProductKey);
+            var product =  dataService.SelectProduct(purchaseInfo.ProductKey);
 
             if (product == null)
             {
@@ -138,7 +158,6 @@ namespace Billing.Core.Services
             BillDetail billDetail = new()
             {
                 ProductId = product.Id,
-                Status = BillTxStatus.INITIATED,
                 AccountId = purchaseInfo.AccountId,
                 CharId = purchaseInfo.CharId,
                 CharName = purchaseInfo.CharName,
@@ -149,13 +168,6 @@ namespace Billing.Core.Services
 
             return dataService.InsertBillDetail(billDetail);
         }
-
-        public bool CompleteBillDetail(long billTxId)
-        {
-            return dataService.CompleteBillDetail(billTxId);
-        }
-                
-
-
+        
     }
 }

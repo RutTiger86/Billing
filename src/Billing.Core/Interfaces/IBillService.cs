@@ -7,8 +7,5 @@ namespace Billing.Core.Interfaces
     {
         Task<(bool Result, BillingError error)> PurchaseValidation(PurchaseInfo purchaseInfo);
         Task<(SubScriptionState Statue, BillingError error)> SubScriptionStateValidation(long billTxID);
-        bool CompleteBillDetail(long billTxId);
-
-
     }
 }

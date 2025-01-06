@@ -1,9 +1,11 @@
 ﻿using Billing.Core.Enums;
 using Billing.Core.Extensions;
 using Billing.Core.Interfaces;
+using Billing.Core.Models;
 using Billing.Core.Models.DataBase;
 using Microsoft.Extensions.Logging;
 using System.Data;
+using System.Runtime.InteropServices;
 
 namespace Billing.Core.Services
 {
@@ -20,7 +22,7 @@ namespace Billing.Core.Services
             memoryDataSet = new DataSet();
             InitMemoryDataSet();
         }
-        
+
         private void InitMemoryDataSet()
         {
             AddTable<BillTx>("Id");
@@ -29,6 +31,7 @@ namespace Billing.Core.Services
             AddTable<ProductItem>("Id");
             AddTable<Item>("Id");
             AddTable<SubscriptionInfo>("Id");
+            AddTable<Ledger>("Id");
 
             ProductDataSet();
         }
@@ -40,6 +43,7 @@ namespace Billing.Core.Services
             DataRow newRow = itemTable.NewRow();
             newRow["Id"] = 1;
             newRow["ItemName"] = "Test Item 1";
+            newRow["PointType"] = PointType.None;
             newRow["CreateDate"] = DateTime.Now;
             newRow["UpdateDate"] = DateTime.Now;
 
@@ -48,6 +52,16 @@ namespace Billing.Core.Services
             newRow = itemTable.NewRow();
             newRow["Id"] = 2;
             newRow["ItemName"] = "Test Item 2";
+            newRow["PointType"] = PointType.None;
+            newRow["CreateDate"] = DateTime.Now;
+            newRow["UpdateDate"] = DateTime.Now;
+
+            itemTable.Rows.Add(newRow);
+
+            newRow = itemTable.NewRow();
+            newRow["Id"] = 3;
+            newRow["ItemName"] = "Diamond";
+            newRow["PointType"] = PointType.Paid;
             newRow["CreateDate"] = DateTime.Now;
             newRow["UpdateDate"] = DateTime.Now;
 
@@ -75,6 +89,16 @@ namespace Billing.Core.Services
 
             productTable.Rows.Add(newRow);
 
+
+            newRow = productTable.NewRow();
+            newRow["Id"] = 3;
+            newRow["ProductKey"] = "ruttiger.billing.item3";
+            newRow["ProductName"] = "Diamond Package 3";
+            newRow["IsUse"] = true;
+            newRow["CreateDate"] = DateTime.Now;
+            newRow["UpdateDate"] = DateTime.Now;
+
+            productTable.Rows.Add(newRow);
 
             DataTable productItemTable = memoryDataSet.Tables[typeof(ProductItem).Name];
 
@@ -114,13 +138,25 @@ namespace Billing.Core.Services
 
             productItemTable.Rows.Add(newRow);
 
+            newRow = productItemTable.NewRow();
+            newRow["Id"] = 4;
+            newRow["ProductId"] = 3;
+            newRow["Types"] = ProductTypes.POINT;
+            newRow["ItemId"] = 3;
+            newRow["ItemVolume"] = 50000;
+            newRow["IsUse"] = true;
+            newRow["CreateDate"] = DateTime.Now;
+            newRow["UpdateDate"] = DateTime.Now;
+
+            productItemTable.Rows.Add(newRow);
+
         }
 
         private void AddTable<T>(string idName) where T : class
         {
             var tableName = typeof(T).Name;
 
-            DataTable table = new (tableName);
+            DataTable table = new(tableName);
 
             foreach (var prop in typeof(T).GetProperties())
             {
@@ -136,25 +172,42 @@ namespace Billing.Core.Services
         }
 
 
-        public BillDetail GetBillDetail(long billDetailId)
+        public BillDetail SelectBillDetail(long billDetailId)
         {
             throw new NotImplementedException();
         }
 
-        public List<BillDetail> GetBillDetails(long billTxId)
+        public List<BillDetail> SelectBillDetails(long billTxId)
         {
             throw new NotImplementedException();
         }
 
+        public List<Ledger> SelectLedger(long accountId)
+        {
+            DataTable ledgerTable = memoryDataSet.Tables[typeof(Ledger).Name];
+            return ledgerTable.AsEnumerable()
+                .Where(row => row.Field<long>("AccountId") == accountId)
+                .Select(row => new Ledger
+                {
+                    Id = row.Field<long>("Id"),
+                    AccountId = row.Field<long>("AccountId"),
+                    Type = (PointType)row.Field<int>("Type"),
+                    Balance = row.Field<long>("Balance"),
+                    CreateDate = row.Field<DateTime>("CreateDate"),
+                    UpdateDate = row.Field<DateTime>("UpdateDate")
+                })
+                .ToList();
+        }
 
-        public BillTx GetBillTx(long billTxId, bool isDeleted = false)
+
+        public BillTx SelectBillTx(long billTxId, bool isDeleted = false)
         {
             DataTable billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
             return billTxTable.AsEnumerable().Where(p => p.Field<bool>("IsDeleted") == isDeleted)
                 .FirstOrDefault(p => p.Field<long>("Id") == billTxId)?.ToClass<BillTx>();
         }
 
-        public SubscriptionInfo GetSubscriptionInfo(long billTxId)
+        public SubscriptionInfo SelectSubscriptionInfo(long billTxId)
         {
             DataTable subscriptionInfoTable = memoryDataSet.Tables[typeof(SubscriptionInfo).Name];
             return subscriptionInfoTable.AsEnumerable().FirstOrDefault(p => p.Field<long>("Id") == billTxId)?.ToClass<SubscriptionInfo>();
@@ -220,54 +273,45 @@ namespace Billing.Core.Services
             }
         }
 
-        public bool UpdateBillDetail(long billDetailId, BillTxStatus status)
+        public long InsertLedger(Ledger ledger)
         {
             lock (lockObj)
             {
-                DataTable billDetailTable = memoryDataSet.Tables[typeof(BillDetail).Name];
-                if (billDetailTable == null)
-                {
-                    return false;
-                }
+                DateTime now = DateTime.UtcNow;
+                DataTable ledgerTable = memoryDataSet.Tables[typeof(Ledger).Name];
 
-                var billDetailRow = billDetailTable.AsEnumerable()
-                    .FirstOrDefault(p => p.Field<long>("Id") == billDetailId);
+                long maxId = ledgerTable.Rows.Count > 0
+                    ? ledgerTable.AsEnumerable().Max(row => row.Field<long>("Id"))
+                    : 0;
 
-                if (billDetailRow == null)
-                {
-                    return false; 
-                }
-
-                billDetailRow["Status"] = status;
-                billDetailRow["UpdateDate"] = DateTime.Now; 
-
-                return true; 
+                ledger.Id = maxId + 1;
+                ledger.CreateDate = now;
+                ledger.UpdateDate = now;
+                ledgerTable.AddRow<Ledger>(ledger);
+                return ledger.Id;
             }
         }
 
-        public bool CompleteBillDetail(long billTxId)
+        public bool UpdateBillTxStatus(long billTxId, BillTxStatus status)
         {
             lock (lockObj)
             {
-                DataTable billDetailTable = memoryDataSet.Tables[typeof(BillDetail).Name];
-                if (billDetailTable == null)
+                DataTable billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
+                if (billTxTable == null)
                 {
                     return false;
                 }
 
-                var billDetailRows = billDetailTable.AsEnumerable().Where(p=> p.Field<long>("BillTxId") == billTxId)
-                    .ToList();
+                var billTxRow = billTxTable.AsEnumerable()
+                    .FirstOrDefault(p => p.Field<long>("Id") == billTxId);
 
-                if (billDetailRows == null || billDetailRows.Count == 0)
+                if (billTxRow == null)
                 {
                     return false;
                 }
 
-                foreach (var row in billDetailRows)
-                {
-                    row["Status"] = BillTxStatus.COMPLETED;
-                    row["UpdateDate"] = DateTime.Now;
-                }
+                billTxRow["Status"] = status;
+                billTxRow["UpdateDate"] = DateTime.Now;
 
                 return true;
             }
@@ -301,7 +345,7 @@ namespace Billing.Core.Services
         }
 
 
-        public bool UpdateBillTx(long billTxId, bool isComplete)
+        public bool CompleteBillTx(long billTxId)
         {
             lock (lockObj)
             {
@@ -316,13 +360,14 @@ namespace Billing.Core.Services
 
                 if (billTxRow != null)
                 {
+                    billTxRow["Status"] = BillTxStatus.COMPLETED;
                     billTxRow["UpdateDate"] = DateTime.Now;
-                    billTxRow["IsCompleted"] = isComplete;
+                    billTxRow["IsCompleted"] = true;
                     return true;
                 }
                 else
                 {
-                    return false; 
+                    return false;
                 }
             }
         }
@@ -335,14 +380,14 @@ namespace Billing.Core.Services
                 DataTable billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
                 if (billTxTable == null)
                 {
-                    return false; 
+                    return false;
                 }
 
                 var billTxRow = billTxTable.AsEnumerable()
                     .FirstOrDefault(p => p.Field<long>("Id") == billTxId);
 
                 if (billTxRow != null)
-                {                    
+                {
                     billTxRow["UpdateDate"] = DateTime.Now;
                     billTxRow["IsDeleted"] = isDeleted;
                     return true;
@@ -353,14 +398,14 @@ namespace Billing.Core.Services
                 }
             }
         }
-        public bool UpdateBillTx(long billTxId, string PurchaseToken)
+        public bool UpdateBillTxToken(long billTxId, string PurchaseToken)
         {
             lock (lockObj)
             {
                 DataTable billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
                 if (billTxTable == null)
                 {
-                    return false; 
+                    return false;
                 }
 
                 var billTxRow = billTxTable.AsEnumerable()
@@ -379,7 +424,7 @@ namespace Billing.Core.Services
             }
         }
 
-        public Product GetProduct(string productKey, bool isUse = true)
+        public Product SelectProduct(string productKey, bool isUse = true)
         {
             var productTable = memoryDataSet.Tables[typeof(Product).Name];
             if (productTable == null || string.IsNullOrEmpty(productKey))
@@ -401,6 +446,81 @@ namespace Billing.Core.Services
                 CreateDate = dataRow.Field<DateTime>("CreateDate"),
                 UpdateDate = dataRow.Field<DateTime>("UpdateDate")
             };
+        }
+
+        public ProductInfo SelectProductInfoByProductKey(string productKey)
+        {
+            var productTable = memoryDataSet.Tables[nameof(Product)];
+            var productItemTable = memoryDataSet.Tables[nameof(ProductItem)];
+            var itemTable = memoryDataSet.Tables[nameof(Item)];
+
+            // Query the dataset
+            var query = from product in productTable.AsEnumerable()
+                        where product.Field<string>("ProductKey") == productKey
+                        join productItem in productItemTable.AsEnumerable()
+                        on product.Field<long>("Id") equals productItem.Field<long>("ProductId")
+                        join item in itemTable.AsEnumerable()
+                        on productItem.Field<long>("ItemId") equals item.Field<long>("Id")
+                        group productItem by new
+                        {
+                            ProductId = product.Field<long>("Id"),
+                            ProductKey = product.Field<string>("ProductKey"),
+                            ProductName = product.Field<string>("ProductName"),
+                            IsUse = product.Field<bool>("IsUse"),
+                            ItemName = item.Field<string>("ItemName"),
+                            PointType = item.Field<int>("PointType")
+
+                        } into productGroup
+                        select new ProductInfo
+                        {
+                            Id = productGroup.Key.ProductId,
+                            ProductKey = productGroup.Key.ProductKey,
+                            ProductName = productGroup.Key.ProductName,
+                            IsUse = productGroup.Key.IsUse,
+                            Items = productGroup.Select(pg => new ProductItemInfo
+                            {
+                                Id = pg.Field<long>("Id"),
+                                ProductId = pg.Field<long>("ProductId"),
+                                Types = (ProductTypes)pg.Field<int>("Types"),
+                                ItemId = pg.Field<long>("ItemId"),
+                                ItemVolume = pg.Field<int>("ItemVolume"),
+                                IsUse = pg.Field<bool>("IsUse"),
+                                ItemName = pg.Field<string>("ItemName"),
+                                PointType = (PointType)pg.Field<int>("PointType")
+                            }).ToList()
+                        };
+
+            return query.FirstOrDefault();
+        }
+
+        public bool ChargeLedger(long accountId, PointType pointType, long amount)
+        {
+            var ledgerTable = memoryDataSet.Tables[nameof(Ledger)];
+
+            var dataRow = ledgerTable.AsEnumerable()
+                .Where(p => p.Field<long>("AccountId") == accountId && p.Field<int>("PointType") == (int)pointType)
+                .FirstOrDefault();
+
+            if (dataRow == null)
+            {
+                Ledger ledger = new()
+                {
+                    AccountId = accountId,
+                    Balance = 0,
+                    Type = pointType,
+                };
+
+                InsertLedger(ledger);
+
+                dataRow = ledgerTable.AsEnumerable()
+                .Where(p => p.Field<long>("AccountId") == accountId && p.Field<int>("PointType") == (int)pointType)
+                .FirstOrDefault();
+            }
+
+            dataRow["UpdateDate"] = DateTime.Now;
+            dataRow["Balance"] = (long)dataRow["Balance"] + amount;
+
+            return true;
         }
     }
 }

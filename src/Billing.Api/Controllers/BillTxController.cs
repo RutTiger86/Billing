@@ -44,17 +44,6 @@ namespace Billing.Api.Controllers
         {
             try
             {
-                if(!billService.CompleteBillDetail(billTxId))
-                {
-                    return new BaseResponse<bool>
-                    {
-                        Result = false,
-                        ErrorCode = (int)BillingError.BILL_COMPLETE_DETAIL_FAILED,
-                        ErrorMessage = BillingError.BILL_COMPLETE_DETAIL_FAILED.ToString(),
-                        Data = false
-                    };
-                }
-
                 if(!billTxService.EndBillTx(billTxId))
                 {
                     return new BaseResponse<bool>

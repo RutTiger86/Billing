@@ -24,11 +24,22 @@ namespace Billing.Core.Enums
         UNKNOWN                         // 알려지지 않은 상태
     }
 
+
+    public enum BillDetailTypes
+    {
+        CONSUMABLE,
+        NON_CONSUMABLE,
+        SUBSCRIPTION_AUTO,
+        SOBSCRIPTION_NON_AUTO,
+        CHARGE,
+        REFUND
+    }
+
     public enum BillProductType
     {
         CONSUMABLE = 0,
         NON_CONSUMABLE,
-        SUBSCRIPTION
+        SUBSCRIPTION,
     }
 
     public enum SubScriptionState

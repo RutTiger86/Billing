@@ -10,8 +10,7 @@ namespace Billing.Core.Models.DataBase
         public long AccountId { get; set; }
         public long? CharId { get; set; }
         public string? CharName { get; set; }
-        public BillTxSubTypes SubType { get; set; }
-        public BillTxStatus Status { get; set; }
+        public BillDetailTypes SubType { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime UpdateDate { get; set; }
