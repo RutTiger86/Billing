@@ -32,6 +32,7 @@ namespace Billing.Core.Services
             AddTable<Item>("Id");
             AddTable<SubscriptionInfo>("Id");
             AddTable<Ledger>("Id");
+            AddTable<PointHistory>("Id");
 
             ProductDataSet();
         }
@@ -199,6 +200,23 @@ namespace Billing.Core.Services
                 .ToList();
         }
 
+        public Ledger SelectLedgerByPointType(long accountId, PointType pointType)
+        {
+            DataTable ledgerTable = memoryDataSet.Tables[typeof(Ledger).Name];
+            return ledgerTable.AsEnumerable()
+                .Where(row => row.Field<long>("AccountId") == accountId && row.Field<int>("PointType") == (int)pointType)
+                .Select(row => new Ledger
+                {
+                    Id = row.Field<long>("Id"),
+                    AccountId = row.Field<long>("AccountId"),
+                    Type = (PointType)row.Field<int>("Type"),
+                    Balance = row.Field<long>("Balance"),
+                    CreateDate = row.Field<DateTime>("CreateDate"),
+                    UpdateDate = row.Field<DateTime>("UpdateDate")
+                })
+                .FirstOrDefault();
+        }
+
 
         public BillTx SelectBillTx(long billTxId, bool isDeleted = false)
         {
@@ -290,6 +308,22 @@ namespace Billing.Core.Services
                 ledgerTable.AddRow<Ledger>(ledger);
                 return ledger.Id;
             }
+        }
+
+        public long InsertPointHistory(PointHistory pointHistory)
+        {
+            DateTime now = DateTime.UtcNow;
+            DataTable pointHistoryTable = memoryDataSet.Tables[typeof(PointHistory).Name];
+
+            long maxId = pointHistoryTable.Rows.Count > 0
+                ? pointHistoryTable.AsEnumerable().Max(row => row.Field<long>("Id"))
+                : 0;
+
+            pointHistory.Id = maxId + 1;
+            pointHistory.CreateDate = now;
+            pointHistory.UpdateDate = now;
+            pointHistoryTable.AddRow<PointHistory>(pointHistory);
+            return pointHistory.Id;
         }
 
         public bool UpdateBillTxStatus(long billTxId, BillTxStatus status)
@@ -442,6 +476,7 @@ namespace Billing.Core.Services
                 Id = dataRow.Field<long>("Id"),
                 ProductKey = dataRow.Field<string>("ProductKey"),
                 ProductName = dataRow.Field<string>("ProductName"),
+                Price = dataRow.Field<int>("Price"),
                 IsUse = dataRow.Field<bool>("IsUse"),
                 CreateDate = dataRow.Field<DateTime>("CreateDate"),
                 UpdateDate = dataRow.Field<DateTime>("UpdateDate")
@@ -499,28 +534,90 @@ namespace Billing.Core.Services
 
             var dataRow = ledgerTable.AsEnumerable()
                 .Where(p => p.Field<long>("AccountId") == accountId && p.Field<int>("PointType") == (int)pointType)
-                .FirstOrDefault();
-
-            if (dataRow == null)
-            {
-                Ledger ledger = new()
-                {
-                    AccountId = accountId,
-                    Balance = 0,
-                    Type = pointType,
-                };
-
-                InsertLedger(ledger);
-
-                dataRow = ledgerTable.AsEnumerable()
-                .Where(p => p.Field<long>("AccountId") == accountId && p.Field<int>("PointType") == (int)pointType)
-                .FirstOrDefault();
-            }
+                .First();
 
             dataRow["UpdateDate"] = DateTime.Now;
             dataRow["Balance"] = (long)dataRow["Balance"] + amount;
 
             return true;
+        }
+
+        public bool Withdrawledger(long accountId, PointType pointType, long amount)
+        {
+            lock (lockObj)
+            {
+                DataTable ledgerTable = memoryDataSet.Tables[typeof(Ledger).Name];
+
+                if (ledgerTable == null)
+                {
+                    return false;
+                }
+
+                var ledgerRow = ledgerTable.AsEnumerable()
+                    .FirstOrDefault(row => row.Field<long>("AccountId") == accountId && row.Field<int>("PointType") == (int)pointType);
+
+                if (ledgerRow == null)
+                {
+                    return false;
+                }
+
+
+                ledgerRow["UpdateDate"] = DateTime.Now;
+                ledgerRow["Balance"] = (long)ledgerRow["Balance"] - amount;
+
+                return true;
+            }
+        }
+
+        public List<PointHistory> SelectPointHistories(long billTxId)
+        {
+            lock (lockObj)
+            {
+                DataTable pointHistoryTable = memoryDataSet.Tables[typeof(PointHistory).Name];
+
+                return pointHistoryTable.AsEnumerable()
+                    .Where(row => row.Field<long>("BillTxId") == billTxId)
+                    .Select(row => new PointHistory
+                    {
+                        Id = row.Field<long>("Id"),
+                        BillTxId = row.Field<long>("BillTxId"),
+                        ProductId = row.Field<long>("ProductId"),
+                        PointOperationType = (PointOperationType)row.Field<int>("PointOperationType"),
+                        AccountId = row.Field<long>("AccountId"),
+                        PointType = (PointType)row.Field<int>("PointType"),
+                        BeforeBalance = row.Field<long>("BeforeBalance"),
+                        Amount = row.Field<long>("Amount"),
+                        AfterBalance = row.Field<long>("AfterBalance"),
+                        IsRollBack = row.Field<bool>("IsRollBack"),
+                        CreateDate = row.Field<DateTime>("CreateDate"),
+                    })
+                    .ToList();
+            }
+        }
+
+        public bool UpdatePointHistoryIsRollBack(long pointHistoryId)
+        {
+            lock (lockObj)
+            {
+                DataTable pointHistoryTable = memoryDataSet.Tables[typeof(PointHistory).Name];
+                if (pointHistoryTable == null)
+                {
+                    return false;
+                }
+
+                var pointHistoryRow = pointHistoryTable.AsEnumerable()
+                    .FirstOrDefault(p => p.Field<long>("Id") == pointHistoryId);
+
+                if (pointHistoryRow == null)
+                {
+                    return false;
+                }
+
+                pointHistoryRow["IsRollBack"] = true;
+                pointHistoryRow["UpdateDate"] = DateTime.Now;
+
+                return true;
+            }
         }
     }
 }

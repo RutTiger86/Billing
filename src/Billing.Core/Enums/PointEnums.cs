@@ -13,4 +13,11 @@ namespace Billing.Core.Enums
         Free,
         Mileage,
     }
+
+    public enum PointOperationType
+    {
+        CREATE,
+        CHARGE,
+        WITHDRAW
+    }
 }

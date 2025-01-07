@@ -17,5 +17,7 @@ namespace Billing.Core.Models
         public long? CharId { get; set; }
         public string? CharName { get; set; }
         public BillDetailTypes SubType { get; set; }
+        public List<PointPurchase>? PointPurchases { get; set; }
     }
+
 }

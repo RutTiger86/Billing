@@ -45,6 +45,7 @@ namespace Billing.Api
             services.AddSingleton<IDataService, MemoryDataService>();
 
             services.AddScoped<GoogleValidationService>();
+            services.AddScoped<PointValidationService>();
             services.AddScoped<IBillTxService, BillTxService>();
             services.AddScoped<IBillService, BillService>();
         }

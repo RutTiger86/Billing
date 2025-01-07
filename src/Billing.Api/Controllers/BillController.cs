@@ -28,18 +28,6 @@ namespace Billing.Api.Controllers
 
             try
             {
-                var (isValid, validationError) = billTxService.ValidateBillTx(validateRequest.BillTxId);
-                if (!isValid)
-                {
-                    return HandleValidationFailure(response, validationError, validateRequest.BillTxId);
-                }
-
-                if (!billTxService.RegistPurchaseToken(validateRequest.BillTxId, validateRequest.PurchaseToken))
-                {
-                    logger.LogWarning($"[RegistPurchaseToken False] BillTxId: {validateRequest.BillTxId}");
-                    return HandleSystemError(response, BillingError.SYSTEM_ERROR, "Failed to register purchase token.");
-                }
-
                 var (validationResult, validationServiceError) = await billService.PurchaseValidation(validateRequest.toPurchaseInfo());
 
                 response.Result = validationResult;
