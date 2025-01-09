@@ -16,7 +16,7 @@ namespace Billing.Api.Extensions
                 BillTxId = request.BillTxId,
                 CharId = request.CharId,
                 CharName = request.CharName,
-                SubType = request.SubType                   
+                ProductType = request.ProductType,
             };
         }
     }

@@ -11,6 +11,6 @@ namespace Billing.Api.Models.Requests
         public long AccountId { get; set; }
         public long? CharId { get; set; }
         public string? CharName { get; set; }
-        public BillProductType SubType { get; set; }
+        public BillProductType ProductType { get; set; }
     }
 }
