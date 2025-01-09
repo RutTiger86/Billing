@@ -16,6 +16,9 @@ namespace Billing.Core.Services
         private readonly PointValidationService pointValidationService = pointValidationService;
         private readonly IBillTxService billTxService = billTxService;
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public async Task<(bool Result, BillingError error)> PurchaseValidation(PurchaseInfo purchaseInfo)
         {
             try
@@ -68,7 +71,10 @@ namespace Billing.Core.Services
                 return (false, BillingError.SYSTEM_ERROR);
             }
         }
-
+       
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public async Task<(SubScriptionState Statue, BillingError error)> SubScriptionStateValidation(long billTxID)
         {
             try
@@ -119,6 +125,9 @@ namespace Billing.Core.Services
             }
         }
        
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public async Task<(bool Result, BillingError error)> CanclePurchase(long billTxId)
         {
             var billtx = dataService.SelectBillTx(billTxId);

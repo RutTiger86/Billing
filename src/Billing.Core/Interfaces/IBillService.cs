@@ -7,6 +7,7 @@ namespace Billing.Core.Interfaces
     {
         /// <summary>
         /// 구매 검증
+        /// Point 구매, 충전의 경우 포인트 프로세스 진행
         /// </summary>
         Task<(bool Result, BillingError error)> PurchaseValidation(PurchaseInfo purchaseInfo);
         /// <summary>

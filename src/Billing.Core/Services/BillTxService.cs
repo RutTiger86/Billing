@@ -7,9 +7,12 @@ namespace Billing.Core.Services
 {
     public class BillTxService(IDataService dataService,IBillService billService, ILogger<BillTxService> logger) : IBillTxService
     {
-        private IDataService dataService = dataService;
-        private ILogger<BillTxService> logger = logger;
+        private readonly IDataService dataService = dataService;
+        private readonly ILogger<BillTxService> logger = logger;
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public long IssueBillTx(BillTxTypes transactionType)
         {
             try
@@ -31,6 +34,9 @@ namespace Billing.Core.Services
             }
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public (bool IsValide, BillingError Error) ValidateBillTx(long billTxId)
         {
             try
@@ -56,6 +62,9 @@ namespace Billing.Core.Services
             }
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public bool RegistPurchaseToken(long billTxId, string purchaseToken)
         {
             try
@@ -69,6 +78,9 @@ namespace Billing.Core.Services
             }
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public bool CancleBillTx(long billTxId)
         {
             try
@@ -82,6 +94,9 @@ namespace Billing.Core.Services
             }
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public bool EndBillTx(long billTxId)
         {
             try

@@ -20,6 +20,10 @@ namespace Billing.Core.Services
         private const string packageName = "com.ruttiger.testapp";
         private const string AppName = "BillTestApp";
 
+        /// <summary>
+        /// Google IAP 서비스 
+        /// PublisherService 설정 
+        /// </summary>
         public GoogleValidationService(IDataService dataService, ILogger<GoogleValidationService> logger)
         {
             this.logger = logger;
@@ -37,6 +41,9 @@ namespace Billing.Core.Services
             });
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public async Task<bool> PurchaseProductValidate(long billDetailId, PurchaseInfo purchaseInfo)
         {
             try
@@ -92,6 +99,9 @@ namespace Billing.Core.Services
             }
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public async Task<bool> PruchaseSubscriptionsValidate(long billDetailId, PurchaseInfo purchaseInfo)
         {
             try
@@ -143,6 +153,10 @@ namespace Billing.Core.Services
                 throw new BillingException(BillingError.PURCHASE_GOOGLE_VALIDATE_ERROR, $"Error verifying purchase: {ex.Message}");
             }
         }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public async Task<SubScriptionState> SubscriptionsValidate(string purchaseToken)
         {
             try

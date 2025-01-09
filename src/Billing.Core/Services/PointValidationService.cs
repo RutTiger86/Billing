@@ -12,11 +12,18 @@ namespace Billing.Core.Services
         private readonly ILogger<PointValidationService> logger = logger;
         private readonly IDataService dataService = dataService;
 
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public Task<bool> PruchaseSubscriptionsValidate(long billDetailId, PurchaseInfo purchaseInfo)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public async Task<bool> PurchaseProductValidate(long billDetailId, PurchaseInfo purchaseInfo)
         {
             try
@@ -91,10 +98,14 @@ namespace Billing.Core.Services
             }
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public Task<SubScriptionState> SubscriptionsValidate(string purchaseToken)
         {
             throw new NotImplementedException();
         }
+
         /// <summary>
         /// 포인트 충전 프로세스 
         /// </summary>
