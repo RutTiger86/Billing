@@ -6,11 +6,8 @@ using Billing.Core.Models.DataBase;
 using Google.Apis.AndroidPublisher.v3;
 using Google.Apis.AndroidPublisher.v3.Data;
 using Google.Apis.Auth.OAuth2;
-using Google.Apis.Requests;
 using Google.Apis.Services;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
-using static Google.Apis.Requests.BatchRequest;
 
 namespace Billing.Core.Services
 {
@@ -146,7 +143,32 @@ namespace Billing.Core.Services
                 throw new BillingException(BillingError.PURCHASE_GOOGLE_VALIDATE_ERROR, $"Error verifying purchase: {ex.Message}");
             }
         }
+        public async Task<SubScriptionState> SubscriptionsValidate(string purchaseToken)
+        {
+            try
+            {
+                var request = service.Purchases.Subscriptionsv2.Get(packageName, purchaseToken);
 
+                var response = await request.ExecuteAsync();
+
+                if (response != null && Enum.TryParse(response.SubscriptionState, out SubScriptionState state))
+                {
+                    return state;
+                }
+                else
+                {
+                    return SubScriptionState.SUBSCRIPTION_STATE_UNSPECIFIED;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new BillingException(BillingError.PURCHASE_GOOGLE_VALIDATE_ERROR, $"Error verifying purchase: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 구독 정보 생성 
+        /// </summary>
         private long CreateSubScription(long billDetailId, PurchaseInfo purchaseInfo, long expiryTimeMillis)
         {
             var product = dataService.SelectProduct(purchaseInfo.ProductKey);
@@ -169,7 +191,10 @@ namespace Billing.Core.Services
             return dataService.InsertSubscriptionInfo(subscription);
         }
 
-
+        /// <summary>
+        /// IAP 소비 처리코드 
+        /// 필요시 활성화 
+        /// </summary>
         private async Task ProductAcknowledge(PurchaseInfo purchaseInfo)
         {
             logger.LogInformation("Acknowledgement required. Processing...");
@@ -182,7 +207,10 @@ namespace Billing.Core.Services
             await acknowledge.ExecuteAsync();
         }
 
-
+        /// <summary>
+        /// IAP 구독 소비 처리코드 
+        /// 필요시 활성화 
+        /// </summary>
         private async Task SubscriptionsAcknowledge(PurchaseInfo purchaseInfo)
         {
             logger.LogInformation("Acknowledgement required. Processing...");
@@ -194,30 +222,7 @@ namespace Billing.Core.Services
             var acknowledge = service.Purchases.Subscriptions.Acknowledge(acknowledgeRequest, packageName, purchaseInfo.ProductKey, purchaseInfo.PurchaseToken);
             await acknowledge.ExecuteAsync();
         }
-
-        
-        
-        public async Task<SubScriptionState> SubscriptionsValidate(string purchaseToken)
-        {
-            try
-            {
-                var request = service.Purchases.Subscriptionsv2.Get(packageName,purchaseToken);
-
-                var response = await request.ExecuteAsync();
-
-                if (response != null && Enum.TryParse(response.SubscriptionState,out SubScriptionState state))
-                {
-                    return state;
-                }
-                else
-                {
-                    return SubScriptionState.SUBSCRIPTION_STATE_UNSPECIFIED;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new BillingException(BillingError.PURCHASE_GOOGLE_VALIDATE_ERROR, $"Error verifying purchase: {ex.Message}");
-            }
-        }
+                
+       
     }
 }

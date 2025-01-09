@@ -4,9 +4,6 @@ using Billing.Core.Interfaces;
 using Billing.Core.Models;
 using Billing.Core.Models.DataBase;
 using Microsoft.Extensions.Logging;
-using static Google.Apis.AndroidPublisher.v3.EditsResource;
-using static Google.Apis.Requests.BatchRequest;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Billing.Core.Services
 {
@@ -49,7 +46,13 @@ namespace Billing.Core.Services
                 var pointProduct = product.Items.Where(p => p.Types == ProductTypes.POINT).ToList();
                 if (pointProduct.Count>0)
                 {
-                    ChargePointProcess(pointProduct,purchaseInfo);
+                    dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.POINT_CHARGE_START);
+                    bool chargePointResult = pointValidationService.ChargePointProcess(pointProduct, purchaseInfo);
+
+                    if(!chargePointResult)
+                    {
+                        return (false, BillingError.PURCHASE_VALIDATION_FAILED);
+                    }
                 }
 
                 return (true, BillingError.NONE);
@@ -75,7 +78,7 @@ namespace Billing.Core.Services
 
                 if (billTx == null)
                 {
-                    return (statue, BillingError.TX_NOTFFOUND);
+                    return (statue, BillingError.TX_NOT_FOUND);
                 }
 
                 var subscriptionInfo = dataService.SelectSubscriptionInfo(billTxID);
@@ -116,6 +119,24 @@ namespace Billing.Core.Services
             }
         }
        
+        public async Task<(bool Result, BillingError error)> CanclePurchase(long billTxId)
+        {
+            var billtx = dataService.SelectBillTx(billTxId);
+
+            if(billtx == null)
+            {
+                return (false, BillingError.TX_NOT_FOUND);
+            }
+
+            pointValidationService.PointRollBack(billTxId);
+
+            return (true, BillingError.NONE);
+        }
+
+        /// <summary>
+        /// 상품 트랜젝션 검증 
+        /// 트랜젝션 정보에 구매 토큰 업데이트 
+        /// </summary>
         private async Task<(bool IsValide, BillingError Error)> ValidationTxProcess(PurchaseInfo purchaseInfo)
         {
             var (isValid, validationError) = billTxService.ValidateBillTx(purchaseInfo.BillTxId);
@@ -132,6 +153,10 @@ namespace Billing.Core.Services
             return (true, BillingError.NONE);
         }
 
+        /// <summary>
+        /// 상품 검증 프로세스 
+        /// 검증 서비스 선정 및 검증진행 포인트구매시 소비처리 진행 
+        /// </summary>
         private async Task<bool> ValidationProcess(long billDetailId, PurchaseInfo purchaseInfo)
         {
             IValidationService validationService = GetValidationService(purchaseInfo.BillTxId);
@@ -143,75 +168,30 @@ namespace Billing.Core.Services
 
             return purchaseInfo.ProductType switch
             {
-                BillProductType.CONSUMABLE or BillProductType.NON_CONSUMABLE => await validationService.PurchaseProductValidate(billDetailId, purchaseInfo),
-                BillProductType.SUBSCRIPTION => await validationService.PruchaseSubscriptionsValidate(billDetailId, purchaseInfo),
+                BillProductType.CONSUMABLE or BillProductType.NON_CONSUMABLE 
+                => await validationService.PurchaseProductValidate(billDetailId, purchaseInfo),
+
+                BillProductType.SUBSCRIPTION_NON_AUTO or BillProductType.SUBSCRIPTION_AUTO 
+                => await validationService.PruchaseSubscriptionsValidate(billDetailId, purchaseInfo),
+
                 _ => false
             };
-        }
-       
-        private void ChargePointProcess(List<ProductItemInfo> products, PurchaseInfo purchaseInfo)
-        {
-            foreach (ProductItemInfo productItem in products)
-            {
-                var pointLedgers = dataService.SelectLedgerByPointType(purchaseInfo.AccountId, productItem.PointType);
-                if(pointLedgers ==  null)
-                {
-                    CreatePointLedger(purchaseInfo,productItem);
-                    pointLedgers = dataService.SelectLedgerByPointType(purchaseInfo.AccountId, productItem.PointType);
-                }
+        }      
 
-                PointHistory pointHistory = new()
-                {
-                    AccountId = purchaseInfo.AccountId,
-                    BillTxId = purchaseInfo.BillTxId,
-                    PointOperationType = PointOperationType.CHARGE,
-                    ProductId = productItem.ProductId,
-                    PointType = productItem.PointType,
-                    BeforeBalance = pointLedgers.Balance,
-                    Amount = productItem.ItemVolume,                   
-                };
-
-                dataService.ChargeLedger(purchaseInfo.AccountId, productItem.PointType, productItem.ItemVolume);
-
-                pointLedgers = dataService.SelectLedgerByPointType(purchaseInfo.AccountId, productItem.PointType);
-                pointHistory.AfterBalance = pointLedgers.Balance;
-                dataService.InsertPointHistory(pointHistory);
-            }
-        }
-
-        private bool CreatePointLedger(PurchaseInfo purchaseInfo, ProductItemInfo productItem)
-        {
-            Ledger ledger = new()
-            {
-                AccountId = purchaseInfo.AccountId,
-                Balance = 0,
-                Type = productItem.PointType,
-            };
-            dataService.InsertLedger(ledger);
-
-            PointHistory pointHistory = new()
-            {
-                AccountId = purchaseInfo.AccountId,
-                BillTxId = purchaseInfo.BillTxId,
-                PointOperationType = PointOperationType.CREATE,
-                ProductId = productItem.ProductId,
-                PointType = productItem.PointType,
-                AfterBalance = 0,
-                BeforeBalance = 0,
-                Amount = 0,
-            };
-
-            dataService.InsertPointHistory(pointHistory);
-
-            return true;
-        }
-
+        /// <summary>
+        /// 트랜잭션 Id로 트랜잭션 타입 선정
+        /// </summary>
         private BillTxTypes GetBillTxType(long billTxId)
         {
             BillTx billTx = dataService.SelectBillTx(billTxId);
-            return billTx == null ? throw new BillingException(BillingError.TX_NOTFFOUND, "Transaction does not exist") : billTx.Type;
+            return billTx == null ? throw new BillingException(BillingError.TX_NOT_FOUND, "Transaction does not exist") : billTx.Type;
         }
 
+        /// <summary>
+        /// 트랜잭션 Id로 검증 서비스 선정
+        /// </summary>
+        /// <param name="billTxId"></param>
+        /// <returns></returns>
         private IValidationService GetValidationService(long billTxId)
         {
             var billType = GetBillTxType(billTxId);
@@ -224,6 +204,9 @@ namespace Billing.Core.Services
             return validationService;
         }
 
+        /// <summary>
+        /// 거래 기록 정보 생성 
+        /// </summary>
         private long CreateBillDetail(PurchaseInfo purchaseInfo)
         {
             var product =  dataService.SelectProduct(purchaseInfo.ProductKey);
@@ -239,9 +222,8 @@ namespace Billing.Core.Services
                 AccountId = purchaseInfo.AccountId,
                 CharId = purchaseInfo.CharId,
                 CharName = purchaseInfo.CharName,
-                SubType = purchaseInfo.SubType,          
                 BillTxId = purchaseInfo.BillTxId,
-                IsDeleted = false,
+                SubType = purchaseInfo.ProductType,
             };
 
             return dataService.InsertBillDetail(billDetail);

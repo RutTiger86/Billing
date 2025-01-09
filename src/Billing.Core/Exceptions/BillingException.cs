@@ -17,6 +17,7 @@ namespace Billing.Core.Exceptions
         {
             ErrorCode = errorCode;
         }
+
         public override string ToString()
         {
             return $"Error Code: {ErrorCode}, Message: {Message}";

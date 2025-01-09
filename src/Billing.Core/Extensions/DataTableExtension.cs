@@ -4,6 +4,10 @@ namespace Billing.Core.Extensions
 {
     public static class DataTableExtension
     {        
+        /// <summary>
+        /// DataTable에 Class DataRow로 변환 입력
+        /// MemoryDataService를 위해 작성 
+        /// </summary>
         public static void AddRow<T>(this DataTable table, T obj)
         {
             var row = table.NewRow();

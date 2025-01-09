@@ -1,15 +1,19 @@
 ﻿using Billing.Core.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Billing.Core.Models
 {
+    /// <summary>
+    /// 포인트 처리 요청 정보
+    /// </summary>
     public class PointPurchase : BaseModel
     {
+        /// <summary>
+        /// 포인트 타입 
+        /// </summary>
         public PointType PointType { get; set; }
+        /// <summary>
+        /// 변경액
+        /// </summary>
         public long Amount { get; set; }
     }
 }

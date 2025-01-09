@@ -50,7 +50,7 @@ Billing Server는 게임 서버의 결제 및 구독 기능을 처리하기 위�
 ### 인메모리 데이터셋 설계
 
 - 클래스 정의에서 동적으로 `DataTable` 생성.
-- 프로토타이핑 과정에서 데이터 조작 간소화. \
+- 프로토타이핑 과정에서 데이터 조작 간소화.
 
   ```
   private void AddTable<T>(string idName) where T : class

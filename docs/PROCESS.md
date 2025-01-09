@@ -39,10 +39,10 @@ Status는 세분화 하여 구분되어 있습니다. 실무에 따라 상태값
 - DELIVAERY_PENDING : 상품 전달 요청
 - DELIVAERED : 상품 전달 완료
 - DELIVERY_FAILED : 상품 전달 실패
-- POINT_CHARGE_REQUESTED : 포인트 충전 요청
+- POINT_CHARGE_START : 포인트 충전 시작
 - POINT_CHARGE_END : 포인트 충전 완료
 - POINT_CHARGE_FAILED : 포인트 충전 실패
-- POINT_SPEND_REQUESTED : 포인트 소모 요청 (포인트 구매)
+- POINT_SPEND_START : 포인트 소모 시작 (포인트 구매)
 - POINT_SPEND : 포인트 소모 완료
 - POINT_SPEND_FAILED : 포인트 소모 실패
 - IAP_RECEIPT_PENDING : IAP 영수증 검증 대기 중
@@ -52,7 +52,6 @@ Status는 세분화 하여 구분되어 있습니다. 실무에 따라 상태값
 - REFUNDED : 환불됨
 - CANCELED : 취소됨
 - EXPIRED : 만료됨
-- CHARGEBACK : 기타 사유로 취소됨 (운영)
 
 ## Process
 

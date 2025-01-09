@@ -3,9 +3,7 @@ using Billing.Api.Models.Requests;
 using Billing.Api.Models.Respons;
 using Billing.Core.Enums;
 using Billing.Core.Interfaces;
-using Billing.Core.Services;
 using Microsoft.AspNetCore.Mvc;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Billing.Api.Controllers
 {
@@ -37,7 +35,10 @@ namespace Billing.Api.Controllers
             catch (Exception ex)
             {
                 logger.LogError($"ValidateBillTx Error: {ex.Message}");
-                return HandleSystemError(response, BillingError.SYSTEM_ERROR, "Unexpected exception during validation.");
+                response.Result = false;
+                response.ErrorCode = (int)BillingError.SYSTEM_ERROR;
+                response.ErrorMessage = BillingError.SYSTEM_ERROR.ToString();
+                return response;
             }
 
             return response;
@@ -70,24 +71,6 @@ namespace Billing.Api.Controllers
                 return response;
             }
 
-            return response;
-        }
-
-        private BaseResponse<bool> HandleValidationFailure(BaseResponse<bool> response, BillingError error, long billTxId)
-        {
-            logger.LogWarning($"[ValidationFailed] BillTxId: {billTxId}, ValidateError: {error}");
-            response.Result = false;
-            response.ErrorCode = (int)error;
-            response.ErrorMessage = error.ToString();
-            return response;
-        }
-
-        private BaseResponse<bool> HandleSystemError(BaseResponse<bool> response, BillingError error, string errorMessage)
-        {
-            logger.LogWarning(errorMessage);
-            response.Result = false;
-            response.ErrorCode = (int)error;
-            response.ErrorMessage = error.ToString();
             return response;
         }
 

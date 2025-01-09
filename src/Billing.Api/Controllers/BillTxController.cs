@@ -1,7 +1,6 @@
 ﻿using Billing.Api.Models.Respons;
 using Billing.Core.Enums;
 using Billing.Core.Interfaces;
-using Billing.Core.Models.DataBase;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Billing.Api.Controllers
@@ -45,6 +44,55 @@ namespace Billing.Api.Controllers
             try
             {
                 if(!billTxService.EndBillTx(billTxId))
+                {
+                    return new BaseResponse<bool>
+                    {
+                        Result = false,
+                        ErrorCode = (int)BillingError.TX_COMPLETE_FAILED,
+                        ErrorMessage = BillingError.TX_COMPLETE_FAILED.ToString(),
+                        Data = false
+                    };
+                }
+
+
+                return new BaseResponse<bool>
+                {
+                    Result = true,
+                    ErrorCode = (int)BillingError.NONE,
+                    Data = true
+                };
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"IssuBillTx Error : {ex.Message}");
+                return new BaseResponse<bool>
+                {
+                    Result = false,
+                    ErrorCode = (int)BillingError.SYSTEM_ERROR,
+                    ErrorMessage = BillingError.SYSTEM_ERROR.ToString(),
+                    Data = false
+                };
+            }
+        }
+
+        [HttpPost("cancletx")]
+        public async Task<BaseResponse<bool>> CancleBillTx([FromBody] long billTxId)
+        {
+            try
+            {
+                (bool cancleResult, BillingError billingError) = await billService.CanclePurchase(billTxId);
+                if (!cancleResult)
+                {
+                    return new BaseResponse<bool>
+                    {
+                        Result = cancleResult,
+                        ErrorCode = (int)billingError,
+                        ErrorMessage = billingError.ToString(),
+                        Data = false
+                    };
+                }
+                
+                if (!billTxService.CancleBillTx(billTxId))
                 {
                     return new BaseResponse<bool>
                     {

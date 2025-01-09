@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Billing.Core.Services
 {
-    public class BillTxService(IDataService dataService, ILogger<BillTxService> logger) : IBillTxService
+    public class BillTxService(IDataService dataService,IBillService billService, ILogger<BillTxService> logger) : IBillTxService
     {
         private IDataService dataService = dataService;
         private ILogger<BillTxService> logger = logger;
@@ -18,8 +18,7 @@ namespace Billing.Core.Services
                 {
                     Type = transactionType,
                     Status = BillTxStatus.INITIATED,
-                    IsDeleted = false,
-                    IsCompleted = false,
+                    IsDone = false,
                 };
 
                 long transactionID = dataService.InsertBillTx(transaction);
@@ -40,12 +39,12 @@ namespace Billing.Core.Services
 
                 if (billTx == null)
                 {
-                    return (false, BillingError.TX_NOTFFOUND);
+                    return (false, BillingError.TX_NOT_FOUND);
                 }
 
-                if (billTx.IsCompleted)
+                if (billTx.IsDone)
                 {
-                    return (false, BillingError.TX_ALREADY_COMPLETED);
+                    return (false, BillingError.TX_ALREADY_IS_DONE);
                 }
 
                 return (true, BillingError.NONE);
@@ -74,7 +73,7 @@ namespace Billing.Core.Services
         {
             try
             {
-                return dataService.DeleteBillTx(billTxId, true);
+                return dataService.UpdateBillTxStatus(billTxId, BillTxStatus.CANCLED, true);
             }
             catch (Exception ex)
             {
@@ -87,7 +86,7 @@ namespace Billing.Core.Services
         {
             try
             {
-                return dataService.CompleteBillTx(billTxId);
+                return dataService.UpdateBillTxStatus(billTxId, BillTxStatus.COMPLETED, true);
             }
             catch (Exception ex)
             {

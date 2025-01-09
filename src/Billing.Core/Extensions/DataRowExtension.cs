@@ -4,6 +4,10 @@ namespace Billing.Core.Extensions
 {
     public static class DataRowExtension
     {
+       /// <summary>
+       /// Class기반 DataRow 생성 
+       /// MemoryDataService를 위하여 작성 
+       /// </summary>
         public static T ToClass<T>(this DataRow row) where T : new()
         {
             var obj = new T();

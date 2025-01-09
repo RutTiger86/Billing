@@ -5,7 +5,6 @@ using Billing.Core.Models;
 using Billing.Core.Models.DataBase;
 using Microsoft.Extensions.Logging;
 using System.Data;
-using System.Runtime.InteropServices;
 
 namespace Billing.Core.Services
 {
@@ -23,6 +22,9 @@ namespace Billing.Core.Services
             InitMemoryDataSet();
         }
 
+        /// <summary>
+        /// 인메모리 테이블 생성 
+        /// </summary>
         private void InitMemoryDataSet()
         {
             AddTable<BillTx>("Id");
@@ -37,6 +39,9 @@ namespace Billing.Core.Services
             ProductDataSet();
         }
 
+        /// <summary>
+        /// 테스트 용 상품 정보 세팅 
+        /// </summary>
         private void ProductDataSet()
         {
             DataTable itemTable = memoryDataSet.Tables[typeof(Item).Name];
@@ -218,11 +223,10 @@ namespace Billing.Core.Services
         }
 
 
-        public BillTx SelectBillTx(long billTxId, bool isDeleted = false)
+        public BillTx SelectBillTx(long billTxId)
         {
             DataTable billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
-            return billTxTable.AsEnumerable().Where(p => p.Field<bool>("IsDeleted") == isDeleted)
-                .FirstOrDefault(p => p.Field<long>("Id") == billTxId)?.ToClass<BillTx>();
+            return billTxTable.AsEnumerable().FirstOrDefault(p => p.Field<long>("Id") == billTxId)?.ToClass<BillTx>();
         }
 
         public SubscriptionInfo SelectSubscriptionInfo(long billTxId)
@@ -230,8 +234,7 @@ namespace Billing.Core.Services
             DataTable subscriptionInfoTable = memoryDataSet.Tables[typeof(SubscriptionInfo).Name];
             return subscriptionInfoTable.AsEnumerable().FirstOrDefault(p => p.Field<long>("Id") == billTxId)?.ToClass<SubscriptionInfo>();
         }
-
-
+        
         public long InsertBillTx(BillTx billTx)
         {
             lock (lockObj)
@@ -326,7 +329,7 @@ namespace Billing.Core.Services
             return pointHistory.Id;
         }
 
-        public bool UpdateBillTxStatus(long billTxId, BillTxStatus status)
+        public bool UpdateBillTxStatus(long billTxId, BillTxStatus status, bool IsDone = false)
         {
             lock (lockObj)
             {
@@ -346,6 +349,8 @@ namespace Billing.Core.Services
 
                 billTxRow["Status"] = status;
                 billTxRow["UpdateDate"] = DateTime.Now;
+                if(IsDone)
+                    billTxRow["IsDone"] = IsDone;
 
                 return true;
             }
@@ -361,77 +366,23 @@ namespace Billing.Core.Services
                     return false;
                 }
 
-                var billDetailRow = subscriptionInfoTable.AsEnumerable()
+                var subscriptionInfoRow = subscriptionInfoTable.AsEnumerable()
                     .FirstOrDefault(p => p.Field<long>("Id") == subscriptionId);
 
-                if (billDetailRow == null)
+                if (subscriptionInfoRow == null)
                 {
                     return false;
                 }
 
-                billDetailRow["State"] = SubScriptionState.SUBSCRIPTION_STATE_EXPIRED;
-                billDetailRow["IsExpired"] = true;
-                billDetailRow["UpdateDate"] = DateTime.Now;
+                subscriptionInfoRow["State"] = SubScriptionState.SUBSCRIPTION_STATE_EXPIRED;
+                subscriptionInfoRow["IsExpired"] = true;
+                subscriptionInfoRow["UpdateDate"] = DateTime.Now;
 
                 return true;
             }
 
         }
-
-
-        public bool CompleteBillTx(long billTxId)
-        {
-            lock (lockObj)
-            {
-                DataTable billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
-                if (billTxTable == null)
-                {
-                    return false;
-                }
-
-                var billTxRow = billTxTable.AsEnumerable()
-                    .FirstOrDefault(p => p.Field<long>("Id") == billTxId);
-
-                if (billTxRow != null)
-                {
-                    billTxRow["Status"] = BillTxStatus.COMPLETED;
-                    billTxRow["UpdateDate"] = DateTime.Now;
-                    billTxRow["IsCompleted"] = true;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
-
-
-        public bool DeleteBillTx(long billTxId, bool isDeleted)
-        {
-            lock (lockObj)
-            {
-                DataTable billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
-                if (billTxTable == null)
-                {
-                    return false;
-                }
-
-                var billTxRow = billTxTable.AsEnumerable()
-                    .FirstOrDefault(p => p.Field<long>("Id") == billTxId);
-
-                if (billTxRow != null)
-                {
-                    billTxRow["UpdateDate"] = DateTime.Now;
-                    billTxRow["IsDeleted"] = isDeleted;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
+        
         public bool UpdateBillTxToken(long billTxId, string PurchaseToken)
         {
             lock (lockObj)
@@ -466,20 +417,20 @@ namespace Billing.Core.Services
                 return null;
             }
 
-            var dataRow = productTable.AsEnumerable()
+            var productRow = productTable.AsEnumerable()
                 .FirstOrDefault(row =>
                     row.Field<bool>("IsUse") == isUse &&
                     row.Field<string>("ProductKey") == productKey);
 
-            return dataRow == null ? null : new Product
+            return productRow == null ? null : new Product
             {
-                Id = dataRow.Field<long>("Id"),
-                ProductKey = dataRow.Field<string>("ProductKey"),
-                ProductName = dataRow.Field<string>("ProductName"),
-                Price = dataRow.Field<int>("Price"),
-                IsUse = dataRow.Field<bool>("IsUse"),
-                CreateDate = dataRow.Field<DateTime>("CreateDate"),
-                UpdateDate = dataRow.Field<DateTime>("UpdateDate")
+                Id = productRow.Field<long>("Id"),
+                ProductKey = productRow.Field<string>("ProductKey"),
+                ProductName = productRow.Field<string>("ProductName"),
+                Price = productRow.Field<int>("Price"),
+                IsUse = productRow.Field<bool>("IsUse"),
+                CreateDate = productRow.Field<DateTime>("CreateDate"),
+                UpdateDate = productRow.Field<DateTime>("UpdateDate")
             };
         }
 
@@ -532,12 +483,12 @@ namespace Billing.Core.Services
         {
             var ledgerTable = memoryDataSet.Tables[nameof(Ledger)];
 
-            var dataRow = ledgerTable.AsEnumerable()
+            var ledgerRow = ledgerTable.AsEnumerable()
                 .Where(p => p.Field<long>("AccountId") == accountId && p.Field<int>("PointType") == (int)pointType)
                 .First();
 
-            dataRow["UpdateDate"] = DateTime.Now;
-            dataRow["Balance"] = (long)dataRow["Balance"] + amount;
+            ledgerRow["UpdateDate"] = DateTime.Now;
+            ledgerRow["Balance"] = (long)ledgerRow["Balance"] + amount;
 
             return true;
         }

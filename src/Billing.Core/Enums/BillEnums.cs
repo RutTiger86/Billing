@@ -1,46 +1,94 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Billing.Core.Enums
+﻿namespace Billing.Core.Enums
 {
     public enum BillingError
     {
-        NONE = 0,                       // 에러 없음 
-        SYSTEM_ERROR,                   // 시스템 에러 
-        TX_NOTFFOUND,                   // 존재하지 않는 Tx
-        TX_ALREADY_COMPLETED,           // 이미 완료된 Tx
-        TX_CANCLED,                     // 취소된 Tx
-        TX_ALREADY_INPROGRESS,          // 지급 진행중인 Tx
-        TX_UNVERIFIABLE_TYPE,           // 검증 불가 타입 
-        PURCHASE_VALIDATION_FAILED,     // 구매 검증 실패 
-        PURCHASE_GOOGLE_VALIDATE_ERROR, // 구글 검증 에러 
-        BILL_CREATE_DETAIL_FAILED,      // 빌링 정보 생성 에러 
-        BILL_COMPLETE_DETAIL_FAILED,    // 빌링 정보 완료 에러 
-        TX_COMPLETE_FAILED,             // Tx 완료 에러 
-        SUBSCRIPTION_NOTFFOUND,                   // 존재하지 않는 Tx
-        UNKNOWN                         // 알려지지 않은 상태
+        /// <summary>
+        /// 에러없음
+        /// </summary>
+        NONE = 0,
+        /// <summary>
+        /// 시스템 에러
+        /// </summary>
+        SYSTEM_ERROR,  
+        /// <summary>
+        /// 존재하지 않는 Tx
+        /// </summary>
+        TX_NOT_FOUND,       
+        /// <summary>
+        /// 이미 완료된 Tx
+        /// </summary>
+        TX_ALREADY_IS_DONE,
+        /// <summary>
+        /// 취소된 Tx
+        /// </summary>
+        TX_CANCLED,  
+        /// <summary>
+        /// 지급 진행주인 Tx
+        /// </summary>
+        TX_ALREADY_INPROGRESS,
+        /// <summary>
+        /// 검증 불가 타입
+        /// </summary>
+        TX_UNVERIFIABLE_TYPE,
+        /// <summary>
+        /// 구매 검증 실패
+        /// </summary>
+        PURCHASE_VALIDATION_FAILED,
+        /// <summary>
+        /// 구글 검증 에러 
+        /// </summary>
+        PURCHASE_GOOGLE_VALIDATE_ERROR,
+        /// <summary>
+        /// 포인트 검증/구매 에러 
+        /// </summary>
+        PURCHASE_POINT_VALIDATE_ERROR,
+        /// <summary>
+        /// 빌링 정보 생성 에러 
+        /// </summary>
+        BILL_CREATE_DETAIL_FAILED,
+        /// <summary>
+        /// 빌링 정보 완료 에러 
+        /// </summary>
+        BILL_COMPLETE_DETAIL_FAILED,
+        /// <summary>
+        /// Tx 완료 에러
+        /// </summary>
+        TX_COMPLETE_FAILED,
+        /// <summary>
+        /// 존재 하지 않는 Tx
+        /// </summary>
+        SUBSCRIPTION_NOTFFOUND,
+        /// <summary>
+        /// 알려지지 않은 에러
+        /// </summary>
+        UNKNOWN                
     }
 
-
-    public enum BillDetailTypes
-    {
-        CONSUMABLE,
-        NON_CONSUMABLE,
-        SUBSCRIPTION_AUTO,
-        SOBSCRIPTION_NON_AUTO,
-        CHARGE,
-        REFUND
-    }
 
     public enum BillProductType
     {
-        CONSUMABLE = 0,
+        /// <summary>
+        /// 소모성 상품
+        /// </summary>
+        CONSUMABLE,
+        /// <summary>
+        /// 비 소모성 상품 
+        /// </summary>
         NON_CONSUMABLE,
-        SUBSCRIPTION,
+        /// <summary>
+        /// 자동 구독 상품
+        /// </summary>
+        SUBSCRIPTION_AUTO,
+        /// <summary>
+        /// 구독 상품 
+        /// </summary>
+        SUBSCRIPTION_NON_AUTO,
+        /// <summary>
+        /// 환불
+        /// </summary>
+        REFUND
     }
+
 
     public enum SubScriptionState
     {
@@ -80,13 +128,6 @@ namespace Billing.Core.Enums
         /// 정기 결제의 대기 중인 거래가 취소되었습니다. 이 대기 중인 구매가 기존 정기 결제에 관한 것이라면 linkedPurchaseToken을 사용하여 해당 정기 결제의 현재 상태를 가져옵니다.
         /// </summary>
         SUBSCRIPTION_STATE_PENDING_PURCHASE_CANCELED
-    }
-
-    public enum AcknowledgementState
-    {
-        ACKNOWLEDGEMENT_STATE_UNSPECIFIED,
-        ACKNOWLEDGEMENT_STATE_PENDING,
-        ACKNOWLEDGEMENT_STATE_ACKNOWLEDGED
     }
 
 }
