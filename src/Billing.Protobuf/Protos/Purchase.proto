@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package billing.protobuf.purchase;
+
+import "Core.proto";
+import "Point.proto";
+
+option csharp_namespace = "Billing.Protobuf.Purchase";
+
+// 구매 정보
+message PurchaseInfo {
+    int64 bill_tx_id = 1;
+    billing.protobuf.core.BillProductType product_type = 2;
+    string product_key = 3;
+    string purchase_token = 4;
+    int64 account_id = 5;
+    string account_name = 6;
+    optional int64 char_id = 7;
+    optional string char_name = 8;
+    repeated billing.protobuf.point.PointPurchase point_purchases = 9;
+}

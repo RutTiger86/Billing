@@ -1,8 +1,9 @@
-﻿using Billing.Core.Enums;
-using Billing.Core.Extensions;
+﻿using Billing.Core.Extensions;
 using Billing.Core.Interfaces;
-using Billing.Core.Models;
 using Billing.Core.Models.DataBase;
+using Billing.Protobuf.Core;
+using Billing.Protobuf.Point;
+using Billing.Protobuf.Product;
 using Microsoft.Extensions.Logging;
 using System.Data;
 
@@ -111,7 +112,7 @@ namespace Billing.Core.Services
             newRow = productItemTable.NewRow();
             newRow["Id"] = 1;
             newRow["ProductId"] = 1;
-            newRow["Types"] = ProductTypes.CHARACTER_ITEM;
+            newRow["Types"] = ProductTypes.CharacterItem;
             newRow["ItemId"] = 1;
             newRow["ItemVolume"] = 1;
             newRow["IsUse"] = true;
@@ -123,7 +124,7 @@ namespace Billing.Core.Services
             newRow = productItemTable.NewRow();
             newRow["Id"] = 2;
             newRow["ProductId"] = 2;
-            newRow["Types"] = ProductTypes.CHARACTER_ITEM;
+            newRow["Types"] = ProductTypes.CharacterItem;
             newRow["ItemId"] = 1;
             newRow["ItemVolume"] = 1;
             newRow["IsUse"] = true;
@@ -135,7 +136,7 @@ namespace Billing.Core.Services
             newRow = productItemTable.NewRow();
             newRow["Id"] = 3;
             newRow["ProductId"] = 2;
-            newRow["Types"] = ProductTypes.CHARACTER_ITEM;
+            newRow["Types"] = ProductTypes.CharacterItem;
             newRow["ItemId"] = 2;
             newRow["ItemVolume"] = 10;
             newRow["IsUse"] = true;
@@ -147,7 +148,7 @@ namespace Billing.Core.Services
             newRow = productItemTable.NewRow();
             newRow["Id"] = 4;
             newRow["ProductId"] = 3;
-            newRow["Types"] = ProductTypes.POINT;
+            newRow["Types"] = ProductTypes.Point;
             newRow["ItemId"] = 3;
             newRow["ItemVolume"] = 50000;
             newRow["IsUse"] = true;
@@ -374,7 +375,7 @@ namespace Billing.Core.Services
                     return false;
                 }
 
-                subscriptionInfoRow["State"] = SubScriptionState.SUBSCRIPTION_STATE_EXPIRED;
+                subscriptionInfoRow["State"] = SubScriptionState.Expired;
                 subscriptionInfoRow["IsExpired"] = true;
                 subscriptionInfoRow["UpdateDate"] = DateTime.Now;
 
@@ -453,21 +454,21 @@ namespace Billing.Core.Services
                             ProductKey = product.Field<string>("ProductKey"),
                             ProductName = product.Field<string>("ProductName"),
                             IsUse = product.Field<bool>("IsUse"),
-                            ItemName = item.Field<string>("ItemName"),
-                            PointType = item.Field<int>("PointType")
-
                         } into productGroup
-                        select new ProductInfo
+                        select new
                         {
-                            Id = productGroup.Key.ProductId,
-                            ProductKey = productGroup.Key.ProductKey,
-                            ProductName = productGroup.Key.ProductName,
-                            IsUse = productGroup.Key.IsUse,
+                            ProductInfo = new ProductInfo
+                            {
+                                Id = productGroup.Key.ProductId,
+                                ProductKey = productGroup.Key.ProductKey,
+                                ProductName = productGroup.Key.ProductName,
+                                IsUse = productGroup.Key.IsUse
+                            },
                             Items = productGroup.Select(pg => new ProductItemInfo
                             {
                                 Id = pg.Field<long>("Id"),
                                 ProductId = pg.Field<long>("ProductId"),
-                                Types = (ProductTypes)pg.Field<int>("Types"),
+                                ProductType = (ProductTypes)pg.Field<int>("Types"),
                                 ItemId = pg.Field<long>("ItemId"),
                                 ItemVolume = pg.Field<int>("ItemVolume"),
                                 IsUse = pg.Field<bool>("IsUse"),
@@ -475,8 +476,11 @@ namespace Billing.Core.Services
                                 PointType = (PointType)pg.Field<int>("PointType")
                             }).ToList()
                         };
+            // Map the query result to ProductInfo
+            var result = query.FirstOrDefault();
+            result?.ProductInfo.Items.AddRange(result.Items);
 
-            return query.FirstOrDefault();
+            return result?.ProductInfo;
         }
 
         public bool ChargeLedger(long accountId, PointType pointType, long amount)

@@ -1,6 +1,6 @@
 ﻿using Billing.Api.Models.Respons;
-using Billing.Core.Enums;
 using Billing.Core.Interfaces;
+using Billing.Protobuf.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Billing.Api.Controllers
@@ -21,7 +21,7 @@ namespace Billing.Api.Controllers
                 return new BaseResponse<long>
                 {
                     Result = true,
-                    ErrorCode = (int)BillingError.NONE,
+                    ErrorCode = (int)BillingError.None,
                     Data = billTxService.IssueBillTx(txTypes)
                 };
             }
@@ -31,8 +31,8 @@ namespace Billing.Api.Controllers
                 return new BaseResponse<long>
                 {
                     Result = false,
-                    ErrorCode = (int)BillingError.SYSTEM_ERROR,
-                    ErrorMessage = BillingError.SYSTEM_ERROR.ToString(),
+                    ErrorCode = (int)BillingError.SystemError,
+                    ErrorMessage = BillingError.SystemError.ToString(),
                     Data = -1
                 };
             }
@@ -48,8 +48,8 @@ namespace Billing.Api.Controllers
                     return new BaseResponse<bool>
                     {
                         Result = false,
-                        ErrorCode = (int)BillingError.TX_COMPLETE_FAILED,
-                        ErrorMessage = BillingError.TX_COMPLETE_FAILED.ToString(),
+                        ErrorCode = (int)BillingError.TxCompleteFailed,
+                        ErrorMessage = BillingError.TxCompleteFailed.ToString(),
                         Data = false
                     };
                 }
@@ -58,7 +58,7 @@ namespace Billing.Api.Controllers
                 return new BaseResponse<bool>
                 {
                     Result = true,
-                    ErrorCode = (int)BillingError.NONE,
+                    ErrorCode = (int)BillingError.None,
                     Data = true
                 };
             }
@@ -68,8 +68,8 @@ namespace Billing.Api.Controllers
                 return new BaseResponse<bool>
                 {
                     Result = false,
-                    ErrorCode = (int)BillingError.SYSTEM_ERROR,
-                    ErrorMessage = BillingError.SYSTEM_ERROR.ToString(),
+                    ErrorCode = (int)BillingError.SystemError,
+                    ErrorMessage = BillingError.SystemError.ToString(),
                     Data = false
                 };
             }
@@ -97,8 +97,8 @@ namespace Billing.Api.Controllers
                     return new BaseResponse<bool>
                     {
                         Result = false,
-                        ErrorCode = (int)BillingError.TX_COMPLETE_FAILED,
-                        ErrorMessage = BillingError.TX_COMPLETE_FAILED.ToString(),
+                        ErrorCode = (int)BillingError.TxCompleteFailed,
+                        ErrorMessage = BillingError.TxCompleteFailed.ToString(),
                         Data = false
                     };
                 }
@@ -107,7 +107,7 @@ namespace Billing.Api.Controllers
                 return new BaseResponse<bool>
                 {
                     Result = true,
-                    ErrorCode = (int)BillingError.NONE,
+                    ErrorCode = (int)BillingError.None,
                     Data = true
                 };
             }
@@ -117,8 +117,8 @@ namespace Billing.Api.Controllers
                 return new BaseResponse<bool>
                 {
                     Result = false,
-                    ErrorCode = (int)BillingError.SYSTEM_ERROR,
-                    ErrorMessage = BillingError.SYSTEM_ERROR.ToString(),
+                    ErrorCode = (int)BillingError.SystemError,
+                    ErrorMessage = BillingError.SystemError.ToString(),
                     Data = false
                 };
             }

@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package billing.protobuf.product;
+
+import "Point.proto";
+
+option csharp_namespace = "Billing.Protobuf.Product";
+
+// 상품 타입
+enum ProductTypes
+{
+    POINT = 0;
+    ACCOUNT_ITEM = 1;
+    CHARACTER_ITEM = 2;
+}
+
+// 상품 정보
+message ProductInfo {
+    int64 id = 1;
+    string product_key = 2;
+    string product_name = 3;
+    bool is_use = 4;
+    repeated ProductItemInfo items = 5;
+}
+
+// 상품별 아이템 정보
+message ProductItemInfo {
+    int64 id = 1;
+    int64 product_id = 2;
+    ProductTypes product_type = 3;
+    int64 item_id = 4;
+    int32 item_volume = 5;
+    string item_name = 6;
+    bool is_use = 7;
+    billing.protobuf.point.PointType PointType = 8;
+}

@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package billing.protobuf.service;
+
+import "Core.proto";
+import "Purchase.proto";
+
+option csharp_namespace = "Billing.Protobuf.Service";
+
+// 트랜잭션 서비스 정의
+service TransactionService {
+    rpc IssueBillTx (IssueBillTxRequest) returns (IssueBillTxResponse);
+    rpc CompleteBillTx (CommonBillTxRequest) returns (CommonResultResponse);
+    rpc CancleBillTx (CommonBillTxRequest) returns (CommonResultResponse);
+}
+
+//구매 및 검증 서비스 정의
+service BillService{
+    rpc PurchaseValidate(billing.protobuf.purchase.PurchaseInfo) returns (CommonResultResponse);
+    rpc GetSubscriptionState(CommonBillTxRequest) returns(GetSubscriptionStateResponse);
+}
+
+// 요청 메시지
+message IssueBillTxRequest {
+    billing.protobuf.core.BillTxTypes bill_tx_type = 1;
+}
+message CommonBillTxRequest {
+   int64 transaction_id = 1;
+}
+
+// 응답 메시지
+message IssueBillTxResponse {
+    int64 transaction_id = 1;
+}
+message CommonResultResponse {
+    bool result = 1;
+}
+message GetSubscriptionStateResponse{
+    billing.protobuf.core.SubScriptionState sub_scription_state = 1;
+}

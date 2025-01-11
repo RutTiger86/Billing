@@ -1,6 +1,6 @@
 ﻿using Billing.Api.Extensions;
 using Billing.Api.Models.Respons;
-using Billing.Core.Enums;
+using Billing.Protobuf.Core;
 using System.Diagnostics;
 using System.Text.Json;
 
@@ -71,8 +71,8 @@ namespace Billing.Api.Middlewares
 
                 BaseResponse<string> res = new()
                 {
-                    ErrorCode = (int)BillingError.SYSTEM_ERROR,
-                    ErrorMessage = $"{BillingError.SYSTEM_ERROR}",
+                    ErrorCode = (int)BillingError.SystemError,
+                    ErrorMessage = $"{BillingError.SystemError}",
                     Data = ex.ToString(),
                     Result = false
                 };

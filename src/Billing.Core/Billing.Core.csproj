@@ -7,8 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\PointPurchase.cs" />
+    <Compile Remove="Models\ProductInfo.cs" />
+    <Compile Remove="Models\ProductItemInfo.cs" />
+    <Compile Remove="Models\PurchaseInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Google.Apis.AndroidPublisher.v3" Version="1.68.0.3637" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Billing.Protobuf\Billing.Protobuf.csproj" />
   </ItemGroup>
 
 </Project>

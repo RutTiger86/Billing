@@ -1,4 +1,4 @@
-﻿using Billing.Core.Enums;
+﻿using Billing.Protobuf.Core;
 
 namespace Billing.Core.Exceptions
 {

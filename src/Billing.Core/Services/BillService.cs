@@ -1,8 +1,9 @@
-﻿using Billing.Core.Enums;
-using Billing.Core.Exceptions;
+﻿using Billing.Core.Exceptions;
 using Billing.Core.Interfaces;
-using Billing.Core.Models;
 using Billing.Core.Models.DataBase;
+using Billing.Protobuf.Core;
+using Billing.Protobuf.Product;
+using Billing.Protobuf.Purchase;
 using Microsoft.Extensions.Logging;
 
 namespace Billing.Core.Services
@@ -34,41 +35,41 @@ namespace Billing.Core.Services
                  var billDetailId = CreateBillDetail(purchaseInfo);
                 if (billDetailId<1)
                 {
-                    return (false, BillingError.BILL_CREATE_DETAIL_FAILED);
+                    return (false, BillingError.BillCreateDetailFailed);
                 }
 
                 // 검증 및 포인트 차감
                 bool validatedResult = await ValidationProcess(billDetailId, purchaseInfo);
                 if (!validatedResult)
                 {
-                    return (false, BillingError.PURCHASE_VALIDATION_FAILED);
+                    return (false, BillingError.PurchaseValidationFailed);
                 }
 
                 //포인트 구매시 포인트 충전 
                 var product = dataService.SelectProductInfoByProductKey(purchaseInfo.ProductKey);
-                var pointProduct = product.Items.Where(p => p.Types == ProductTypes.POINT).ToList();
+                var pointProduct = product.Items.Where(p => p.ProductType == ProductTypes.Point).ToList();
                 if (pointProduct.Count>0)
                 {
-                    dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.POINT_CHARGE_START);
+                    dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.PointChargeStart);
                     bool chargePointResult = pointValidationService.ChargePointProcess(pointProduct, purchaseInfo);
 
                     if(!chargePointResult)
                     {
-                        return (false, BillingError.PURCHASE_VALIDATION_FAILED);
+                        return (false, BillingError.PurchaseValidationFailed);
                     }
                 }
 
-                return (true, BillingError.NONE);
+                return (true, BillingError.None);
             }
             catch (BillingException ex)
             {
                 logger.LogError($"Bill Exception Error : {ex.Message}");
-                return (false, BillingError.SYSTEM_ERROR);
+                return (false, BillingError.SystemError);
             }
             catch (Exception ex)
             {
                 logger.LogError($"Bill Exception Error : {ex.Message}");
-                return (false, BillingError.SYSTEM_ERROR);
+                return (false, BillingError.SystemError);
             }
         }
        
@@ -79,48 +80,48 @@ namespace Billing.Core.Services
         {
             try
             {
-                SubScriptionState statue = SubScriptionState.SUBSCRIPTION_STATE_UNSPECIFIED;
+                SubScriptionState statue = SubScriptionState.Unspecified;
                 var billTx = dataService.SelectBillTx(billTxID);
 
                 if (billTx == null)
                 {
-                    return (statue, BillingError.TX_NOT_FOUND);
+                    return (statue, BillingError.TxNotFound);
                 }
 
                 var subscriptionInfo = dataService.SelectSubscriptionInfo(billTxID);
 
                 if (subscriptionInfo == null)
                 {
-                    return (statue, BillingError.SUBSCRIPTION_NOTFFOUND);
+                    return (statue, BillingError.SubscriptionNotffound);
                 }
 
                 IValidationService validationService = GetValidationService(billTxID);
 
                 if (validationService == null)
                 {
-                    return (statue, BillingError.TX_UNVERIFIABLE_TYPE);
+                    return (statue, BillingError.TxUnverifiableType);
                 }
 
                 statue = await  validationService.SubscriptionsValidate(billTx.PurchaseToken);
 
                 switch (statue)
                 {
-                    case SubScriptionState.SUBSCRIPTION_STATE_EXPIRED :
+                    case SubScriptionState.Expired :
                         dataService.ExpireSubscription(subscriptionInfo.Id);
                             break;
                 };
 
-                return (statue, BillingError.NONE);
+                return (statue, BillingError.None);
             }
             catch (BillingException ex)
             {
                 logger.LogError($"Bill Exception Error : {ex.Message}");
-                return (SubScriptionState.SUBSCRIPTION_STATE_UNSPECIFIED, BillingError.SYSTEM_ERROR);
+                return (SubScriptionState.Unspecified, BillingError.SystemError);
             }
             catch (Exception ex)
             {
                 logger.LogError($"Bill Exception Error : {ex.Message}");
-                return (SubScriptionState.SUBSCRIPTION_STATE_UNSPECIFIED, BillingError.SYSTEM_ERROR);
+                return (SubScriptionState.Unspecified, BillingError.SystemError);
 
             }
         }
@@ -134,12 +135,12 @@ namespace Billing.Core.Services
 
             if(billtx == null)
             {
-                return (false, BillingError.TX_NOT_FOUND);
+                return (false, BillingError.TxNotFound);
             }
 
             pointValidationService.PointRollBack(billTxId);
 
-            return (true, BillingError.NONE);
+            return (true, BillingError.None);
         }
 
         /// <summary>
@@ -156,10 +157,10 @@ namespace Billing.Core.Services
 
             if (!billTxService.RegistPurchaseToken(purchaseInfo.BillTxId, purchaseInfo.PurchaseToken))
             {
-                return (false, BillingError.SYSTEM_ERROR);
+                return (false, BillingError.SystemError);
             }
 
-            return (true, BillingError.NONE);
+            return (true, BillingError.None);
         }
 
         /// <summary>
@@ -172,15 +173,15 @@ namespace Billing.Core.Services
 
             if (validationService == null)
             {
-                throw new BillingException(BillingError.TX_UNVERIFIABLE_TYPE, "Undefined Tx Type");
+                throw new BillingException(BillingError.TxUnverifiableType, "Undefined Tx Type");
             }
 
             return purchaseInfo.ProductType switch
             {
-                BillProductType.CONSUMABLE or BillProductType.NON_CONSUMABLE 
+                BillProductType.Consumable or BillProductType.NonConsumable
                 => await validationService.PurchaseProductValidate(billDetailId, purchaseInfo),
 
-                BillProductType.SUBSCRIPTION_NON_AUTO or BillProductType.SUBSCRIPTION_AUTO 
+                BillProductType.SubscriptionNonAuto or BillProductType.SubscriptionAuto
                 => await validationService.PruchaseSubscriptionsValidate(billDetailId, purchaseInfo),
 
                 _ => false
@@ -193,7 +194,7 @@ namespace Billing.Core.Services
         private BillTxTypes GetBillTxType(long billTxId)
         {
             BillTx billTx = dataService.SelectBillTx(billTxId);
-            return billTx == null ? throw new BillingException(BillingError.TX_NOT_FOUND, "Transaction does not exist") : billTx.Type;
+            return billTx == null ? throw new BillingException(BillingError.TxNotFound, "Transaction does not exist") : billTx.Type;
         }
 
         /// <summary>
@@ -206,8 +207,8 @@ namespace Billing.Core.Services
             var billType = GetBillTxType(billTxId);
             IValidationService validationService = billType switch
             {
-                BillTxTypes.IAP_Google => googlValidationServices,
-                BillTxTypes.POINT =>  pointValidationService,
+                BillTxTypes.IapGoogle => googlValidationServices,
+                BillTxTypes.Point =>  pointValidationService,
                 _ => null,
             };
             return validationService;

@@ -1,8 +1,8 @@
-﻿using Billing.Core.Enums;
+﻿using Billing.Protobuf.Core;
 
 namespace Billing.Core.Models.DataBase
 {
-    public class BillTx : BaseModel
+    public class BillTx
     {
         /// <summary>
         /// 트랜젝션 ID

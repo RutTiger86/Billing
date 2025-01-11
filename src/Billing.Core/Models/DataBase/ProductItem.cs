@@ -1,4 +1,4 @@
-﻿using Billing.Core.Enums;
+﻿using Billing.Protobuf.Product;
 
 namespace Billing.Core.Models.DataBase
 {

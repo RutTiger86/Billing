@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package billing.protobuf.core;
+
+option csharp_namespace = "Billing.Protobuf.Core";
+
+// 공통 에러 상태
+enum BillingError {
+    NONE = 0;
+    SYSTEM_ERROR = 1;
+    TX_NOT_FOUND = 2;    
+    TX_ALREADY_IS_DONE = 3;
+    TX_CANCLED = 4; 
+    TX_ALREADY_INPROGRESS = 5;
+    TX_UNVERIFIABLE_TYPE = 6;
+    PURCHASE_VALIDATION_FAILED = 7;
+    PURCHASE_GOOGLE_VALIDATE_ERROR = 8;
+    PURCHASE_POINT_VALIDATE_ERROR = 9;
+    BILL_CREATE_DETAIL_FAILED = 10;
+    BILL_COMPLETE_DETAIL_FAILED = 11;
+    TX_COMPLETE_FAILED = 12;
+    SUBSCRIPTION_NOTFFOUND = 13;
+    UNKNOWN = 14;
+}
+
+// 트랜잭션 타입
+enum BillTxTypes {
+    WEB_PG = 0;
+    IAP_GOOGLE = 1;
+    IAP_IOS = 2;
+    POINT = 3;
+}
+
+// 트랜잭션 상태 
+enum BillTxStatus {
+    INITIATED = 0;
+    COMPLETED = 1;
+    DELIVERY_FAILED = 2;
+    POINT_CHARGE_START = 3;
+    POINT_CHARGE_END = 4;
+    POINT_CHARGE_FAILED = 5;
+    POINT_SPEND_START = 6;
+    POINT_SPEND_END = 7;
+    POINT_SPEND_FAILED = 8;
+    IAP_RECEIPT_PENDING = 9;
+    IAP_RECEIPT_VALID = 10;
+    IAP_RECEIPT_INVALID = 11;
+    REFUNDED = 12;
+    CANCLED = 13;
+    EXPIRED =14;
+}
+
+// 상품 타입
+enum BillProductType {
+    CONSUMABLE = 0;
+    NON_CONSUMABLE = 1;
+    SUBSCRIPTION_AUTO = 2;
+    SUBSCRIPTION_NON_AUTO = 3;
+    REFUND = 4;
+}
+
+//구독 상태
+enum SubScriptionState {
+    SUBSCRIPTION_STATE_UNSPECIFIED = 0;
+    SUBSCRIPTION_STATE_PENDING = 1;
+    SUBSCRIPTION_STATE_ACTIVE = 2;
+    SUBSCRIPTION_STATE_PAUSED = 3;
+    SUBSCRIPTION_STATE_IN_GRACE_PERIOD =4;
+    SUBSCRIPTION_STATE_ON_HOLD = 5;
+    SUBSCRIPTION_STATE_CANCELED = 6;
+    SUBSCRIPTION_STATE_EXPIRED = 7;
+}

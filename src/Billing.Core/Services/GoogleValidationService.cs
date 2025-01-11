@@ -1,8 +1,8 @@
-﻿using Billing.Core.Enums;
-using Billing.Core.Exceptions;
+﻿using Billing.Core.Exceptions;
 using Billing.Core.Interfaces;
-using Billing.Core.Models;
 using Billing.Core.Models.DataBase;
+using Billing.Protobuf.Core;
+using Billing.Protobuf.Purchase;
 using Google.Apis.AndroidPublisher.v3;
 using Google.Apis.AndroidPublisher.v3.Data;
 using Google.Apis.Auth.OAuth2;
@@ -52,7 +52,7 @@ namespace Billing.Core.Services
 
                 var responseTask = request.ExecuteAsync();
 
-                dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IAP_RECEIPT_PENDING);
+                dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IapReceiptPending);
 
                 var response = await responseTask;
 
@@ -75,27 +75,27 @@ namespace Billing.Core.Services
                         //    logger.LogInformation("Purchase already acknowledged.");
                         //}
 
-                        dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IAP_RECEIPT_VALID);
+                        dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IapReceiptValid);
                         logger.LogInformation($"Purchase verified: {response.OrderId}");
                         return true;
                     }
                     else
                     {
-                        dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IAP_RECEIPT_INVALID);
+                        dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IapReceiptInvalid);
                         logger.LogWarning($"Purchase is not valid: {response.OrderId}");
                         return false;
                     }
                 }
                 else
                 {
-                    dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IAP_RECEIPT_INVALID);
+                    dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IapReceiptInvalid);
                     logger.LogError($"Purchase valid response is Null  ProductId: {purchaseInfo.ProductKey}");
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                throw new BillingException(BillingError.PURCHASE_GOOGLE_VALIDATE_ERROR, $"Error verifying purchase: {ex.Message}");
+                throw new BillingException(BillingError.PurchaseGoogleValidateError, $"Error verifying purchase: {ex.Message}");
             }
         }
 
@@ -110,7 +110,7 @@ namespace Billing.Core.Services
 
                 var responseTask = request.ExecuteAsync();
 
-                dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IAP_RECEIPT_PENDING);
+                dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IapReceiptPending);
 
                 var response = await responseTask;
 
@@ -119,7 +119,7 @@ namespace Billing.Core.Services
                     long currentTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                     if (response.ExpiryTimeMillis < currentTime)
                     {
-                        dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IAP_RECEIPT_VALID);
+                        dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IapReceiptValid);
                         logger.LogInformation("Subscription has expired.");
                         return false;
                     }
@@ -137,20 +137,20 @@ namespace Billing.Core.Services
 
                     CreateSubScription(billDetailId, purchaseInfo, (long)response.ExpiryTimeMillis);
 
-                    dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IAP_RECEIPT_VALID);
+                    dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IapReceiptValid);
                     logger.LogInformation($"Purchase verified: {response.OrderId}");
                     return true;
                 }
                 else
                 {
-                    dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IAP_RECEIPT_INVALID);
+                    dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IapReceiptInvalid);
                     logger.LogError($"Purchase valid response is Null  ProductId: {purchaseInfo.ProductKey}");
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                throw new BillingException(BillingError.PURCHASE_GOOGLE_VALIDATE_ERROR, $"Error verifying purchase: {ex.Message}");
+                throw new BillingException(BillingError.PurchaseGoogleValidateError, $"Error verifying purchase: {ex.Message}");
             }
         }
 
@@ -171,12 +171,12 @@ namespace Billing.Core.Services
                 }
                 else
                 {
-                    return SubScriptionState.SUBSCRIPTION_STATE_UNSPECIFIED;
+                    return SubScriptionState.Unspecified;
                 }
             }
             catch (Exception ex)
             {
-                throw new BillingException(BillingError.PURCHASE_GOOGLE_VALIDATE_ERROR, $"Error verifying purchase: {ex.Message}");
+                throw new BillingException(BillingError.PurchaseGoogleValidateError, $"Error verifying purchase: {ex.Message}");
             }
         }
 
@@ -199,7 +199,7 @@ namespace Billing.Core.Services
                 BillTxId = purchaseInfo.BillTxId,
                 ExpiryTimeMillis = expiryTimeMillis,
                 IsExpired = false,
-                State = SubScriptionState.SUBSCRIPTION_STATE_ACTIVE             
+                State = SubScriptionState.Active             
             };
 
             return dataService.InsertSubscriptionInfo(subscription);

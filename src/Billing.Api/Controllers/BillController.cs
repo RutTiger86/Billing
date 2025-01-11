@@ -1,8 +1,9 @@
 ﻿using Billing.Api.Extensions;
 using Billing.Api.Models.Requests;
 using Billing.Api.Models.Respons;
-using Billing.Core.Enums;
 using Billing.Core.Interfaces;
+using Billing.Protobuf.Core;
+using Billing.Protobuf.Purchase;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Billing.Api.Controllers
@@ -16,17 +17,17 @@ namespace Billing.Api.Controllers
         private readonly IBillService billService = billService;
 
         [HttpPost("validate")]
-        public async Task<BaseResponse<bool>> ValidateBillTx([FromBody] ValidateBillTxRequest validateRequest)
+        public async Task<BaseResponse<bool>> ValidateBillTx([FromBody] PurchaseInfo validateRequest)
         {
             var response = new BaseResponse<bool>
             {
                 Result = true,
-                ErrorCode = (int)BillingError.NONE,
+                ErrorCode = (int)BillingError.None,
             };
 
             try
             {
-                var (validationResult, validationServiceError) = await billService.PurchaseValidation(validateRequest.toPurchaseInfo());
+                var (validationResult, validationServiceError) = await billService.PurchaseValidation(validateRequest);
 
                 response.Result = validationResult;
                 response.ErrorCode = (int)validationServiceError;
@@ -36,8 +37,8 @@ namespace Billing.Api.Controllers
             {
                 logger.LogError($"ValidateBillTx Error: {ex.Message}");
                 response.Result = false;
-                response.ErrorCode = (int)BillingError.SYSTEM_ERROR;
-                response.ErrorMessage = BillingError.SYSTEM_ERROR.ToString();
+                response.ErrorCode = (int)BillingError.SystemError;
+                response.ErrorMessage = BillingError.SystemError.ToString();
                 return response;
             }
 
@@ -50,7 +51,7 @@ namespace Billing.Api.Controllers
             var response = new BaseResponse<SubScriptionState>
             {
                 Result = true,
-                ErrorCode = (int)BillingError.NONE,
+                ErrorCode = (int)BillingError.None,
             };
 
             try
@@ -66,8 +67,8 @@ namespace Billing.Api.Controllers
             {
                 logger.LogError($"ValidateBillTx Error: {ex.Message}");
                 response.Result = false;
-                response.ErrorCode = (int)BillingError.SYSTEM_ERROR;
-                response.ErrorMessage = BillingError.SYSTEM_ERROR.ToString();
+                response.ErrorCode = (int)BillingError.SystemError;
+                response.ErrorMessage = BillingError.SystemError.ToString();
                 return response;
             }
 

@@ -1,6 +1,6 @@
-﻿using Billing.Core.Enums;
-using Billing.Core.Interfaces;
+﻿using Billing.Core.Interfaces;
 using Billing.Core.Models.DataBase;
+using Billing.Protobuf.Core;
 using Microsoft.Extensions.Logging;
 
 namespace Billing.Core.Services
@@ -20,7 +20,7 @@ namespace Billing.Core.Services
                 BillTx transaction = new ()
                 {
                     Type = transactionType,
-                    Status = BillTxStatus.INITIATED,
+                    Status = BillTxStatus.Initiated,
                     IsDone = false,
                 };
 
@@ -45,20 +45,20 @@ namespace Billing.Core.Services
 
                 if (billTx == null)
                 {
-                    return (false, BillingError.TX_NOT_FOUND);
+                    return (false, BillingError.TxNotFound);
                 }
 
                 if (billTx.IsDone)
                 {
-                    return (false, BillingError.TX_ALREADY_IS_DONE);
+                    return (false, BillingError.TxAlreadyIsDone);
                 }
 
-                return (true, BillingError.NONE);
+                return (true, BillingError.None);
             }
             catch (Exception ex)
             {
                 logger.LogError($"ValidateBillTx Error: {ex.ToString()}");
-                return (false, BillingError.SYSTEM_ERROR);
+                return (false, BillingError.SystemError);
             }
         }
 
@@ -85,7 +85,7 @@ namespace Billing.Core.Services
         {
             try
             {
-                return dataService.UpdateBillTxStatus(billTxId, BillTxStatus.CANCLED, true);
+                return dataService.UpdateBillTxStatus(billTxId, BillTxStatus.Cancled, true);
             }
             catch (Exception ex)
             {
@@ -101,7 +101,7 @@ namespace Billing.Core.Services
         {
             try
             {
-                return dataService.UpdateBillTxStatus(billTxId, BillTxStatus.COMPLETED, true);
+                return dataService.UpdateBillTxStatus(billTxId, BillTxStatus.Completed, true);
             }
             catch (Exception ex)
             {

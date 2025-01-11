@@ -1,6 +1,7 @@
-﻿using Billing.Core.Enums;
-using Billing.Core.Models;
-using Billing.Core.Models.DataBase;
+﻿using Billing.Core.Models.DataBase;
+using Billing.Protobuf.Core;
+using Billing.Protobuf.Point;
+using Billing.Protobuf.Product;
 
 namespace Billing.Core.Interfaces
 {

@@ -1,5 +1,4 @@
-﻿using Billing.Core.Enums;
-using System.Runtime.CompilerServices;
+﻿using Billing.Protobuf.Core;
 
 namespace Billing.Api.Models.Requests
 {

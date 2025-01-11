@@ -1,8 +1,10 @@
-﻿using Billing.Core.Enums;
-using Billing.Core.Exceptions;
+﻿using Billing.Core.Exceptions;
 using Billing.Core.Interfaces;
-using Billing.Core.Models;
 using Billing.Core.Models.DataBase;
+using Billing.Protobuf.Core;
+using Billing.Protobuf.Point;
+using Billing.Protobuf.Product;
+using Billing.Protobuf.Purchase;
 using Microsoft.Extensions.Logging;
 
 namespace Billing.Core.Services
@@ -29,7 +31,7 @@ namespace Billing.Core.Services
             try
             {
 
-                dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.POINT_SPEND_START);
+                dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.PointSpendStart);
 
                 List<Ledger> ledgers =  dataService.SelectLedger(purchaseInfo.AccountId);
 
@@ -59,7 +61,7 @@ namespace Billing.Core.Services
                     {
                         AccountId = purchaseInfo.AccountId,
                         BillTxId = purchaseInfo.BillTxId,
-                        PointOperationType = PointOperationType.WITHDRAW,
+                        PointOperationType = PointOperationType.Withdraw,
                         ProductId = product.Id,
                         PointType = pointPurchase.PointType,
                         BeforeBalance = pointLedger.Balance,
@@ -86,15 +88,15 @@ namespace Billing.Core.Services
                 {
                     PointRollBack(purchaseInfo.BillTxId);
 
-                    dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.POINT_CHARGE_FAILED);
+                    dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.PointSpendFailed);
                     return false;
                 }
-                dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.POINT_SPEND_END);
+                dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.PointSpendEnd);
                 return true;
             }
             catch (Exception ex)
             {
-                throw new BillingException(BillingError.PURCHASE_POINT_VALIDATE_ERROR, $"Error verifying purchase: {ex.Message}");
+                throw new BillingException(BillingError.PurchasePointValidateError, $"Error verifying purchase: {ex.Message}");
             }
         }
 
@@ -126,7 +128,7 @@ namespace Billing.Core.Services
                     {
                         AccountId = purchaseInfo.AccountId,
                         BillTxId = purchaseInfo.BillTxId,
-                        PointOperationType = PointOperationType.CHARGE,
+                        PointOperationType = PointOperationType.Charge,
                         ProductId = productItem.ProductId,
                         PointType = productItem.PointType,
                         BeforeBalance = pointLedgers.Balance,
@@ -140,13 +142,13 @@ namespace Billing.Core.Services
                     dataService.InsertPointHistory(pointHistory);
                 }
 
-                dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.POINT_CHARGE_END);
+                dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.PointChargeEnd);
                 return true;
             }
             catch (Exception ex)
             {
                 logger.LogError($"ChargePointProcess Error - TxId : {purchaseInfo.BillTxId} , Message : {ex.Message}");
-                dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.POINT_CHARGE_FAILED);
+                dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.PointChargeFailed);
                 return false;
             }
         }
@@ -162,7 +164,7 @@ namespace Billing.Core.Services
             {
                 if (!pointHistory.IsRollBack)
                 {
-                    if (pointHistory.PointOperationType == PointOperationType.CHARGE)
+                    if (pointHistory.PointOperationType == PointOperationType.Charge)
                     {
                         if (dataService.Withdrawledger(pointHistory.AccountId, pointHistory.PointType, pointHistory.Amount))
                         {
@@ -211,7 +213,7 @@ namespace Billing.Core.Services
             {
                 AccountId = purchaseInfo.AccountId,
                 BillTxId = purchaseInfo.BillTxId,
-                PointOperationType = PointOperationType.CREATE,
+                PointOperationType = PointOperationType.Create,
                 ProductId = productItem.ProductId,
                 PointType = productItem.PointType,
                 AfterBalance = 0,

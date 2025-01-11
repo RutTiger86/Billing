@@ -1,5 +1,5 @@
-﻿using Billing.Core.Enums;
-using Billing.Core.Models;
+﻿using Billing.Protobuf.Core;
+using Billing.Protobuf.Purchase;
 
 namespace Billing.Core.Interfaces
 {
