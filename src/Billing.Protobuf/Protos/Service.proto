@@ -8,16 +8,16 @@ import "Purchase.proto";
 option csharp_namespace = "Billing.Protobuf.Service";
 
 // 트랜잭션 서비스 정의
-service TransactionService {
+service TransactionGrpcService {
     rpc IssueBillTx (IssueBillTxRequest) returns (IssueBillTxResponse);
-    rpc CompleteBillTx (CommonBillTxRequest) returns (CommonResultResponse);
-    rpc CancleBillTx (CommonBillTxRequest) returns (CommonResultResponse);
+    rpc CompleteBillTx (CommonBillTxRequest) returns (CommonResponse);
+    rpc CancelBillTx (CommonBillTxRequest) returns (CommonResponse);
 }
 
 //구매 및 검증 서비스 정의
-service BillService{
-    rpc PurchaseValidate(billing.protobuf.purchase.PurchaseInfo) returns (CommonResultResponse);
-    rpc GetSubscriptionState(CommonBillTxRequest) returns(GetSubscriptionStateResponse);
+service BillGrpcService{
+    rpc PurchaseValidate(billing.protobuf.purchase.PurchaseInfo) returns (CommonResponse);
+    rpc GetSubscriptionState(CommonBillTxRequest) returns(SubscriptionStateResponse);
 }
 
 // 요청 메시지
@@ -29,12 +29,19 @@ message CommonBillTxRequest {
 }
 
 // 응답 메시지
+message BaseResponse {
+    bool is_successful = 1; // 성공 여부를 더 명확히 표현
+    billing.protobuf.core.BillingError error = 2; // 명확히 BillingError를 설명
+}
 message IssueBillTxResponse {
-    int64 transaction_id = 1;
+    BaseResponse base_response = 1; // 공통 응답 필드
+    int64 transaction_id = 2;       // 트랜잭션 ID
 }
-message CommonResultResponse {
-    bool result = 1;
+message CommonResponse {
+    BaseResponse base_response = 1; // 공통 응답 필드
+    bool result = 2;     // 부가적인 결과 값
 }
-message GetSubscriptionStateResponse{
-    billing.protobuf.core.SubScriptionState sub_scription_state = 1;
+message SubscriptionStateResponse {
+    BaseResponse base_response = 1;                 // 공통 응답 필드
+    billing.protobuf.core.SubScriptionState sub_scription_state = 2;
 }

@@ -64,7 +64,7 @@ namespace Billing.Api.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError($"IssuBillTx Error : {ex.Message}");
+                logger.LogError($"CompleteBillTx Error : {ex.Message}");
                 return new BaseResponse<bool>
                 {
                     Result = false,
@@ -75,29 +75,29 @@ namespace Billing.Api.Controllers
             }
         }
 
-        [HttpPost("cancletx")]
-        public async Task<BaseResponse<bool>> CancleBillTx([FromBody] long billTxId)
+        [HttpPost("canceltx")]
+        public async Task<BaseResponse<bool>> CancelBillTx([FromBody] long billTxId)
         {
             try
             {
-                (bool cancleResult, BillingError billingError) = await billService.CanclePurchase(billTxId);
-                if (!cancleResult)
+                (bool cancelResult, BillingError billingError) = await billService.CancelPurchase(billTxId);
+                if (!cancelResult)
                 {
                     return new BaseResponse<bool>
                     {
-                        Result = cancleResult,
+                        Result = cancelResult,
                         ErrorCode = (int)billingError,
                         ErrorMessage = billingError.ToString(),
                         Data = false
                     };
                 }
                 
-                if (!billTxService.CancleBillTx(billTxId))
+                if (!billTxService.CancelBillTx(billTxId))
                 {
                     return new BaseResponse<bool>
                     {
                         Result = false,
-                        ErrorCode = (int)BillingError.TxCompleteFailed,
+                        ErrorCode = (int)BillingError.TxCanceled,
                         ErrorMessage = BillingError.TxCompleteFailed.ToString(),
                         Data = false
                     };
@@ -113,7 +113,7 @@ namespace Billing.Api.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError($"IssuBillTx Error : {ex.Message}");
+                logger.LogError($"CancelBillTx Error : {ex.Message}");
                 return new BaseResponse<bool>
                 {
                     Result = false,

@@ -65,7 +65,7 @@ namespace Billing.Api.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError($"ValidateBillTx Error: {ex.Message}");
+                logger.LogError($"GetSubscriptionState Error: {ex.Message}");
                 response.Result = false;
                 response.ErrorCode = (int)BillingError.SystemError;
                 response.ErrorMessage = BillingError.SystemError.ToString();

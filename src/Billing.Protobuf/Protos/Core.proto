@@ -10,7 +10,7 @@ enum BillingError {
     SYSTEM_ERROR = 1;
     TX_NOT_FOUND = 2;    
     TX_ALREADY_IS_DONE = 3;
-    TX_CANCLED = 4; 
+    TX_CANCELED = 4; 
     TX_ALREADY_INPROGRESS = 5;
     TX_UNVERIFIABLE_TYPE = 6;
     PURCHASE_VALIDATION_FAILED = 7;
@@ -46,7 +46,7 @@ enum BillTxStatus {
     IAP_RECEIPT_VALID = 10;
     IAP_RECEIPT_INVALID = 11;
     REFUNDED = 12;
-    CANCLED = 13;
+    CANCELED = 13;
     EXPIRED =14;
 }
 

@@ -129,7 +129,7 @@ namespace Billing.Core.Services
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public async Task<(bool Result, BillingError error)> CanclePurchase(long billTxId)
+        public async Task<(bool Result, BillingError error)> CancelPurchase(long billTxId)
         {
             var billtx = dataService.SelectBillTx(billTxId);
 

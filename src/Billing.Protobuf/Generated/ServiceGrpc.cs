@@ -11,9 +11,9 @@ namespace Billing.Protobuf.Service {
   /// <summary>
   /// 트랜잭션 서비스 정의
   /// </summary>
-  public static partial class TransactionService
+  public static partial class TransactionGrpcService
   {
-    static readonly string __ServiceName = "billing.protobuf.service.TransactionService";
+    static readonly string __ServiceName = "billing.protobuf.service.TransactionGrpcService";
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static void __Helper_SerializeMessage(global::Google.Protobuf.IMessage message, grpc::SerializationContext context)
@@ -55,7 +55,7 @@ namespace Billing.Protobuf.Service {
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static readonly grpc::Marshaller<global::Billing.Protobuf.Service.CommonBillTxRequest> __Marshaller_billing_protobuf_service_CommonBillTxRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Billing.Protobuf.Service.CommonBillTxRequest.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Marshaller<global::Billing.Protobuf.Service.CommonResultResponse> __Marshaller_billing_protobuf_service_CommonResultResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Billing.Protobuf.Service.CommonResultResponse.Parser));
+    static readonly grpc::Marshaller<global::Billing.Protobuf.Service.CommonResponse> __Marshaller_billing_protobuf_service_CommonResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Billing.Protobuf.Service.CommonResponse.Parser));
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static readonly grpc::Method<global::Billing.Protobuf.Service.IssueBillTxRequest, global::Billing.Protobuf.Service.IssueBillTxResponse> __Method_IssueBillTx = new grpc::Method<global::Billing.Protobuf.Service.IssueBillTxRequest, global::Billing.Protobuf.Service.IssueBillTxResponse>(
@@ -66,20 +66,20 @@ namespace Billing.Protobuf.Service {
         __Marshaller_billing_protobuf_service_IssueBillTxResponse);
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.CommonResultResponse> __Method_CompleteBillTx = new grpc::Method<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.CommonResultResponse>(
+    static readonly grpc::Method<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.CommonResponse> __Method_CompleteBillTx = new grpc::Method<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.CommonResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "CompleteBillTx",
         __Marshaller_billing_protobuf_service_CommonBillTxRequest,
-        __Marshaller_billing_protobuf_service_CommonResultResponse);
+        __Marshaller_billing_protobuf_service_CommonResponse);
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.CommonResultResponse> __Method_CancleBillTx = new grpc::Method<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.CommonResultResponse>(
+    static readonly grpc::Method<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.CommonResponse> __Method_CancelBillTx = new grpc::Method<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.CommonResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
-        "CancleBillTx",
+        "CancelBillTx",
         __Marshaller_billing_protobuf_service_CommonBillTxRequest,
-        __Marshaller_billing_protobuf_service_CommonResultResponse);
+        __Marshaller_billing_protobuf_service_CommonResponse);
 
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
@@ -87,9 +87,9 @@ namespace Billing.Protobuf.Service {
       get { return global::Billing.Protobuf.Service.ServiceReflection.Descriptor.Services[0]; }
     }
 
-    /// <summary>Base class for server-side implementations of TransactionService</summary>
-    [grpc::BindServiceMethod(typeof(TransactionService), "BindService")]
-    public abstract partial class TransactionServiceBase
+    /// <summary>Base class for server-side implementations of TransactionGrpcService</summary>
+    [grpc::BindServiceMethod(typeof(TransactionGrpcService), "BindService")]
+    public abstract partial class TransactionGrpcServiceBase
     {
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual global::System.Threading.Tasks.Task<global::Billing.Protobuf.Service.IssueBillTxResponse> IssueBillTx(global::Billing.Protobuf.Service.IssueBillTxRequest request, grpc::ServerCallContext context)
@@ -98,43 +98,43 @@ namespace Billing.Protobuf.Service {
       }
 
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::System.Threading.Tasks.Task<global::Billing.Protobuf.Service.CommonResultResponse> CompleteBillTx(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Billing.Protobuf.Service.CommonResponse> CompleteBillTx(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::System.Threading.Tasks.Task<global::Billing.Protobuf.Service.CommonResultResponse> CancleBillTx(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Billing.Protobuf.Service.CommonResponse> CancelBillTx(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
     }
 
-    /// <summary>Client for TransactionService</summary>
-    public partial class TransactionServiceClient : grpc::ClientBase<TransactionServiceClient>
+    /// <summary>Client for TransactionGrpcService</summary>
+    public partial class TransactionGrpcServiceClient : grpc::ClientBase<TransactionGrpcServiceClient>
     {
-      /// <summary>Creates a new client for TransactionService</summary>
+      /// <summary>Creates a new client for TransactionGrpcService</summary>
       /// <param name="channel">The channel to use to make remote calls.</param>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public TransactionServiceClient(grpc::ChannelBase channel) : base(channel)
+      public TransactionGrpcServiceClient(grpc::ChannelBase channel) : base(channel)
       {
       }
-      /// <summary>Creates a new client for TransactionService that uses a custom <c>CallInvoker</c>.</summary>
+      /// <summary>Creates a new client for TransactionGrpcService that uses a custom <c>CallInvoker</c>.</summary>
       /// <param name="callInvoker">The callInvoker to use to make remote calls.</param>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public TransactionServiceClient(grpc::CallInvoker callInvoker) : base(callInvoker)
+      public TransactionGrpcServiceClient(grpc::CallInvoker callInvoker) : base(callInvoker)
       {
       }
       /// <summary>Protected parameterless constructor to allow creation of test doubles.</summary>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      protected TransactionServiceClient() : base()
+      protected TransactionGrpcServiceClient() : base()
       {
       }
       /// <summary>Protected constructor to allow creation of configured clients.</summary>
       /// <param name="configuration">The client configuration.</param>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      protected TransactionServiceClient(ClientBaseConfiguration configuration) : base(configuration)
+      protected TransactionGrpcServiceClient(ClientBaseConfiguration configuration) : base(configuration)
       {
       }
 
@@ -159,62 +159,62 @@ namespace Billing.Protobuf.Service {
         return CallInvoker.AsyncUnaryCall(__Method_IssueBillTx, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::Billing.Protobuf.Service.CommonResultResponse CompleteBillTx(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Billing.Protobuf.Service.CommonResponse CompleteBillTx(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return CompleteBillTx(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::Billing.Protobuf.Service.CommonResultResponse CompleteBillTx(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::CallOptions options)
+      public virtual global::Billing.Protobuf.Service.CommonResponse CompleteBillTx(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_CompleteBillTx, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::Billing.Protobuf.Service.CommonResultResponse> CompleteBillTxAsync(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Billing.Protobuf.Service.CommonResponse> CompleteBillTxAsync(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return CompleteBillTxAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::Billing.Protobuf.Service.CommonResultResponse> CompleteBillTxAsync(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Billing.Protobuf.Service.CommonResponse> CompleteBillTxAsync(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_CompleteBillTx, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::Billing.Protobuf.Service.CommonResultResponse CancleBillTx(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Billing.Protobuf.Service.CommonResponse CancelBillTx(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
-        return CancleBillTx(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+        return CancelBillTx(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::Billing.Protobuf.Service.CommonResultResponse CancleBillTx(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::CallOptions options)
+      public virtual global::Billing.Protobuf.Service.CommonResponse CancelBillTx(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::CallOptions options)
       {
-        return CallInvoker.BlockingUnaryCall(__Method_CancleBillTx, null, options, request);
+        return CallInvoker.BlockingUnaryCall(__Method_CancelBillTx, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::Billing.Protobuf.Service.CommonResultResponse> CancleBillTxAsync(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Billing.Protobuf.Service.CommonResponse> CancelBillTxAsync(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
-        return CancleBillTxAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+        return CancelBillTxAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::Billing.Protobuf.Service.CommonResultResponse> CancleBillTxAsync(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Billing.Protobuf.Service.CommonResponse> CancelBillTxAsync(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::CallOptions options)
       {
-        return CallInvoker.AsyncUnaryCall(__Method_CancleBillTx, null, options, request);
+        return CallInvoker.AsyncUnaryCall(__Method_CancelBillTx, null, options, request);
       }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      protected override TransactionServiceClient NewInstance(ClientBaseConfiguration configuration)
+      protected override TransactionGrpcServiceClient NewInstance(ClientBaseConfiguration configuration)
       {
-        return new TransactionServiceClient(configuration);
+        return new TransactionGrpcServiceClient(configuration);
       }
     }
 
     /// <summary>Creates service definition that can be registered with a server</summary>
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    public static grpc::ServerServiceDefinition BindService(TransactionServiceBase serviceImpl)
+    public static grpc::ServerServiceDefinition BindService(TransactionGrpcServiceBase serviceImpl)
     {
       return grpc::ServerServiceDefinition.CreateBuilder()
           .AddMethod(__Method_IssueBillTx, serviceImpl.IssueBillTx)
           .AddMethod(__Method_CompleteBillTx, serviceImpl.CompleteBillTx)
-          .AddMethod(__Method_CancleBillTx, serviceImpl.CancleBillTx).Build();
+          .AddMethod(__Method_CancelBillTx, serviceImpl.CancelBillTx).Build();
     }
 
     /// <summary>Register service method with a service binder with or without implementation. Useful when customizing the service binding logic.
@@ -222,20 +222,20 @@ namespace Billing.Protobuf.Service {
     /// <param name="serviceBinder">Service methods will be bound by calling <c>AddMethod</c> on this object.</param>
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    public static void BindService(grpc::ServiceBinderBase serviceBinder, TransactionServiceBase serviceImpl)
+    public static void BindService(grpc::ServiceBinderBase serviceBinder, TransactionGrpcServiceBase serviceImpl)
     {
       serviceBinder.AddMethod(__Method_IssueBillTx, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Billing.Protobuf.Service.IssueBillTxRequest, global::Billing.Protobuf.Service.IssueBillTxResponse>(serviceImpl.IssueBillTx));
-      serviceBinder.AddMethod(__Method_CompleteBillTx, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.CommonResultResponse>(serviceImpl.CompleteBillTx));
-      serviceBinder.AddMethod(__Method_CancleBillTx, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.CommonResultResponse>(serviceImpl.CancleBillTx));
+      serviceBinder.AddMethod(__Method_CompleteBillTx, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.CommonResponse>(serviceImpl.CompleteBillTx));
+      serviceBinder.AddMethod(__Method_CancelBillTx, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.CommonResponse>(serviceImpl.CancelBillTx));
     }
 
   }
   /// <summary>
   ///구매 및 검증 서비스 정의
   /// </summary>
-  public static partial class BillService
+  public static partial class BillGrpcService
   {
-    static readonly string __ServiceName = "billing.protobuf.service.BillService";
+    static readonly string __ServiceName = "billing.protobuf.service.BillGrpcService";
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static void __Helper_SerializeMessage(global::Google.Protobuf.IMessage message, grpc::SerializationContext context)
@@ -273,27 +273,27 @@ namespace Billing.Protobuf.Service {
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static readonly grpc::Marshaller<global::Billing.Protobuf.Purchase.PurchaseInfo> __Marshaller_billing_protobuf_purchase_PurchaseInfo = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Billing.Protobuf.Purchase.PurchaseInfo.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Marshaller<global::Billing.Protobuf.Service.CommonResultResponse> __Marshaller_billing_protobuf_service_CommonResultResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Billing.Protobuf.Service.CommonResultResponse.Parser));
+    static readonly grpc::Marshaller<global::Billing.Protobuf.Service.CommonResponse> __Marshaller_billing_protobuf_service_CommonResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Billing.Protobuf.Service.CommonResponse.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static readonly grpc::Marshaller<global::Billing.Protobuf.Service.CommonBillTxRequest> __Marshaller_billing_protobuf_service_CommonBillTxRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Billing.Protobuf.Service.CommonBillTxRequest.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Marshaller<global::Billing.Protobuf.Service.GetSubscriptionStateResponse> __Marshaller_billing_protobuf_service_GetSubscriptionStateResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Billing.Protobuf.Service.GetSubscriptionStateResponse.Parser));
+    static readonly grpc::Marshaller<global::Billing.Protobuf.Service.SubscriptionStateResponse> __Marshaller_billing_protobuf_service_SubscriptionStateResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Billing.Protobuf.Service.SubscriptionStateResponse.Parser));
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::Billing.Protobuf.Purchase.PurchaseInfo, global::Billing.Protobuf.Service.CommonResultResponse> __Method_PurchaseValidate = new grpc::Method<global::Billing.Protobuf.Purchase.PurchaseInfo, global::Billing.Protobuf.Service.CommonResultResponse>(
+    static readonly grpc::Method<global::Billing.Protobuf.Purchase.PurchaseInfo, global::Billing.Protobuf.Service.CommonResponse> __Method_PurchaseValidate = new grpc::Method<global::Billing.Protobuf.Purchase.PurchaseInfo, global::Billing.Protobuf.Service.CommonResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "PurchaseValidate",
         __Marshaller_billing_protobuf_purchase_PurchaseInfo,
-        __Marshaller_billing_protobuf_service_CommonResultResponse);
+        __Marshaller_billing_protobuf_service_CommonResponse);
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.GetSubscriptionStateResponse> __Method_GetSubscriptionState = new grpc::Method<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.GetSubscriptionStateResponse>(
+    static readonly grpc::Method<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.SubscriptionStateResponse> __Method_GetSubscriptionState = new grpc::Method<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.SubscriptionStateResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "GetSubscriptionState",
         __Marshaller_billing_protobuf_service_CommonBillTxRequest,
-        __Marshaller_billing_protobuf_service_GetSubscriptionStateResponse);
+        __Marshaller_billing_protobuf_service_SubscriptionStateResponse);
 
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
@@ -301,103 +301,103 @@ namespace Billing.Protobuf.Service {
       get { return global::Billing.Protobuf.Service.ServiceReflection.Descriptor.Services[1]; }
     }
 
-    /// <summary>Base class for server-side implementations of BillService</summary>
-    [grpc::BindServiceMethod(typeof(BillService), "BindService")]
-    public abstract partial class BillServiceBase
+    /// <summary>Base class for server-side implementations of BillGrpcService</summary>
+    [grpc::BindServiceMethod(typeof(BillGrpcService), "BindService")]
+    public abstract partial class BillGrpcServiceBase
     {
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::System.Threading.Tasks.Task<global::Billing.Protobuf.Service.CommonResultResponse> PurchaseValidate(global::Billing.Protobuf.Purchase.PurchaseInfo request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Billing.Protobuf.Service.CommonResponse> PurchaseValidate(global::Billing.Protobuf.Purchase.PurchaseInfo request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::System.Threading.Tasks.Task<global::Billing.Protobuf.Service.GetSubscriptionStateResponse> GetSubscriptionState(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Billing.Protobuf.Service.SubscriptionStateResponse> GetSubscriptionState(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
     }
 
-    /// <summary>Client for BillService</summary>
-    public partial class BillServiceClient : grpc::ClientBase<BillServiceClient>
+    /// <summary>Client for BillGrpcService</summary>
+    public partial class BillGrpcServiceClient : grpc::ClientBase<BillGrpcServiceClient>
     {
-      /// <summary>Creates a new client for BillService</summary>
+      /// <summary>Creates a new client for BillGrpcService</summary>
       /// <param name="channel">The channel to use to make remote calls.</param>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public BillServiceClient(grpc::ChannelBase channel) : base(channel)
+      public BillGrpcServiceClient(grpc::ChannelBase channel) : base(channel)
       {
       }
-      /// <summary>Creates a new client for BillService that uses a custom <c>CallInvoker</c>.</summary>
+      /// <summary>Creates a new client for BillGrpcService that uses a custom <c>CallInvoker</c>.</summary>
       /// <param name="callInvoker">The callInvoker to use to make remote calls.</param>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public BillServiceClient(grpc::CallInvoker callInvoker) : base(callInvoker)
+      public BillGrpcServiceClient(grpc::CallInvoker callInvoker) : base(callInvoker)
       {
       }
       /// <summary>Protected parameterless constructor to allow creation of test doubles.</summary>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      protected BillServiceClient() : base()
+      protected BillGrpcServiceClient() : base()
       {
       }
       /// <summary>Protected constructor to allow creation of configured clients.</summary>
       /// <param name="configuration">The client configuration.</param>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      protected BillServiceClient(ClientBaseConfiguration configuration) : base(configuration)
+      protected BillGrpcServiceClient(ClientBaseConfiguration configuration) : base(configuration)
       {
       }
 
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::Billing.Protobuf.Service.CommonResultResponse PurchaseValidate(global::Billing.Protobuf.Purchase.PurchaseInfo request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Billing.Protobuf.Service.CommonResponse PurchaseValidate(global::Billing.Protobuf.Purchase.PurchaseInfo request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return PurchaseValidate(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::Billing.Protobuf.Service.CommonResultResponse PurchaseValidate(global::Billing.Protobuf.Purchase.PurchaseInfo request, grpc::CallOptions options)
+      public virtual global::Billing.Protobuf.Service.CommonResponse PurchaseValidate(global::Billing.Protobuf.Purchase.PurchaseInfo request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_PurchaseValidate, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::Billing.Protobuf.Service.CommonResultResponse> PurchaseValidateAsync(global::Billing.Protobuf.Purchase.PurchaseInfo request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Billing.Protobuf.Service.CommonResponse> PurchaseValidateAsync(global::Billing.Protobuf.Purchase.PurchaseInfo request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return PurchaseValidateAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::Billing.Protobuf.Service.CommonResultResponse> PurchaseValidateAsync(global::Billing.Protobuf.Purchase.PurchaseInfo request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Billing.Protobuf.Service.CommonResponse> PurchaseValidateAsync(global::Billing.Protobuf.Purchase.PurchaseInfo request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_PurchaseValidate, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::Billing.Protobuf.Service.GetSubscriptionStateResponse GetSubscriptionState(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Billing.Protobuf.Service.SubscriptionStateResponse GetSubscriptionState(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetSubscriptionState(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::Billing.Protobuf.Service.GetSubscriptionStateResponse GetSubscriptionState(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::CallOptions options)
+      public virtual global::Billing.Protobuf.Service.SubscriptionStateResponse GetSubscriptionState(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_GetSubscriptionState, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::Billing.Protobuf.Service.GetSubscriptionStateResponse> GetSubscriptionStateAsync(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Billing.Protobuf.Service.SubscriptionStateResponse> GetSubscriptionStateAsync(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetSubscriptionStateAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::Billing.Protobuf.Service.GetSubscriptionStateResponse> GetSubscriptionStateAsync(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Billing.Protobuf.Service.SubscriptionStateResponse> GetSubscriptionStateAsync(global::Billing.Protobuf.Service.CommonBillTxRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetSubscriptionState, null, options, request);
       }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      protected override BillServiceClient NewInstance(ClientBaseConfiguration configuration)
+      protected override BillGrpcServiceClient NewInstance(ClientBaseConfiguration configuration)
       {
-        return new BillServiceClient(configuration);
+        return new BillGrpcServiceClient(configuration);
       }
     }
 
     /// <summary>Creates service definition that can be registered with a server</summary>
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    public static grpc::ServerServiceDefinition BindService(BillServiceBase serviceImpl)
+    public static grpc::ServerServiceDefinition BindService(BillGrpcServiceBase serviceImpl)
     {
       return grpc::ServerServiceDefinition.CreateBuilder()
           .AddMethod(__Method_PurchaseValidate, serviceImpl.PurchaseValidate)
@@ -409,10 +409,10 @@ namespace Billing.Protobuf.Service {
     /// <param name="serviceBinder">Service methods will be bound by calling <c>AddMethod</c> on this object.</param>
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    public static void BindService(grpc::ServiceBinderBase serviceBinder, BillServiceBase serviceImpl)
+    public static void BindService(grpc::ServiceBinderBase serviceBinder, BillGrpcServiceBase serviceImpl)
     {
-      serviceBinder.AddMethod(__Method_PurchaseValidate, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Billing.Protobuf.Purchase.PurchaseInfo, global::Billing.Protobuf.Service.CommonResultResponse>(serviceImpl.PurchaseValidate));
-      serviceBinder.AddMethod(__Method_GetSubscriptionState, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.GetSubscriptionStateResponse>(serviceImpl.GetSubscriptionState));
+      serviceBinder.AddMethod(__Method_PurchaseValidate, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Billing.Protobuf.Purchase.PurchaseInfo, global::Billing.Protobuf.Service.CommonResponse>(serviceImpl.PurchaseValidate));
+      serviceBinder.AddMethod(__Method_GetSubscriptionState, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Billing.Protobuf.Service.CommonBillTxRequest, global::Billing.Protobuf.Service.SubscriptionStateResponse>(serviceImpl.GetSubscriptionState));
     }
 
   }

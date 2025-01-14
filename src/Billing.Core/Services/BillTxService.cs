@@ -73,7 +73,7 @@ namespace Billing.Core.Services
             }
             catch (Exception ex)
             {
-                logger.LogError($"CancleBillTx Error: {ex.ToString()}");
+                logger.LogError($"RegistPurchaseToken Error: {ex.ToString()}");
                 return false;
             }
         }
@@ -81,15 +81,15 @@ namespace Billing.Core.Services
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public bool CancleBillTx(long billTxId)
+        public bool CancelBillTx(long billTxId)
         {
             try
             {
-                return dataService.UpdateBillTxStatus(billTxId, BillTxStatus.Cancled, true);
+                return dataService.UpdateBillTxStatus(billTxId, BillTxStatus.Canceled, true);
             }
             catch (Exception ex)
             {
-                logger.LogError($"CancleBillTx Error: {ex.ToString()}");
+                logger.LogError($"CancelBillTx Error: {ex.ToString()}");
                 return false;
             }
         }
@@ -105,7 +105,7 @@ namespace Billing.Core.Services
             }
             catch (Exception ex)
             {
-                logger.LogError($"CancleBillTx Error: {ex.ToString()}");
+                logger.LogError($"EndBillTx Error: {ex.ToString()}");
                 return false;
             }
         }

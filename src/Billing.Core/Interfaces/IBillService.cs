@@ -18,6 +18,6 @@ namespace Billing.Core.Interfaces
         /// 구매 취소 
         /// Point 구매, 충전의 경우 해당 포인트 이력 롤백 처리 
         /// </summary>
-        Task<(bool Result, BillingError error)> CanclePurchase(long billTxID);
+        Task<(bool Result, BillingError error)> CancelPurchase(long billTxID);
     }
 }

@@ -28,7 +28,7 @@ namespace Billing.Core.Interfaces
         /// <summary>
         /// 거래 트랜잭션 취소 
         /// </summary>
-        public bool CancleBillTx(long billTxId);
+        public bool CancelBillTx(long billTxId);
 
     }
 }

@@ -28,33 +28,40 @@ namespace Billing.Protobuf.Service {
             "cmUucHJvdG8aDlB1cmNoYXNlLnByb3RvIk4KEklzc3VlQmlsbFR4UmVxdWVz",
             "dBI4CgxiaWxsX3R4X3R5cGUYASABKA4yIi5iaWxsaW5nLnByb3RvYnVmLmNv",
             "cmUuQmlsbFR4VHlwZXMiLQoTQ29tbW9uQmlsbFR4UmVxdWVzdBIWCg50cmFu",
-            "c2FjdGlvbl9pZBgBIAEoAyItChNJc3N1ZUJpbGxUeFJlc3BvbnNlEhYKDnRy",
-            "YW5zYWN0aW9uX2lkGAEgASgDIiYKFENvbW1vblJlc3VsdFJlc3BvbnNlEg4K",
-            "BnJlc3VsdBgBIAEoCCJlChxHZXRTdWJzY3JpcHRpb25TdGF0ZVJlc3BvbnNl",
-            "EkUKE3N1Yl9zY3JpcHRpb25fc3RhdGUYASABKA4yKC5iaWxsaW5nLnByb3Rv",
-            "YnVmLmNvcmUuU3ViU2NyaXB0aW9uU3RhdGUy4AIKElRyYW5zYWN0aW9uU2Vy",
-            "dmljZRJqCgtJc3N1ZUJpbGxUeBIsLmJpbGxpbmcucHJvdG9idWYuc2Vydmlj",
-            "ZS5Jc3N1ZUJpbGxUeFJlcXVlc3QaLS5iaWxsaW5nLnByb3RvYnVmLnNlcnZp",
-            "Y2UuSXNzdWVCaWxsVHhSZXNwb25zZRJvCg5Db21wbGV0ZUJpbGxUeBItLmJp",
-            "bGxpbmcucHJvdG9idWYuc2VydmljZS5Db21tb25CaWxsVHhSZXF1ZXN0Gi4u",
-            "YmlsbGluZy5wcm90b2J1Zi5zZXJ2aWNlLkNvbW1vblJlc3VsdFJlc3BvbnNl",
-            "Em0KDENhbmNsZUJpbGxUeBItLmJpbGxpbmcucHJvdG9idWYuc2VydmljZS5D",
-            "b21tb25CaWxsVHhSZXF1ZXN0Gi4uYmlsbGluZy5wcm90b2J1Zi5zZXJ2aWNl",
-            "LkNvbW1vblJlc3VsdFJlc3BvbnNlMvkBCgtCaWxsU2VydmljZRJrChBQdXJj",
-            "aGFzZVZhbGlkYXRlEicuYmlsbGluZy5wcm90b2J1Zi5wdXJjaGFzZS5QdXJj",
-            "aGFzZUluZm8aLi5iaWxsaW5nLnByb3RvYnVmLnNlcnZpY2UuQ29tbW9uUmVz",
-            "dWx0UmVzcG9uc2USfQoUR2V0U3Vic2NyaXB0aW9uU3RhdGUSLS5iaWxsaW5n",
-            "LnByb3RvYnVmLnNlcnZpY2UuQ29tbW9uQmlsbFR4UmVxdWVzdBo2LmJpbGxp",
-            "bmcucHJvdG9idWYuc2VydmljZS5HZXRTdWJzY3JpcHRpb25TdGF0ZVJlc3Bv",
-            "bnNlQhuqAhhCaWxsaW5nLlByb3RvYnVmLlNlcnZpY2ViBnByb3RvMw=="));
+            "c2FjdGlvbl9pZBgBIAEoAyJZCgxCYXNlUmVzcG9uc2USFQoNaXNfc3VjY2Vz",
+            "c2Z1bBgBIAEoCBIyCgVlcnJvchgCIAEoDjIjLmJpbGxpbmcucHJvdG9idWYu",
+            "Y29yZS5CaWxsaW5nRXJyb3IibAoTSXNzdWVCaWxsVHhSZXNwb25zZRI9Cg1i",
+            "YXNlX3Jlc3BvbnNlGAEgASgLMiYuYmlsbGluZy5wcm90b2J1Zi5zZXJ2aWNl",
+            "LkJhc2VSZXNwb25zZRIWCg50cmFuc2FjdGlvbl9pZBgCIAEoAyJfCg5Db21t",
+            "b25SZXNwb25zZRI9Cg1iYXNlX3Jlc3BvbnNlGAEgASgLMiYuYmlsbGluZy5w",
+            "cm90b2J1Zi5zZXJ2aWNlLkJhc2VSZXNwb25zZRIOCgZyZXN1bHQYAiABKAgi",
+            "oQEKGVN1YnNjcmlwdGlvblN0YXRlUmVzcG9uc2USPQoNYmFzZV9yZXNwb25z",
+            "ZRgBIAEoCzImLmJpbGxpbmcucHJvdG9idWYuc2VydmljZS5CYXNlUmVzcG9u",
+            "c2USRQoTc3ViX3NjcmlwdGlvbl9zdGF0ZRgCIAEoDjIoLmJpbGxpbmcucHJv",
+            "dG9idWYuY29yZS5TdWJTY3JpcHRpb25TdGF0ZTLYAgoWVHJhbnNhY3Rpb25H",
+            "cnBjU2VydmljZRJqCgtJc3N1ZUJpbGxUeBIsLmJpbGxpbmcucHJvdG9idWYu",
+            "c2VydmljZS5Jc3N1ZUJpbGxUeFJlcXVlc3QaLS5iaWxsaW5nLnByb3RvYnVm",
+            "LnNlcnZpY2UuSXNzdWVCaWxsVHhSZXNwb25zZRJpCg5Db21wbGV0ZUJpbGxU",
+            "eBItLmJpbGxpbmcucHJvdG9idWYuc2VydmljZS5Db21tb25CaWxsVHhSZXF1",
+            "ZXN0GiguYmlsbGluZy5wcm90b2J1Zi5zZXJ2aWNlLkNvbW1vblJlc3BvbnNl",
+            "EmcKDENhbmNlbEJpbGxUeBItLmJpbGxpbmcucHJvdG9idWYuc2VydmljZS5D",
+            "b21tb25CaWxsVHhSZXF1ZXN0GiguYmlsbGluZy5wcm90b2J1Zi5zZXJ2aWNl",
+            "LkNvbW1vblJlc3BvbnNlMvQBCg9CaWxsR3JwY1NlcnZpY2USZQoQUHVyY2hh",
+            "c2VWYWxpZGF0ZRInLmJpbGxpbmcucHJvdG9idWYucHVyY2hhc2UuUHVyY2hh",
+            "c2VJbmZvGiguYmlsbGluZy5wcm90b2J1Zi5zZXJ2aWNlLkNvbW1vblJlc3Bv",
+            "bnNlEnoKFEdldFN1YnNjcmlwdGlvblN0YXRlEi0uYmlsbGluZy5wcm90b2J1",
+            "Zi5zZXJ2aWNlLkNvbW1vbkJpbGxUeFJlcXVlc3QaMy5iaWxsaW5nLnByb3Rv",
+            "YnVmLnNlcnZpY2UuU3Vic2NyaXB0aW9uU3RhdGVSZXNwb25zZUIbqgIYQmls",
+            "bGluZy5Qcm90b2J1Zi5TZXJ2aWNlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Billing.Protobuf.Core.CoreReflection.Descriptor, global::Billing.Protobuf.Purchase.PurchaseReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Billing.Protobuf.Service.IssueBillTxRequest), global::Billing.Protobuf.Service.IssueBillTxRequest.Parser, new[]{ "BillTxType" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Billing.Protobuf.Service.CommonBillTxRequest), global::Billing.Protobuf.Service.CommonBillTxRequest.Parser, new[]{ "TransactionId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Billing.Protobuf.Service.IssueBillTxResponse), global::Billing.Protobuf.Service.IssueBillTxResponse.Parser, new[]{ "TransactionId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Billing.Protobuf.Service.CommonResultResponse), global::Billing.Protobuf.Service.CommonResultResponse.Parser, new[]{ "Result" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Billing.Protobuf.Service.GetSubscriptionStateResponse), global::Billing.Protobuf.Service.GetSubscriptionStateResponse.Parser, new[]{ "SubScriptionState" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Billing.Protobuf.Service.BaseResponse), global::Billing.Protobuf.Service.BaseResponse.Parser, new[]{ "IsSuccessful", "Error" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Billing.Protobuf.Service.IssueBillTxResponse), global::Billing.Protobuf.Service.IssueBillTxResponse.Parser, new[]{ "BaseResponse", "TransactionId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Billing.Protobuf.Service.CommonResponse), global::Billing.Protobuf.Service.CommonResponse.Parser, new[]{ "BaseResponse", "Result" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Billing.Protobuf.Service.SubscriptionStateResponse), global::Billing.Protobuf.Service.SubscriptionStateResponse.Parser, new[]{ "BaseResponse", "SubScriptionState" }, null, null, null, null)
           }));
     }
     #endregion
@@ -464,6 +471,247 @@ namespace Billing.Protobuf.Service {
   /// 응답 메시지
   /// </summary>
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class BaseResponse : pb::IMessage<BaseResponse>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<BaseResponse> _parser = new pb::MessageParser<BaseResponse>(() => new BaseResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<BaseResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Billing.Protobuf.Service.ServiceReflection.Descriptor.MessageTypes[2]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public BaseResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public BaseResponse(BaseResponse other) : this() {
+      isSuccessful_ = other.isSuccessful_;
+      error_ = other.error_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public BaseResponse Clone() {
+      return new BaseResponse(this);
+    }
+
+    /// <summary>Field number for the "is_successful" field.</summary>
+    public const int IsSuccessfulFieldNumber = 1;
+    private bool isSuccessful_;
+    /// <summary>
+    /// 성공 여부를 더 명확히 표현
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsSuccessful {
+      get { return isSuccessful_; }
+      set {
+        isSuccessful_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "error" field.</summary>
+    public const int ErrorFieldNumber = 2;
+    private global::Billing.Protobuf.Core.BillingError error_ = global::Billing.Protobuf.Core.BillingError.None;
+    /// <summary>
+    /// 명확히 BillingError를 설명
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Billing.Protobuf.Core.BillingError Error {
+      get { return error_; }
+      set {
+        error_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as BaseResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(BaseResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (IsSuccessful != other.IsSuccessful) return false;
+      if (Error != other.Error) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (IsSuccessful != false) hash ^= IsSuccessful.GetHashCode();
+      if (Error != global::Billing.Protobuf.Core.BillingError.None) hash ^= Error.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (IsSuccessful != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(IsSuccessful);
+      }
+      if (Error != global::Billing.Protobuf.Core.BillingError.None) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Error);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (IsSuccessful != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(IsSuccessful);
+      }
+      if (Error != global::Billing.Protobuf.Core.BillingError.None) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Error);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (IsSuccessful != false) {
+        size += 1 + 1;
+      }
+      if (Error != global::Billing.Protobuf.Core.BillingError.None) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Error);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(BaseResponse other) {
+      if (other == null) {
+        return;
+      }
+      if (other.IsSuccessful != false) {
+        IsSuccessful = other.IsSuccessful;
+      }
+      if (other.Error != global::Billing.Protobuf.Core.BillingError.None) {
+        Error = other.Error;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            IsSuccessful = input.ReadBool();
+            break;
+          }
+          case 16: {
+            Error = (global::Billing.Protobuf.Core.BillingError) input.ReadEnum();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            IsSuccessful = input.ReadBool();
+            break;
+          }
+          case 16: {
+            Error = (global::Billing.Protobuf.Core.BillingError) input.ReadEnum();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class IssueBillTxResponse : pb::IMessage<IssueBillTxResponse>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -478,7 +726,7 @@ namespace Billing.Protobuf.Service {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Billing.Protobuf.Service.ServiceReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Billing.Protobuf.Service.ServiceReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -498,6 +746,7 @@ namespace Billing.Protobuf.Service {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public IssueBillTxResponse(IssueBillTxResponse other) : this() {
+      baseResponse_ = other.baseResponse_ != null ? other.baseResponse_.Clone() : null;
       transactionId_ = other.transactionId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -508,9 +757,27 @@ namespace Billing.Protobuf.Service {
       return new IssueBillTxResponse(this);
     }
 
+    /// <summary>Field number for the "base_response" field.</summary>
+    public const int BaseResponseFieldNumber = 1;
+    private global::Billing.Protobuf.Service.BaseResponse baseResponse_;
+    /// <summary>
+    /// 공통 응답 필드
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Billing.Protobuf.Service.BaseResponse BaseResponse {
+      get { return baseResponse_; }
+      set {
+        baseResponse_ = value;
+      }
+    }
+
     /// <summary>Field number for the "transaction_id" field.</summary>
-    public const int TransactionIdFieldNumber = 1;
+    public const int TransactionIdFieldNumber = 2;
     private long transactionId_;
+    /// <summary>
+    /// 트랜잭션 ID
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public long TransactionId {
@@ -535,6 +802,7 @@ namespace Billing.Protobuf.Service {
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (!object.Equals(BaseResponse, other.BaseResponse)) return false;
       if (TransactionId != other.TransactionId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -543,6 +811,7 @@ namespace Billing.Protobuf.Service {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
+      if (baseResponse_ != null) hash ^= BaseResponse.GetHashCode();
       if (TransactionId != 0L) hash ^= TransactionId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -562,8 +831,12 @@ namespace Billing.Protobuf.Service {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
+      if (baseResponse_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(BaseResponse);
+      }
       if (TransactionId != 0L) {
-        output.WriteRawTag(8);
+        output.WriteRawTag(16);
         output.WriteInt64(TransactionId);
       }
       if (_unknownFields != null) {
@@ -576,8 +849,12 @@ namespace Billing.Protobuf.Service {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (baseResponse_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(BaseResponse);
+      }
       if (TransactionId != 0L) {
-        output.WriteRawTag(8);
+        output.WriteRawTag(16);
         output.WriteInt64(TransactionId);
       }
       if (_unknownFields != null) {
@@ -590,6 +867,9 @@ namespace Billing.Protobuf.Service {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
+      if (baseResponse_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(BaseResponse);
+      }
       if (TransactionId != 0L) {
         size += 1 + pb::CodedOutputStream.ComputeInt64Size(TransactionId);
       }
@@ -604,6 +884,12 @@ namespace Billing.Protobuf.Service {
     public void MergeFrom(IssueBillTxResponse other) {
       if (other == null) {
         return;
+      }
+      if (other.baseResponse_ != null) {
+        if (baseResponse_ == null) {
+          BaseResponse = new global::Billing.Protobuf.Service.BaseResponse();
+        }
+        BaseResponse.MergeFrom(other.BaseResponse);
       }
       if (other.TransactionId != 0L) {
         TransactionId = other.TransactionId;
@@ -627,7 +913,14 @@ namespace Billing.Protobuf.Service {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 8: {
+          case 10: {
+            if (baseResponse_ == null) {
+              BaseResponse = new global::Billing.Protobuf.Service.BaseResponse();
+            }
+            input.ReadMessage(BaseResponse);
+            break;
+          }
+          case 16: {
             TransactionId = input.ReadInt64();
             break;
           }
@@ -650,7 +943,14 @@ namespace Billing.Protobuf.Service {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
-          case 8: {
+          case 10: {
+            if (baseResponse_ == null) {
+              BaseResponse = new global::Billing.Protobuf.Service.BaseResponse();
+            }
+            input.ReadMessage(BaseResponse);
+            break;
+          }
+          case 16: {
             TransactionId = input.ReadInt64();
             break;
           }
@@ -662,21 +962,21 @@ namespace Billing.Protobuf.Service {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class CommonResultResponse : pb::IMessage<CommonResultResponse>
+  public sealed partial class CommonResponse : pb::IMessage<CommonResponse>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<CommonResultResponse> _parser = new pb::MessageParser<CommonResultResponse>(() => new CommonResultResponse());
+    private static readonly pb::MessageParser<CommonResponse> _parser = new pb::MessageParser<CommonResponse>(() => new CommonResponse());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<CommonResultResponse> Parser { get { return _parser; } }
+    public static pb::MessageParser<CommonResponse> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Billing.Protobuf.Service.ServiceReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Billing.Protobuf.Service.ServiceReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -687,7 +987,7 @@ namespace Billing.Protobuf.Service {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public CommonResultResponse() {
+    public CommonResponse() {
       OnConstruction();
     }
 
@@ -695,20 +995,39 @@ namespace Billing.Protobuf.Service {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public CommonResultResponse(CommonResultResponse other) : this() {
+    public CommonResponse(CommonResponse other) : this() {
+      baseResponse_ = other.baseResponse_ != null ? other.baseResponse_.Clone() : null;
       result_ = other.result_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public CommonResultResponse Clone() {
-      return new CommonResultResponse(this);
+    public CommonResponse Clone() {
+      return new CommonResponse(this);
+    }
+
+    /// <summary>Field number for the "base_response" field.</summary>
+    public const int BaseResponseFieldNumber = 1;
+    private global::Billing.Protobuf.Service.BaseResponse baseResponse_;
+    /// <summary>
+    /// 공통 응답 필드
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Billing.Protobuf.Service.BaseResponse BaseResponse {
+      get { return baseResponse_; }
+      set {
+        baseResponse_ = value;
+      }
     }
 
     /// <summary>Field number for the "result" field.</summary>
-    public const int ResultFieldNumber = 1;
+    public const int ResultFieldNumber = 2;
     private bool result_;
+    /// <summary>
+    /// 부가적인 결과 값
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Result {
@@ -721,18 +1040,19 @@ namespace Billing.Protobuf.Service {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as CommonResultResponse);
+      return Equals(other as CommonResponse);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(CommonResultResponse other) {
+    public bool Equals(CommonResponse other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (!object.Equals(BaseResponse, other.BaseResponse)) return false;
       if (Result != other.Result) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -741,6 +1061,7 @@ namespace Billing.Protobuf.Service {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
+      if (baseResponse_ != null) hash ^= BaseResponse.GetHashCode();
       if (Result != false) hash ^= Result.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -760,8 +1081,12 @@ namespace Billing.Protobuf.Service {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
+      if (baseResponse_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(BaseResponse);
+      }
       if (Result != false) {
-        output.WriteRawTag(8);
+        output.WriteRawTag(16);
         output.WriteBool(Result);
       }
       if (_unknownFields != null) {
@@ -774,8 +1099,12 @@ namespace Billing.Protobuf.Service {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (baseResponse_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(BaseResponse);
+      }
       if (Result != false) {
-        output.WriteRawTag(8);
+        output.WriteRawTag(16);
         output.WriteBool(Result);
       }
       if (_unknownFields != null) {
@@ -788,6 +1117,9 @@ namespace Billing.Protobuf.Service {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
+      if (baseResponse_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(BaseResponse);
+      }
       if (Result != false) {
         size += 1 + 1;
       }
@@ -799,9 +1131,15 @@ namespace Billing.Protobuf.Service {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(CommonResultResponse other) {
+    public void MergeFrom(CommonResponse other) {
       if (other == null) {
         return;
+      }
+      if (other.baseResponse_ != null) {
+        if (baseResponse_ == null) {
+          BaseResponse = new global::Billing.Protobuf.Service.BaseResponse();
+        }
+        BaseResponse.MergeFrom(other.BaseResponse);
       }
       if (other.Result != false) {
         Result = other.Result;
@@ -825,7 +1163,14 @@ namespace Billing.Protobuf.Service {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 8: {
+          case 10: {
+            if (baseResponse_ == null) {
+              BaseResponse = new global::Billing.Protobuf.Service.BaseResponse();
+            }
+            input.ReadMessage(BaseResponse);
+            break;
+          }
+          case 16: {
             Result = input.ReadBool();
             break;
           }
@@ -848,7 +1193,14 @@ namespace Billing.Protobuf.Service {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
-          case 8: {
+          case 10: {
+            if (baseResponse_ == null) {
+              BaseResponse = new global::Billing.Protobuf.Service.BaseResponse();
+            }
+            input.ReadMessage(BaseResponse);
+            break;
+          }
+          case 16: {
             Result = input.ReadBool();
             break;
           }
@@ -860,21 +1212,21 @@ namespace Billing.Protobuf.Service {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class GetSubscriptionStateResponse : pb::IMessage<GetSubscriptionStateResponse>
+  public sealed partial class SubscriptionStateResponse : pb::IMessage<SubscriptionStateResponse>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<GetSubscriptionStateResponse> _parser = new pb::MessageParser<GetSubscriptionStateResponse>(() => new GetSubscriptionStateResponse());
+    private static readonly pb::MessageParser<SubscriptionStateResponse> _parser = new pb::MessageParser<SubscriptionStateResponse>(() => new SubscriptionStateResponse());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<GetSubscriptionStateResponse> Parser { get { return _parser; } }
+    public static pb::MessageParser<SubscriptionStateResponse> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Billing.Protobuf.Service.ServiceReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Billing.Protobuf.Service.ServiceReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -885,7 +1237,7 @@ namespace Billing.Protobuf.Service {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public GetSubscriptionStateResponse() {
+    public SubscriptionStateResponse() {
       OnConstruction();
     }
 
@@ -893,19 +1245,35 @@ namespace Billing.Protobuf.Service {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public GetSubscriptionStateResponse(GetSubscriptionStateResponse other) : this() {
+    public SubscriptionStateResponse(SubscriptionStateResponse other) : this() {
+      baseResponse_ = other.baseResponse_ != null ? other.baseResponse_.Clone() : null;
       subScriptionState_ = other.subScriptionState_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public GetSubscriptionStateResponse Clone() {
-      return new GetSubscriptionStateResponse(this);
+    public SubscriptionStateResponse Clone() {
+      return new SubscriptionStateResponse(this);
+    }
+
+    /// <summary>Field number for the "base_response" field.</summary>
+    public const int BaseResponseFieldNumber = 1;
+    private global::Billing.Protobuf.Service.BaseResponse baseResponse_;
+    /// <summary>
+    /// 공통 응답 필드
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Billing.Protobuf.Service.BaseResponse BaseResponse {
+      get { return baseResponse_; }
+      set {
+        baseResponse_ = value;
+      }
     }
 
     /// <summary>Field number for the "sub_scription_state" field.</summary>
-    public const int SubScriptionStateFieldNumber = 1;
+    public const int SubScriptionStateFieldNumber = 2;
     private global::Billing.Protobuf.Core.SubScriptionState subScriptionState_ = global::Billing.Protobuf.Core.SubScriptionState.Unspecified;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -919,18 +1287,19 @@ namespace Billing.Protobuf.Service {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as GetSubscriptionStateResponse);
+      return Equals(other as SubscriptionStateResponse);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(GetSubscriptionStateResponse other) {
+    public bool Equals(SubscriptionStateResponse other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (!object.Equals(BaseResponse, other.BaseResponse)) return false;
       if (SubScriptionState != other.SubScriptionState) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -939,6 +1308,7 @@ namespace Billing.Protobuf.Service {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
+      if (baseResponse_ != null) hash ^= BaseResponse.GetHashCode();
       if (SubScriptionState != global::Billing.Protobuf.Core.SubScriptionState.Unspecified) hash ^= SubScriptionState.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -958,8 +1328,12 @@ namespace Billing.Protobuf.Service {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
+      if (baseResponse_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(BaseResponse);
+      }
       if (SubScriptionState != global::Billing.Protobuf.Core.SubScriptionState.Unspecified) {
-        output.WriteRawTag(8);
+        output.WriteRawTag(16);
         output.WriteEnum((int) SubScriptionState);
       }
       if (_unknownFields != null) {
@@ -972,8 +1346,12 @@ namespace Billing.Protobuf.Service {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (baseResponse_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(BaseResponse);
+      }
       if (SubScriptionState != global::Billing.Protobuf.Core.SubScriptionState.Unspecified) {
-        output.WriteRawTag(8);
+        output.WriteRawTag(16);
         output.WriteEnum((int) SubScriptionState);
       }
       if (_unknownFields != null) {
@@ -986,6 +1364,9 @@ namespace Billing.Protobuf.Service {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
+      if (baseResponse_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(BaseResponse);
+      }
       if (SubScriptionState != global::Billing.Protobuf.Core.SubScriptionState.Unspecified) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) SubScriptionState);
       }
@@ -997,9 +1378,15 @@ namespace Billing.Protobuf.Service {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(GetSubscriptionStateResponse other) {
+    public void MergeFrom(SubscriptionStateResponse other) {
       if (other == null) {
         return;
+      }
+      if (other.baseResponse_ != null) {
+        if (baseResponse_ == null) {
+          BaseResponse = new global::Billing.Protobuf.Service.BaseResponse();
+        }
+        BaseResponse.MergeFrom(other.BaseResponse);
       }
       if (other.SubScriptionState != global::Billing.Protobuf.Core.SubScriptionState.Unspecified) {
         SubScriptionState = other.SubScriptionState;
@@ -1023,7 +1410,14 @@ namespace Billing.Protobuf.Service {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 8: {
+          case 10: {
+            if (baseResponse_ == null) {
+              BaseResponse = new global::Billing.Protobuf.Service.BaseResponse();
+            }
+            input.ReadMessage(BaseResponse);
+            break;
+          }
+          case 16: {
             SubScriptionState = (global::Billing.Protobuf.Core.SubScriptionState) input.ReadEnum();
             break;
           }
@@ -1046,7 +1440,14 @@ namespace Billing.Protobuf.Service {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
-          case 8: {
+          case 10: {
+            if (baseResponse_ == null) {
+              BaseResponse = new global::Billing.Protobuf.Service.BaseResponse();
+            }
+            input.ReadMessage(BaseResponse);
+            break;
+          }
+          case 16: {
             SubScriptionState = (global::Billing.Protobuf.Core.SubScriptionState) input.ReadEnum();
             break;
           }

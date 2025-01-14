@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package billing.protobuf.point;
 
-import "Core.proto";
-
 option csharp_namespace = "Billing.Protobuf.Point";
 
 //포인트 타입

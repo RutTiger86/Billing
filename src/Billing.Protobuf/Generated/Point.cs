@@ -24,15 +24,15 @@ namespace Billing.Protobuf.Point {
     static PointReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgtQb2ludC5wcm90bxIWYmlsbGluZy5wcm90b2J1Zi5wb2ludBoKQ29yZS5w",
-            "cm90byJWCg1Qb2ludFB1cmNoYXNlEjUKCnBvaW50X3R5cGUYASABKA4yIS5i",
-            "aWxsaW5nLnByb3RvYnVmLnBvaW50LlBvaW50VHlwZRIOCgZhbW91bnQYAiAB",
-            "KAMqNgoJUG9pbnRUeXBlEggKBE5PTkUQABIICgRQQUlEEAESCAoERlJFRRAC",
-            "EgsKB01JTEVBR0UQAyo6ChJQb2ludE9wZXJhdGlvblR5cGUSCgoGQ1JFQVRF",
-            "EAASCgoGQ0hBUkdFEAESDAoIV0lUSERSQVcQAkIZqgIWQmlsbGluZy5Qcm90",
-            "b2J1Zi5Qb2ludGIGcHJvdG8z"));
+            "CgtQb2ludC5wcm90bxIWYmlsbGluZy5wcm90b2J1Zi5wb2ludCJWCg1Qb2lu",
+            "dFB1cmNoYXNlEjUKCnBvaW50X3R5cGUYASABKA4yIS5iaWxsaW5nLnByb3Rv",
+            "YnVmLnBvaW50LlBvaW50VHlwZRIOCgZhbW91bnQYAiABKAMqNgoJUG9pbnRU",
+            "eXBlEggKBE5PTkUQABIICgRQQUlEEAESCAoERlJFRRACEgsKB01JTEVBR0UQ",
+            "Ayo6ChJQb2ludE9wZXJhdGlvblR5cGUSCgoGQ1JFQVRFEAASCgoGQ0hBUkdF",
+            "EAESDAoIV0lUSERSQVcQAkIZqgIWQmlsbGluZy5Qcm90b2J1Zi5Qb2ludGIG",
+            "cHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Billing.Protobuf.Core.CoreReflection.Descriptor, },
+          new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Billing.Protobuf.Point.PointType), typeof(global::Billing.Protobuf.Point.PointOperationType), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Billing.Protobuf.Point.PointPurchase), global::Billing.Protobuf.Point.PointPurchase.Parser, new[]{ "PointType", "Amount" }, null, null, null, null)
           }));
