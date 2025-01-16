@@ -56,7 +56,7 @@ namespace Billing.Api.Controllers
 
             try
             {
-                var (state, validationServiceError) = await billService.SubScriptionStateValidation(billTxId);
+                var (state, validationServiceError) = await billService.GetSubScriptionState(billTxId);
 
                 response.Result = true;
                 response.ErrorCode = (int)validationServiceError;

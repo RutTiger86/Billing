@@ -68,7 +68,7 @@ namespace Billing.Core.Services
                         Amount = pointPurchase.Amount,
                     };
 
-                    dataService.Withdrawledger(purchaseInfo.AccountId, pointPurchase.PointType, pointPurchase.Amount);
+                    dataService.WithdrawLedger(purchaseInfo.AccountId, pointPurchase.PointType, pointPurchase.Amount);
 
                     var afterPointledger = dataService.SelectLedgerByPointType(purchaseInfo.AccountId, pointPurchase.PointType);
 
@@ -91,6 +91,7 @@ namespace Billing.Core.Services
                     dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.PointSpendFailed);
                     return false;
                 }
+
                 dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.PointSpendEnd);
                 return true;
             }
@@ -166,23 +167,15 @@ namespace Billing.Core.Services
                 {
                     if (pointHistory.PointOperationType == PointOperationType.Charge)
                     {
-                        if (dataService.Withdrawledger(pointHistory.AccountId, pointHistory.PointType, pointHistory.Amount))
-                        {
-                            dataService.UpdatePointHistoryIsRollBack(pointHistory.Id);
-                        }
-                        else
-                        {
+                        if (dataService.ChargeRollBackLedger(pointHistory.Id, pointHistory.AccountId, pointHistory.PointType, pointHistory.Amount) <1)
+                        { 
                             logger.LogError($"PointRollBack pointHistory ID {pointHistory.Id} is WithdrawRollBack Failed");
                         }
                     }
                     else
                     {
-                        if (dataService.ChargeLedger(pointHistory.AccountId, pointHistory.PointType, pointHistory.Amount))
-                        {
-                            dataService.UpdatePointHistoryIsRollBack(pointHistory.Id);
-                        }
-                        else
-                        {
+                        if (dataService.ChargeRollBackLedger(pointHistory.Id, pointHistory.AccountId, pointHistory.PointType, pointHistory.Amount)<1)
+                        { 
                             logger.LogError($"PointRollBack pointHistory ID {pointHistory.Id} is ChargeRollBack Failed");
                         }
                     }

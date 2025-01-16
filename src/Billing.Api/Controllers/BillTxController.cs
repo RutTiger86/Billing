@@ -43,7 +43,7 @@ namespace Billing.Api.Controllers
         {
             try
             {
-                if(!billTxService.EndBillTx(billTxId))
+                if(billTxService.EndBillTx(billTxId) < 1)
                 {
                     return new BaseResponse<bool>
                     {
@@ -53,7 +53,6 @@ namespace Billing.Api.Controllers
                         Data = false
                     };
                 }
-
 
                 return new BaseResponse<bool>
                 {
@@ -76,11 +75,11 @@ namespace Billing.Api.Controllers
         }
 
         [HttpPost("canceltx")]
-        public async Task<BaseResponse<bool>> CancelBillTx([FromBody] long billTxId)
+        public BaseResponse<bool> CancelBillTx([FromBody] long billTxId)
         {
             try
             {
-                (bool cancelResult, BillingError billingError) = await billService.CancelPurchase(billTxId);
+                (bool cancelResult, BillingError billingError) = billService.CancelPurchase(billTxId);
                 if (!cancelResult)
                 {
                     return new BaseResponse<bool>
@@ -92,7 +91,7 @@ namespace Billing.Api.Controllers
                     };
                 }
                 
-                if (!billTxService.CancelBillTx(billTxId))
+                if (billTxService.CancelBillTx(billTxId) < 1)
                 {
                     return new BaseResponse<bool>
                     {
@@ -102,7 +101,6 @@ namespace Billing.Api.Controllers
                         Data = false
                     };
                 }
-
 
                 return new BaseResponse<bool>
                 {

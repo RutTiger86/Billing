@@ -6,14 +6,12 @@ namespace Billing.Core.Exceptions
     {
         public BillingError ErrorCode { get; }
 
-        public BillingException(BillingError errorCode, string message)
-       : base(message)
+        public BillingException(BillingError errorCode, string message) : base(message)
         {
             ErrorCode = errorCode;
         }
 
-        public BillingException(BillingError errorCode, string message, Exception innerException)
-        : base(message, innerException)
+        public BillingException(BillingError errorCode, string message, Exception innerException) : base(message, innerException)
         {
             ErrorCode = errorCode;
         }

@@ -74,20 +74,15 @@ Billing Server는 게임 서버의 결제 및 구독 기능을 처리하기 위�
 
 ## 로드맵
 
-1. Point 구매 지원
-   - Ledger Point 내용을 기반한 구매 프로세스 작성.
-2. RollBack 프로세스 작성
-   - 충전/소모시 단계별 RollBack 프로세스 작성
-3. Service 형태 작성
-   - Protobuf를 통하여 API, gRPC 형태 개발
-4. iOS IAP 연동
+1. iOS IAP 연동
    - Apple App Store와의 안전한 거래 검증 통합.
-5. PG사 연동 지원
+2. PG사 연동 지원
    - 다양한 결제 게이트웨이를 추가하여 폭넓은 결제 옵션 제공.
-6. 구독 기능 강화
+3. 구독 기능 강화
    - 구독 변경 및 복구 워크플로우 고도화.
 
 ## 기타정보
 
-[프로세스 설명](docs/PROCESS.md)  
+[프로세스](docs/PROCESS.md)  
+[결재검증](docs/VALIDATION.md)  
 [Todo](docs/TODO.md)

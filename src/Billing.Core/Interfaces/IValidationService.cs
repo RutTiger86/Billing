@@ -12,6 +12,7 @@ namespace Billing.Core.Interfaces
         /// Web의 경우 PG 사의 결재 영수증 검증 
         /// </summary>
         public Task<bool> PurchaseProductValidate(long billDetailId, PurchaseInfo purchaseInfo);
+
         /// <summary>
         /// 구독 검증
         /// IAP의 경우 각 Market API를 통해 결재 영수증 검증
@@ -19,6 +20,7 @@ namespace Billing.Core.Interfaces
         /// Web의 경우 PG 사의 결재 영수증 검증 
         /// </summary>
         public Task<bool> PruchaseSubscriptionsValidate(long billDetailId, PurchaseInfo purchaseInfo);
+
         /// <summary>
         /// 구독 상태 확인
         /// </summary>

@@ -15,7 +15,9 @@ namespace Billing.Core.Services
 
         private readonly DataSet memoryDataSet;
 
+        // Todo : Net9 변경시 System.Threading.Lock 클래스 사용 
         private readonly object lockObj = new();
+
         public MemoryDataService(ILogger<MemoryDataService> logger)
         {
             this.logger = logger;
@@ -45,7 +47,7 @@ namespace Billing.Core.Services
         /// </summary>
         private void ProductDataSet()
         {
-            DataTable itemTable = memoryDataSet.Tables[typeof(Item).Name];
+            DataTable itemTable = memoryDataSet.Tables[typeof(Item).Name] ?? throw new Exception("Item Table is null");
 
             DataRow newRow = itemTable.NewRow();
             newRow["Id"] = 1;
@@ -74,7 +76,7 @@ namespace Billing.Core.Services
 
             itemTable.Rows.Add(newRow);
 
-            DataTable productTable = memoryDataSet.Tables[typeof(Product).Name];
+            DataTable productTable = memoryDataSet.Tables[typeof(Product).Name] ?? throw new Exception("Product Table is null");
 
             newRow = productTable.NewRow();
             newRow["Id"] = 1;
@@ -107,7 +109,7 @@ namespace Billing.Core.Services
 
             productTable.Rows.Add(newRow);
 
-            DataTable productItemTable = memoryDataSet.Tables[typeof(ProductItem).Name];
+            DataTable productItemTable = memoryDataSet.Tables[typeof(ProductItem).Name] ?? throw new Exception("Product Item Table is null");
 
             newRow = productItemTable.NewRow();
             newRow["Id"] = 1;
@@ -161,9 +163,7 @@ namespace Billing.Core.Services
 
         private void AddTable<T>(string idName) where T : class
         {
-            var tableName = typeof(T).Name;
-
-            DataTable table = new(tableName);
+            DataTable table = new(typeof(T).Name);
 
             foreach (var prop in typeof(T).GetProperties())
             {
@@ -172,26 +172,20 @@ namespace Billing.Core.Services
 
             if (table.Columns.Contains(idName))
             {
-                table.PrimaryKey = new[] { table.Columns[idName] };
+                table.PrimaryKey = [table.Columns[idName]];
             }
 
             memoryDataSet.Tables.Add(table);
         }
 
-
-        public BillDetail SelectBillDetail(long billDetailId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<BillDetail> SelectBillDetails(long billTxId)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<Ledger> SelectLedger(long accountId)
         {
-            DataTable ledgerTable = memoryDataSet.Tables[typeof(Ledger).Name];
+            var ledgerTable = memoryDataSet.Tables[typeof(Ledger).Name];
+            if (ledgerTable == null)
+            {
+                return null;
+            }
+
             return ledgerTable.AsEnumerable()
                 .Where(row => row.Field<long>("AccountId") == accountId)
                 .Select(row => new Ledger
@@ -202,13 +196,17 @@ namespace Billing.Core.Services
                     Balance = row.Field<long>("Balance"),
                     CreateDate = row.Field<DateTime>("CreateDate"),
                     UpdateDate = row.Field<DateTime>("UpdateDate")
-                })
-                .ToList();
+                }).ToList();
         }
 
         public Ledger SelectLedgerByPointType(long accountId, PointType pointType)
         {
-            DataTable ledgerTable = memoryDataSet.Tables[typeof(Ledger).Name];
+            var ledgerTable = memoryDataSet.Tables[typeof(Ledger).Name];
+            if (ledgerTable == null)
+            {
+                return null;
+            }
+
             return ledgerTable.AsEnumerable()
                 .Where(row => row.Field<long>("AccountId") == accountId && row.Field<int>("PointType") == (int)pointType)
                 .Select(row => new Ledger
@@ -226,13 +224,23 @@ namespace Billing.Core.Services
 
         public BillTx SelectBillTx(long billTxId)
         {
-            DataTable billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
+            var billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
+            if (billTxTable == null)
+            {
+                return null;
+            }
+
             return billTxTable.AsEnumerable().FirstOrDefault(p => p.Field<long>("Id") == billTxId)?.ToClass<BillTx>();
         }
 
         public SubscriptionInfo SelectSubscriptionInfo(long billTxId)
         {
-            DataTable subscriptionInfoTable = memoryDataSet.Tables[typeof(SubscriptionInfo).Name];
+            var subscriptionInfoTable = memoryDataSet.Tables[typeof(SubscriptionInfo).Name];
+            if (subscriptionInfoTable == null)
+            {
+                return null;
+            }
+
             return subscriptionInfoTable.AsEnumerable().FirstOrDefault(p => p.Field<long>("Id") == billTxId)?.ToClass<SubscriptionInfo>();
         }
         
@@ -241,7 +249,12 @@ namespace Billing.Core.Services
             lock (lockObj)
             {
                 DateTime now = DateTime.UtcNow;
-                DataTable billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
+
+                var billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
+                if(billTxTable == null)
+                {
+                    return -1;
+                }
 
                 long maxId = billTxTable.Rows.Count > 0
                     ? billTxTable.AsEnumerable().Max(row => row.Field<long>("Id"))
@@ -260,7 +273,12 @@ namespace Billing.Core.Services
             lock (lockObj)
             {
                 DateTime now = DateTime.UtcNow;
-                DataTable billDetailTable = memoryDataSet.Tables[typeof(BillDetail).Name];
+
+                var billDetailTable = memoryDataSet.Tables[typeof(BillDetail).Name];
+                if (billDetailTable == null)
+                {
+                    return -1;
+                }
 
                 long maxId = billDetailTable.Rows.Count > 0
                     ? billDetailTable.AsEnumerable().Max(row => row.Field<long>("Id"))
@@ -280,7 +298,12 @@ namespace Billing.Core.Services
             lock (lockObj)
             {
                 DateTime now = DateTime.UtcNow;
-                DataTable subscriptionInfoTable = memoryDataSet.Tables[typeof(SubscriptionInfo).Name];
+
+                var subscriptionInfoTable = memoryDataSet.Tables[typeof(SubscriptionInfo).Name];
+                if (subscriptionInfoTable == null)
+                {
+                    return -1;
+                }
 
                 long maxId = subscriptionInfoTable.Rows.Count > 0
                     ? subscriptionInfoTable.AsEnumerable().Max(row => row.Field<long>("Id"))
@@ -300,7 +323,12 @@ namespace Billing.Core.Services
             lock (lockObj)
             {
                 DateTime now = DateTime.UtcNow;
-                DataTable ledgerTable = memoryDataSet.Tables[typeof(Ledger).Name];
+
+                var ledgerTable = memoryDataSet.Tables[typeof(Ledger).Name];
+                if (ledgerTable == null)
+                {
+                    return -1;
+                }
 
                 long maxId = ledgerTable.Rows.Count > 0
                     ? ledgerTable.AsEnumerable().Max(row => row.Field<long>("Id"))
@@ -317,7 +345,12 @@ namespace Billing.Core.Services
         public long InsertPointHistory(PointHistory pointHistory)
         {
             DateTime now = DateTime.UtcNow;
-            DataTable pointHistoryTable = memoryDataSet.Tables[typeof(PointHistory).Name];
+
+            var pointHistoryTable = memoryDataSet.Tables[typeof(PointHistory).Name];
+            if (pointHistoryTable == null)
+            {
+                return -1;
+            }
 
             long maxId = pointHistoryTable.Rows.Count > 0
                 ? pointHistoryTable.AsEnumerable().Max(row => row.Field<long>("Id"))
@@ -330,14 +363,14 @@ namespace Billing.Core.Services
             return pointHistory.Id;
         }
 
-        public bool UpdateBillTxStatus(long billTxId, BillTxStatus status, bool IsDone = false)
+        public int UpdateBillTxStatus(long billTxId, BillTxStatus status, bool IsDone = false)
         {
             lock (lockObj)
             {
-                DataTable billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
+                var billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
                 if (billTxTable == null)
                 {
-                    return false;
+                    return -1;
                 }
 
                 var billTxRow = billTxTable.AsEnumerable()
@@ -345,26 +378,51 @@ namespace Billing.Core.Services
 
                 if (billTxRow == null)
                 {
-                    return false;
+                    return -1;
                 }
 
                 billTxRow["Status"] = status;
                 billTxRow["UpdateDate"] = DateTime.Now;
-                if(IsDone)
+                if (IsDone)
                     billTxRow["IsDone"] = IsDone;
 
-                return true;
+                return 1;
             }
         }
 
-        public bool ExpireSubscription(long subscriptionId)
+        public int BillTxValidateStart(long billTxId)
         {
             lock (lockObj)
             {
-                DataTable subscriptionInfoTable = memoryDataSet.Tables[typeof(SubscriptionInfo).Name];
+                var billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
+                if (billTxTable == null)
+                {
+                    return -1;
+                }
+
+                var billTxRow = billTxTable.AsEnumerable()
+                    .FirstOrDefault(p => p.Field<long>("Id") == billTxId && p.Field<int>("Status") == (int)BillTxStatus.Initiated);
+
+                if (billTxRow == null)
+                {
+                    return -1;
+                }
+
+                billTxRow["Status"] = BillTxStatus.ValidateStart;
+                billTxRow["UpdateDate"] = DateTime.Now;
+
+                return 1;
+            }
+        }
+
+        public int ExpireSubscription(long subscriptionId)
+        {
+            lock (lockObj)
+            {
+                var subscriptionInfoTable = memoryDataSet.Tables[typeof(SubscriptionInfo).Name];
                 if (subscriptionInfoTable == null)
                 {
-                    return false;
+                    return -1;
                 }
 
                 var subscriptionInfoRow = subscriptionInfoTable.AsEnumerable()
@@ -372,26 +430,26 @@ namespace Billing.Core.Services
 
                 if (subscriptionInfoRow == null)
                 {
-                    return false;
+                    return -1;
                 }
 
                 subscriptionInfoRow["State"] = SubScriptionState.Expired;
                 subscriptionInfoRow["IsExpired"] = true;
                 subscriptionInfoRow["UpdateDate"] = DateTime.Now;
 
-                return true;
+                return 1;
             }
 
         }
         
-        public bool UpdateBillTxToken(long billTxId, string PurchaseToken)
+        public int UpdateBillTxToken(long billTxId, string PurchaseToken)
         {
             lock (lockObj)
             {
-                DataTable billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
+                var billTxTable = memoryDataSet.Tables[typeof(BillTx).Name];
                 if (billTxTable == null)
                 {
-                    return false;
+                    return -1;
                 }
 
                 var billTxRow = billTxTable.AsEnumerable()
@@ -401,11 +459,11 @@ namespace Billing.Core.Services
                 {
                     billTxRow["UpdateDate"] = DateTime.Now;
                     billTxRow["PurchaseToken"] = PurchaseToken;
-                    return true;
+                    return 1;
                 }
                 else
                 {
-                    return false;
+                    return -1;
                 }
             }
         }
@@ -426,8 +484,8 @@ namespace Billing.Core.Services
             return productRow == null ? null : new Product
             {
                 Id = productRow.Field<long>("Id"),
-                ProductKey = productRow.Field<string>("ProductKey"),
-                ProductName = productRow.Field<string>("ProductName"),
+                ProductKey = productRow.Field<string>("ProductKey")??String.Empty,
+                ProductName = productRow.Field<string>("ProductName") ?? String.Empty,
                 Price = productRow.Field<int>("Price"),
                 IsUse = productRow.Field<bool>("IsUse"),
                 CreateDate = productRow.Field<DateTime>("CreateDate"),
@@ -441,13 +499,9 @@ namespace Billing.Core.Services
             var productItemTable = memoryDataSet.Tables[nameof(ProductItem)];
             var itemTable = memoryDataSet.Tables[nameof(Item)];
 
-            // Query the dataset
-            var query = from product in productTable.AsEnumerable()
-                        where product.Field<string>("ProductKey") == productKey
-                        join productItem in productItemTable.AsEnumerable()
-                        on product.Field<long>("Id") equals productItem.Field<long>("ProductId")
-                        join item in itemTable.AsEnumerable()
-                        on productItem.Field<long>("ItemId") equals item.Field<long>("Id")
+            var query = from product in productTable.AsEnumerable() where product.Field<string>("ProductKey") == productKey
+                        join productItem in productItemTable.AsEnumerable() on product.Field<long>("Id") equals productItem.Field<long>("ProductId")
+                        join item in itemTable.AsEnumerable() on productItem.Field<long>("ItemId") equals item.Field<long>("Id")
                         group productItem by new
                         {
                             ProductId = product.Field<long>("Id"),
@@ -476,51 +530,150 @@ namespace Billing.Core.Services
                                 PointType = (PointType)pg.Field<int>("PointType")
                             }).ToList()
                         };
-            // Map the query result to ProductInfo
+
             var result = query.FirstOrDefault();
             result?.ProductInfo.Items.AddRange(result.Items);
 
             return result?.ProductInfo;
         }
 
-        public bool ChargeLedger(long accountId, PointType pointType, long amount)
-        {
-            var ledgerTable = memoryDataSet.Tables[nameof(Ledger)];
-
-            var ledgerRow = ledgerTable.AsEnumerable()
-                .Where(p => p.Field<long>("AccountId") == accountId && p.Field<int>("PointType") == (int)pointType)
-                .First();
-
-            ledgerRow["UpdateDate"] = DateTime.Now;
-            ledgerRow["Balance"] = (long)ledgerRow["Balance"] + amount;
-
-            return true;
-        }
-
-        public bool Withdrawledger(long accountId, PointType pointType, long amount)
+        public int ChargeLedger(long accountId, PointType pointType, long amount)
         {
             lock (lockObj)
             {
-                DataTable ledgerTable = memoryDataSet.Tables[typeof(Ledger).Name];
-
+                var ledgerTable = memoryDataSet.Tables[nameof(Ledger)];
                 if (ledgerTable == null)
                 {
-                    return false;
+                    return -1;
                 }
 
                 var ledgerRow = ledgerTable.AsEnumerable()
-                    .FirstOrDefault(row => row.Field<long>("AccountId") == accountId && row.Field<int>("PointType") == (int)pointType);
+                    .FirstOrDefault(p => p.Field<long>("AccountId") == accountId && p.Field<int>("PointType") == (int)pointType);
 
                 if (ledgerRow == null)
                 {
-                    return false;
+                    return -1;
                 }
 
+                ledgerRow["UpdateDate"] = DateTime.Now;
+                ledgerRow["Balance"] = (long)ledgerRow["Balance"] + amount;
+            }
+
+            return 1;
+        }
+
+
+        public int ChargeRollBackLedger(long pointHistoryId, long accountId, PointType pointType, long amount)
+        {
+            lock (lockObj)
+            {
+                var ledgerTable = memoryDataSet.Tables[nameof(Ledger)];
+                var pointHistoryTable = memoryDataSet.Tables[typeof(PointHistory).Name];
+                if (pointHistoryTable == null)
+                {
+                    return -1;
+                }
+                if (ledgerTable == null)
+                {
+                    return -1;
+                }
+
+
+                var pointHistoryRow = pointHistoryTable.AsEnumerable().FirstOrDefault(p => p.Field<long>("Id") == pointHistoryId);
+                var ledgerRow = ledgerTable.AsEnumerable()
+                    .FirstOrDefault(p => p.Field<long>("AccountId") == accountId && p.Field<int>("PointType") == (int)pointType);
+                if (pointHistoryRow == null)
+                {
+                    return -1;
+                }
+                if (ledgerRow == null)
+                {
+                    return -1;
+                }
+
+                pointHistoryRow["IsRollBack"] = true;
+                pointHistoryRow["UpdateDate"] = DateTime.Now;
 
                 ledgerRow["UpdateDate"] = DateTime.Now;
                 ledgerRow["Balance"] = (long)ledgerRow["Balance"] - amount;
 
-                return true;
+
+                ledgerRow = ledgerTable.AsEnumerable()
+                  .FirstOrDefault(p => p.Field<long>("AccountId") == accountId && p.Field<int>("PointType") == (int)pointType);
+
+                if((long)ledgerRow["Balance"] < 0 )
+                {
+                    pointHistoryRow["IsRollBack"] = false;
+                    pointHistoryRow["UpdateDate"] = DateTime.Now;
+
+                    ledgerRow["UpdateDate"] = DateTime.Now;
+                    ledgerRow["Balance"] = (long)ledgerRow["Balance"] + amount;
+
+                    return -1;
+                }
+
+            }
+
+            return 1;
+        }
+
+        public int WithdrawLedger(long accountId, PointType pointType, long amount)
+        {
+            lock (lockObj)
+            {
+                var ledgerTable = memoryDataSet.Tables[typeof(Ledger).Name];
+                if (ledgerTable == null)
+                {
+                    return -1;
+                }
+
+                var ledgerRow = ledgerTable.AsEnumerable()
+                    .FirstOrDefault(row => row.Field<long>("AccountId") == accountId && row.Field<int>("PointType") == (int)pointType);
+                if (ledgerRow == null)
+                {
+                    return -1;
+                }
+
+                ledgerRow["UpdateDate"] = DateTime.Now;
+                ledgerRow["Balance"] = (long)ledgerRow["Balance"] - amount;
+
+                return 1;
+            }
+        }
+
+        public int WithdrawRollBackLedger(long pointHistoryId, long accountId, PointType pointType, long amount)
+        {
+            lock (lockObj)
+            {
+                var ledgerTable = memoryDataSet.Tables[typeof(Ledger).Name];
+                var pointHistoryTable = memoryDataSet.Tables[typeof(PointHistory).Name];
+                if (pointHistoryTable == null)
+                {
+                    return -1;
+                }
+                if (ledgerTable == null)
+                {
+                    return -1;
+                }
+
+                var pointHistoryRow = pointHistoryTable.AsEnumerable().FirstOrDefault(p => p.Field<long>("Id") == pointHistoryId);
+                var ledgerRow = ledgerTable.AsEnumerable()
+                    .FirstOrDefault(row => row.Field<long>("AccountId") == accountId && row.Field<int>("PointType") == (int)pointType);
+                if (pointHistoryRow == null)
+                {
+                    return -1;
+                }
+                if (ledgerRow == null)
+                {
+                    return -1;
+                }
+
+                pointHistoryRow["IsRollBack"] = true;
+                pointHistoryRow["UpdateDate"] = DateTime.Now;               
+                ledgerRow["UpdateDate"] = DateTime.Now;
+                ledgerRow["Balance"] = (long)ledgerRow["Balance"] + amount;
+
+                return 1;
             }
         }
 
@@ -528,7 +681,7 @@ namespace Billing.Core.Services
         {
             lock (lockObj)
             {
-                DataTable pointHistoryTable = memoryDataSet.Tables[typeof(PointHistory).Name];
+                var pointHistoryTable = memoryDataSet.Tables[typeof(PointHistory).Name];
 
                 return pointHistoryTable.AsEnumerable()
                     .Where(row => row.Field<long>("BillTxId") == billTxId)
@@ -547,31 +700,6 @@ namespace Billing.Core.Services
                         CreateDate = row.Field<DateTime>("CreateDate"),
                     })
                     .ToList();
-            }
-        }
-
-        public bool UpdatePointHistoryIsRollBack(long pointHistoryId)
-        {
-            lock (lockObj)
-            {
-                DataTable pointHistoryTable = memoryDataSet.Tables[typeof(PointHistory).Name];
-                if (pointHistoryTable == null)
-                {
-                    return false;
-                }
-
-                var pointHistoryRow = pointHistoryTable.AsEnumerable()
-                    .FirstOrDefault(p => p.Field<long>("Id") == pointHistoryId);
-
-                if (pointHistoryRow == null)
-                {
-                    return false;
-                }
-
-                pointHistoryRow["IsRollBack"] = true;
-                pointHistoryRow["UpdateDate"] = DateTime.Now;
-
-                return true;
             }
         }
     }

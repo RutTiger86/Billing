@@ -18,17 +18,17 @@ namespace Billing.Core.Interfaces
         /// <summary>
         /// 거래 토큰 기록 
         /// </summary>
-        public bool RegistPurchaseToken(long billTxId, string purchaseToken);
+        public int RegistPurchaseToken(long billTxId, string purchaseToken);
 
         /// <summary>
         /// 거래 트랜잭션 종료 
         /// </summary>
-        public bool EndBillTx(long billTxId);
+        public int EndBillTx(long billTxId);
 
         /// <summary>
         /// 거래 트랜잭션 취소 
         /// </summary>
-        public bool CancelBillTx(long billTxId);
+        public int CancelBillTx(long billTxId);
 
     }
 }

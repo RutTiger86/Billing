@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Billing.Core.Services
 {
-    public class BillTxService(IDataService dataService,IBillService billService, ILogger<BillTxService> logger) : IBillTxService
+    public class BillTxService(IDataService dataService,ILogger<BillTxService> logger) : IBillTxService
     {
         private readonly IDataService dataService = dataService;
         private readonly ILogger<BillTxService> logger = logger;
@@ -25,6 +25,7 @@ namespace Billing.Core.Services
                 };
 
                 long transactionID = dataService.InsertBillTx(transaction);
+
                 return transactionID;
             }
             catch (Exception ex)
@@ -65,7 +66,7 @@ namespace Billing.Core.Services
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public bool RegistPurchaseToken(long billTxId, string purchaseToken)
+        public int RegistPurchaseToken(long billTxId, string purchaseToken)
         {
             try
             {
@@ -74,14 +75,14 @@ namespace Billing.Core.Services
             catch (Exception ex)
             {
                 logger.LogError($"RegistPurchaseToken Error: {ex.ToString()}");
-                return false;
+                return -1;
             }
         }
 
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public bool CancelBillTx(long billTxId)
+        public int CancelBillTx(long billTxId)
         {
             try
             {
@@ -90,14 +91,14 @@ namespace Billing.Core.Services
             catch (Exception ex)
             {
                 logger.LogError($"CancelBillTx Error: {ex.ToString()}");
-                return false;
+                return -1;
             }
         }
 
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public bool EndBillTx(long billTxId)
+        public int EndBillTx(long billTxId)
         {
             try
             {
@@ -106,7 +107,7 @@ namespace Billing.Core.Services
             catch (Exception ex)
             {
                 logger.LogError($"EndBillTx Error: {ex.ToString()}");
-                return false;
+                return -1;
             }
         }
     }

@@ -14,7 +14,7 @@ namespace Billing.Service.Services
         {
             try
             {
-                var (state, validationServiceError) = await billService.SubScriptionStateValidation(request.TransactionId);
+                var (state, validationServiceError) = await billService.GetSubScriptionState(request.TransactionId);
 
                 return new SubscriptionStateResponse
                 {

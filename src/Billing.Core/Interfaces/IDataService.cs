@@ -13,18 +13,16 @@ namespace Billing.Core.Interfaces
         public long InsertLedger(Ledger ledger);
         public long InsertPointHistory(PointHistory pointHistory);
 
-        public bool UpdateBillTxToken(long billTxId, string purchaseToken);
-        public bool UpdateBillTxStatus(long billTxId, BillTxStatus status, bool IsDone = false);
-        public bool ExpireSubscription(long subscriptionId);
-        public bool UpdatePointHistoryIsRollBack(long pointHistoryId);
-
-        public bool ChargeLedger(long accountId, PointType pointType, long amount);
-        public bool Withdrawledger(long accountId, PointType pointType, long amount);
-
+        public int UpdateBillTxToken(long billTxId, string purchaseToken);
+        public int UpdateBillTxStatus(long billTxId, BillTxStatus status, bool IsDone = false);
+        public int BillTxValidateStart(long billTxId);
+        public int ExpireSubscription(long subscriptionId);
+        public int ChargeLedger(long accountId, PointType pointType, long amount);
+        public int WithdrawLedger(long accountId, PointType pointType, long amount);
+        public int ChargeRollBackLedger(long pointHistoryId, long accountId, PointType pointType, long amount);
+        public int WithdrawRollBackLedger(long pointHistoryId, long accountId, PointType pointType, long amount);
 
         public BillTx SelectBillTx(long billTxId);
-        public BillDetail SelectBillDetail(long billDetailId);
-        public List<BillDetail> SelectBillDetails(long billTxId);
         public List<Ledger> SelectLedger(long accountId);
         public Ledger SelectLedgerByPointType(long accountId, PointType pointType);
         public Product SelectProduct(string productKey, bool isUse = true);

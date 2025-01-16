@@ -135,16 +135,16 @@ namespace Billing.Core.Services
                     //    logger.LogInformation("Subscription already acknowledged.");
                     //}
 
-                    CreateSubScription(billDetailId, purchaseInfo, (long)response.ExpiryTimeMillis);
+                   long subscriptionId = CreateSubScription(billDetailId, purchaseInfo, response.ExpiryTimeMillis??0);
 
                     dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IapReceiptValid);
-                    logger.LogInformation($"Purchase verified: {response.OrderId}");
+                    logger.LogInformation($"PruchaseSubscriptionsValidate verified:  subscriptionId [ {subscriptionId}], {response.OrderId}");
                     return true;
                 }
                 else
                 {
                     dataService.UpdateBillTxStatus(purchaseInfo.BillTxId, BillTxStatus.IapReceiptInvalid);
-                    logger.LogError($"Purchase valid response is Null  ProductId: {purchaseInfo.ProductKey}");
+                    logger.LogError($"PruchaseSubscriptionsValidate Error :  ProductId [ {purchaseInfo.ProductKey}] ");
                     return false;
                 }
             }

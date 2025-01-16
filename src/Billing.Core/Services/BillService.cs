@@ -25,7 +25,7 @@ namespace Billing.Core.Services
             try
             {
                 //Tx 검증
-                (var txResult, var billError) = await ValidationTxProcess(purchaseInfo);
+                (var txResult, var billError) = PurchaseValidationTxProcess(purchaseInfo);
                 if(!txResult)
                 {
                     return (false, billError);
@@ -76,40 +76,33 @@ namespace Billing.Core.Services
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public async Task<(SubScriptionState Statue, BillingError error)> SubScriptionStateValidation(long billTxID)
+        public async Task<(SubScriptionState Statue, BillingError error)> GetSubScriptionState(long billTxID)
         {
             try
             {
                 SubScriptionState statue = SubScriptionState.Unspecified;
-                var billTx = dataService.SelectBillTx(billTxID);
 
+                var billTx = dataService.SelectBillTx(billTxID);
                 if (billTx == null)
                 {
                     return (statue, BillingError.TxNotFound);
                 }
 
                 var subscriptionInfo = dataService.SelectSubscriptionInfo(billTxID);
-
                 if (subscriptionInfo == null)
                 {
                     return (statue, BillingError.SubscriptionNotffound);
                 }
 
                 IValidationService validationService = GetValidationService(billTxID);
-
                 if (validationService == null)
                 {
                     return (statue, BillingError.TxUnverifiableType);
                 }
 
                 statue = await  validationService.SubscriptionsValidate(billTx.PurchaseToken);
-
-                switch (statue)
-                {
-                    case SubScriptionState.Expired :
-                        dataService.ExpireSubscription(subscriptionInfo.Id);
-                            break;
-                };
+                if (statue == SubScriptionState.Expired)
+                    dataService.ExpireSubscription(subscriptionInfo.Id);
 
                 return (statue, BillingError.None);
             }
@@ -129,7 +122,7 @@ namespace Billing.Core.Services
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public async Task<(bool Result, BillingError error)> CancelPurchase(long billTxId)
+        public (bool Result, BillingError error) CancelPurchase(long billTxId)
         {
             var billtx = dataService.SelectBillTx(billTxId);
 
@@ -147,7 +140,7 @@ namespace Billing.Core.Services
         /// 상품 트랜젝션 검증 
         /// 트랜젝션 정보에 구매 토큰 업데이트 
         /// </summary>
-        private async Task<(bool IsValide, BillingError Error)> ValidationTxProcess(PurchaseInfo purchaseInfo)
+        private  (bool IsValide, BillingError Error) PurchaseValidationTxProcess(PurchaseInfo purchaseInfo)
         {
             var (isValid, validationError) = billTxService.ValidateBillTx(purchaseInfo.BillTxId);
             if (!isValid)
@@ -155,7 +148,13 @@ namespace Billing.Core.Services
                 return (false, validationError);
             }
 
-            if (!billTxService.RegistPurchaseToken(purchaseInfo.BillTxId, purchaseInfo.PurchaseToken))
+            var changeRowCount =  dataService.BillTxValidateStart(purchaseInfo.BillTxId);
+            if(changeRowCount<1)
+            {
+                return (false, BillingError.TxAlreadyInprogress);
+            }
+
+            if (billTxService.RegistPurchaseToken(purchaseInfo.BillTxId, purchaseInfo.PurchaseToken)<1)
             {
                 return (false, BillingError.SystemError);
             }
@@ -211,6 +210,7 @@ namespace Billing.Core.Services
                 BillTxTypes.Point =>  pointValidationService,
                 _ => null,
             };
+
             return validationService;
         }
 

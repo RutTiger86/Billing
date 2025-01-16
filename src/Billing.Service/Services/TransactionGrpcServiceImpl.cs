@@ -51,7 +51,7 @@ namespace Billing.Service.Services
                         IsSuccessful = true,
                         Error = BillingError.None
                     },
-                    Result = billTxService.EndBillTx(request.TransactionId)
+                    Result = billTxService.EndBillTx(request.TransactionId) < 1
                 });
             }
             catch (Exception ex)
@@ -73,7 +73,7 @@ namespace Billing.Service.Services
         {
             try
             {
-                (bool cancelResult, BillingError billingError) = await billService.CancelPurchase(request.TransactionId);
+                (bool cancelResult, BillingError billingError) = billService.CancelPurchase(request.TransactionId);
 
                 if (!cancelResult)
                 {
@@ -96,7 +96,7 @@ namespace Billing.Service.Services
                         IsSuccessful = true,
                         Error = BillingError.None
                     },
-                    Result = billTxService.CancelBillTx(request.TransactionId)
+                    Result = billTxService.CancelBillTx(request.TransactionId) < 1
                 };
             }
             catch (Exception ex)
