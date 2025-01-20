@@ -20,6 +20,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "Tests\TestApp\Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billing.Protobuf", "Billing.Protobuf\Billing.Protobuf.csproj", "{F37540F4-216C-4F01-948B-4B7C6015F235}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestTools", "TestTools", "{47A26EDE-20B1-421A-AC1F-4F934590C221}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billing.Grpc.TestClient", "Billing.Grpc.TestClient\Billing.Grpc.TestClient.csproj", "{2BAAA81F-F42A-4EDE-BFFB-97E9EBAF7A57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,11 +52,16 @@ Global
 		{F37540F4-216C-4F01-948B-4B7C6015F235}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F37540F4-216C-4F01-948B-4B7C6015F235}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F37540F4-216C-4F01-948B-4B7C6015F235}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BAAA81F-F42A-4EDE-BFFB-97E9EBAF7A57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BAAA81F-F42A-4EDE-BFFB-97E9EBAF7A57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BAAA81F-F42A-4EDE-BFFB-97E9EBAF7A57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BAAA81F-F42A-4EDE-BFFB-97E9EBAF7A57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{124F5648-7EC8-48D5-8C09-3349FA320803} = {DEDA8D8E-8391-465D-A5F9-39CF2646AE67}
+		{2BAAA81F-F42A-4EDE-BFFB-97E9EBAF7A57} = {47A26EDE-20B1-421A-AC1F-4F934590C221}
 	EndGlobalSection
 EndGlobal

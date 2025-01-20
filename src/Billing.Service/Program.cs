@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
 using System.Reflection;
+using System.Reflection.PortableExecutable;
 
 namespace Billing.Service
 {
@@ -65,6 +66,7 @@ namespace Billing.Service
             })
             .ConfigureWebHostDefaults(webBuilder =>
             {
+                ConfigureKestrel(webBuilder);
                 ConfigureGrpcServices(webBuilder);
                 ConfigureGrpcPipeline(webBuilder);
             })
@@ -80,6 +82,15 @@ namespace Billing.Service
             {
                 services.AddGrpc();
             });
+        }
+
+        private static void ConfigureKestrel(IWebHostBuilder webBuilder)
+        {
+            webBuilder.ConfigureKestrel((context, options) =>
+            {
+                options.Configure(context.Configuration.GetSection("Kestrel"));
+            });
+
         }
 
         private static void ConfigureGrpcPipeline(IWebHostBuilder webBuilder)
